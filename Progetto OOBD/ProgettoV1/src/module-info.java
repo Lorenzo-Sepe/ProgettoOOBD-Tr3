@@ -2,8 +2,8 @@
  * 
  */
 /**
- * @author LorenzoSepe
+ * @author Utente
  *
  */
-module documentazione {
+module Progetto {
 }
