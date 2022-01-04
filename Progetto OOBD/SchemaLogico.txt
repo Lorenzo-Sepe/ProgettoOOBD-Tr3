@@ -1,0 +1,25 @@
+CONTATTO(ContattoID, PrefissoNome, Nome, Cognome, PathFoto, Visibilità)
+MAIL(NomeMail, ContattoAssociato)
+ACCOUNT(ContattoAssociato, Fornitore, Nickname, Mail, FraseDiBenvenuto)
+NUMERI_TELEFONICI(ContattoAssociato, PrefissoNazionale, Numero, TipoNumero, Identificatore)
+INDIRIZZI(ContattoAssociato, IndirizziID, Via, Città, CodicePostale, Nazione)
+GRUPPI(Nome)
+CASSAFORTE(Nome, Password)
+ABITA(IndirizzoID, ContattoID, AbitazionePrincipale, Identificatore)
+APPARTENENZA(GruppoNome, ContattoID)
+INCLUSIONE(CassaforteNome, ContattoID)
+
+
+//
+MAIL.ContattoAssociato -> CONTATTO.ContattoID
+ACCOUNT.ContattoAssociato -> CONTATTO.ContattoID
+NUMERI_TELEFONICI.ContattoAssociato -> CONTATTO.ContattoID
+INDIRIZZI.ContattoAssociato -> CONTATTO.ContattoID
+ABITA.IndirizzoID -> INDIRIZZO.IndirizziID
+ABITA.ContattoID -> CONTATTO.ContattoID
+APPARTENENZA.GruppoNome -> GRUPPO.Nome
+APPARTENENZA.ContattoID -> CONTATTO.ContattoID
+INCLUSIONE.CassaforteNome -> CASSAFORTE.Nome
+INCLUSIONE.ContattoID -> CONTATTO.ContattoID
+// (modificato)
+4 gennaio 2022
