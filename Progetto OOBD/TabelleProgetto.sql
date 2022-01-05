@@ -2,6 +2,18 @@
 
 create database if not exists Progetto3;
 
+/* Creazione Ruolo*/ 
+CREATE ROLE "AccessoProgetto" WITH
+	LOGIN
+	NOSUPERUSER
+	NOCREATEDB
+	NOCREATEROLE
+	INHERIT
+	NOREPLICATION
+	CONNECTION LIMIT -1
+	PASSWORD 'xxxxxx';
+	/*PASSWORD = BarraTramontana*/
+
 /*CREAZIONE TIPI*/
 
 CREATE TYPE NumeroTYPE AS ENUM ('Mobile', 'fisso');
