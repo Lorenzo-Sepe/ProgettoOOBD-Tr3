@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import java.util.ArrayList;
 
@@ -11,7 +11,7 @@ public class Contatto {
 	private ArrayList<Email> ListaEmail = null;
 	private ArrayList<Indirizzi> ListaIndirizzi = null;
 	private ArrayList<NumeriTelefonici> ListaNumeri = null;
-	private ArrayList<account> ListaAccount = null;
+	private ArrayList<Account> ListaAccount = null;
 	
 	public Contatto (String prefisso, String nome, String cognome, String pathFoto) {
 		if (prefisso == null) {

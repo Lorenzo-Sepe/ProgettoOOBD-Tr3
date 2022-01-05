@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 
 import java.util.*;
@@ -6,7 +6,7 @@ import java.util.*;
 /**
  * 
  */
-public class Cassaforte extends gruppo {
+public class Cassaforte extends Gruppo {
 
 	private String password;
 

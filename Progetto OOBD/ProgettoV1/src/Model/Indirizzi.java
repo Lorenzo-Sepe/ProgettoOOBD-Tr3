@@ -14,6 +14,7 @@ public class Indirizzi {
 	   private int codicePostale;
 	   private String nazione;
 	   private String identificatore;
+	   
 //Costruttore
 	   
 	   public Indirizzi (boolean p, String v, String c, int cp, String n, String i)
