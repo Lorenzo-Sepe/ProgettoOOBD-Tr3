@@ -8,7 +8,8 @@ import java.util.*;
  */
 public class Indirizzi {
 
-	  private boolean principale;
+		private int id;
+	   private boolean principale;
 	   private String via;
 	   private String città;
 	   private int codicePostale;
@@ -17,8 +18,9 @@ public class Indirizzi {
 	   
 //Costruttore
 	   
-	   public Indirizzi (boolean p, String v, String c, int cp, String n, String i)
+	   public Indirizzi (int d, boolean p, String v, String c, int cp, String n, String i)
 	   {
+		id = d;    
 		principale = p;   
 		via = v;
 		città=c;
@@ -29,6 +31,10 @@ public class Indirizzi {
 	   
 //Setter	   
 
+	   public void setID(int id) {
+		   this.id = id;
+	   }
+	   
 	public void setVia(String via) {
 			this.via = via;
 		}
@@ -49,6 +55,10 @@ public class Indirizzi {
 		   this.identificatore = identificatore;
 	   }
 //Getter	   
+	   
+	   public int getID() {
+		   return id;
+	   }
 	   
 	   public String getVia() {
 			return via;
