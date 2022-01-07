@@ -12,8 +12,7 @@ CREATE ROLE "AccessoProgetto" WITH
 	NOREPLICATION
 	CONNECTION LIMIT -1
 	PASSWORD 'BarraTramontana';
-	/*PASSWORD = BarraTramontana*/
-
+	
 /*CREAZIONE TIPI*/
 
 CREATE TYPE NumeroTYPE AS ENUM ('Mobile', 'fisso');
