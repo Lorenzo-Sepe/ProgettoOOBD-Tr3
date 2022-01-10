@@ -1,14 +1,10 @@
-package model;
-
 
 import java.util.*;
 
 /**
  * 
  */
-public class Cassaforte extends Gruppo {
-
-	private String password;
+public class Cassaforte extends gruppo {
 
     /**
      * Default constructor
@@ -19,7 +15,8 @@ public class Cassaforte extends Gruppo {
     /**
      * 
      */
-    
+    public void String password;
+
 
 
 }
