@@ -32,5 +32,6 @@ VALUES
 ('Lorenzen Allé 7, st.','Borre','5309','Danimarca')
 RETURNING *;
 INSERT INTO CONTATTO (prefisso_nome,nome,cognome,path_foto,visibilità)
-VALUES ('Calcetto','Jessiko',null,null,true),
+VALUES
+('Calcetto','Jessiko',null,null,true),
 RETURNING *;
