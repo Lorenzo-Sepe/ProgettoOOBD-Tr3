@@ -1,4 +1,4 @@
-package model;
+package Model;
 
 import java.util.ArrayList;
 
@@ -8,10 +8,10 @@ public class Contatto {
 	private String nome;
 	private String cognome;
 	private String pathFoto;
-	private ArrayList<Email> ListaEmail = null;
+	private ArrayList<String> ListaEmail = null;
 	private ArrayList<Indirizzi> ListaIndirizzi = null;
 	private ArrayList<NumeriTelefonici> ListaNumeri = null;
-	private ArrayList<Account> ListaAccount = null;
+	private ArrayList<account> ListaAccount = null;
 	
 	public Contatto (String prefisso, String nome, String cognome, String pathFoto) {
 		if (prefisso == null) {
@@ -77,6 +77,16 @@ public class Contatto {
 	public boolean EliminaIndirizzo (Indirizzi i) {
 		boolean riuscita;
 		riuscita = ListaIndirizzi.remove(i);
+		return riuscita;
+	}
+	
+	public void AggiungiEmail (String e) {
+		ListaEmail.add(e);
+	}
+	
+	public boolean EliminaEmail (String e) {
+		boolean riuscita;
+		riuscita = ListaEmail.remove(e);
 		return riuscita;
 	}
 }
