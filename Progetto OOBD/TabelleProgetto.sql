@@ -1,3 +1,5 @@
+/*Per evitare problemi durante la creazione delle tabelle, è consigliato crearle nell'rdine una alla volta*/
+
 /*CREAZIONE DATABASE*/
 
 create database if not exists ProgettoOOBD;
