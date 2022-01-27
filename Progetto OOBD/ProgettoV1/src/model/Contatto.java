@@ -89,5 +89,26 @@ public class Contatto {
 		riuscita = ListaEmail.remove(e);
 		return riuscita;
 	}
+	
+	public void AggiungiNumero (NumeriTelefonici n) {
+		ListaNumeri.add(n);
+	}
+	
+	public boolean EliminaNumero (NumeriTelefonici n) {
+		boolean riuscita;
+		riuscita = ListaNumeri.remove(n);
+		return riuscita;
+	}
+	
+	public void AggiungiAccount (account a) {
+		ListaAccount.add(a);
+	}
+	
+	public boolean EliminaAccount (account a) {
+		boolean riuscita;
+		riuscita = ListaAccount.remove(a);
+		return riuscita;
+	}
+	
 }
 
