@@ -1851,6 +1851,23 @@
 									"subViews": [
 										{
 											"_type": "UMLAttributeView",
+											"_id": "AAAAAAF+oXGbMjrLANE=",
+											"_parent": {
+												"$ref": "AAAAAAF9lIi2t1Zhyqw="
+											},
+											"model": {
+												"$ref": "AAAAAAF+oXGa/zrCvPw="
+											},
+											"font": "Arial;13;0",
+											"left": 565,
+											"top": 246,
+											"width": 117.66015625,
+											"height": 13,
+											"text": "+Numero_ID {id}",
+											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLAttributeView",
 											"_id": "AAAAAAF9/JZINyda6rE=",
 											"_parent": {
 												"$ref": "AAAAAAF9lIi2t1Zhyqw="
@@ -1860,10 +1877,10 @@
 											},
 											"font": "Arial;13;0",
 											"left": 565,
-											"top": 246,
+											"top": 261,
 											"width": 117.66015625,
 											"height": 13,
-											"text": "+String Prefisso {id}",
+											"text": "+String Prefisso",
 											"horizontalAlignment": 0
 										},
 										{
@@ -1877,10 +1894,10 @@
 											},
 											"font": "Arial;13;0",
 											"left": 565,
-											"top": 261,
+											"top": 276,
 											"width": 117.66015625,
 											"height": 13,
-											"text": "+String Numero {id}",
+											"text": "+String Numero",
 											"horizontalAlignment": 0
 										},
 										{
@@ -1894,7 +1911,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 565,
-											"top": 276,
+											"top": 291,
 											"width": 117.66015625,
 											"height": 13,
 											"text": "+Enum Tipo numero",
@@ -1911,7 +1928,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 565,
-											"top": 291,
+											"top": 306,
 											"width": 117.66015625,
 											"height": 13,
 											"text": "+String Nota",
@@ -1922,7 +1939,7 @@
 									"left": 560,
 									"top": 241,
 									"width": 127.66015625,
-									"height": 68
+									"height": 83
 								},
 								{
 									"_type": "UMLOperationCompartmentView",
@@ -1935,7 +1952,7 @@
 									},
 									"font": "Arial;13;0",
 									"left": 560,
-									"top": 309,
+									"top": 324,
 									"width": 127.66015625,
 									"height": 10
 								},
@@ -1977,7 +1994,7 @@
 							"left": 560,
 							"top": 216,
 							"width": 127.66015625,
-							"height": 103,
+							"height": 118,
 							"nameCompartment": {
 								"$ref": "AAAAAAF9lIi2t1Zcnt4="
 							},
@@ -5065,9 +5082,9 @@
 										"$ref": "AAAAAAF+nKFEkxMOwDk="
 									},
 									"font": "Arial;13;0",
-									"left": 633,
+									"left": 632,
 									"top": 188,
-									"width": 5.05908203125,
+									"width": 6.5,
 									"height": 13,
 									"alpha": -0.5235987755982988,
 									"distance": 25,
@@ -6011,13 +6028,21 @@
 					"attributes": [
 						{
 							"_type": "UMLAttribute",
+							"_id": "AAAAAAF+oXGa/zrCvPw=",
+							"_parent": {
+								"$ref": "AAAAAAF9lIi2tVZZX9E="
+							},
+							"name": "Numero_ID",
+							"isID": true
+						},
+						{
+							"_type": "UMLAttribute",
 							"_id": "AAAAAAF9/JZIBydI5Ww=",
 							"_parent": {
 								"$ref": "AAAAAAF9lIi2tVZZX9E="
 							},
 							"name": "String Prefisso",
-							"type": "",
-							"isID": true
+							"type": ""
 						},
 						{
 							"_type": "UMLAttribute",
@@ -6026,8 +6051,7 @@
 								"$ref": "AAAAAAF9lIi2tVZZX9E="
 							},
 							"name": "String Numero",
-							"type": "",
-							"isID": true
+							"type": ""
 						},
 						{
 							"_type": "UMLAttribute",
