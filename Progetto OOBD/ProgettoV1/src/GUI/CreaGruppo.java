@@ -1,4 +1,4 @@
-package GUI;
+package Gui;
 
 import Model.*;
 import java.awt.BorderLayout;
@@ -16,6 +16,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import javax.swing.SpringLayout;
 import javax.swing.JTable;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class CreaGruppo extends JFrame {
 
@@ -107,16 +109,62 @@ public class CreaGruppo extends JFrame {
 		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane_1, 410, SpringLayout.WEST, contentPane);
 		contentPane.add(scrollPane_1);
 		
-		Gruppo = new JTable();
+		//Gruppo = new JTable();
+		DefaultTableModel modelloGruppo =  new DefaultTableModel() {
+	        @Override
+	        public boolean isCellEditable(int row, int column) {
+	           //all cells false
+	           return false;
+	        }};
+		
+		Gruppo = new JTable(modelloGruppo);
+		ListSelectionModel listenerGruppoSelezionato=Gruppo.getSelectionModel();
+		Gruppo.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		modelloGruppo.addColumn("prefisso");
+		modelloGruppo.addColumn("nome"); 
+		modelloGruppo.addColumn("cognome"); 
+		
+
 		scrollPane_1.setViewportView(Gruppo);
 		
 		JButton Aggiungi = new JButton("Aggiungi");
+		Aggiungi.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int row;
+				if (!listenerContattoSelezionato.isSelectionEmpty()) {
+					row = Contatti.getSelectedRow();
+					String prefisso = (String) Contatti.getValueAt(row, 0);
+					String nome = (String) Contatti.getValueAt(row, 1);
+					String cognome = (String) Contatti.getValueAt(row, 2);
+					DefaultTableModel contattiModel = (DefaultTableModel) Contatti.getModel();
+					contattiModel.removeRow(row);
+					modelloGruppo.addRow(new Object[]{prefisso, nome, cognome});
+					}
+			}
+		});
 		sl_contentPane.putConstraint(SpringLayout.NORTH, Aggiungi, 70, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, Aggiungi, 166, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, Aggiungi, 255, SpringLayout.WEST, contentPane);
 		contentPane.add(Aggiungi);
 		
 		JButton Elimina = new JButton("Elimina");
+		Elimina.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int row;
+				if (!listenerGruppoSelezionato.isSelectionEmpty()) {
+					row = Gruppo.getSelectedRow();
+					String prefisso = (String) Gruppo.getValueAt(row, 0);
+					String nome = (String) Gruppo.getValueAt(row, 1);
+					String cognome = (String) Gruppo.getValueAt(row, 2);
+					DefaultTableModel gruppoModel = (DefaultTableModel) Gruppo.getModel();
+					gruppoModel.removeRow(row);
+					modelloContatti.addRow(new Object[]{prefisso, nome, cognome});
+				}
+			}
+		});
 		sl_contentPane.putConstraint(SpringLayout.NORTH, Elimina, 104, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, Elimina, 166, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, Elimina, 255, SpringLayout.WEST, contentPane);
