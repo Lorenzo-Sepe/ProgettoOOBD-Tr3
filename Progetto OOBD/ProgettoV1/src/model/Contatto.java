@@ -109,6 +109,43 @@ public class Contatto {
 		riuscita = ListaAccount.remove(a);
 		return riuscita;
 	}
+	public String StampaContatto() {
+		
+		return new String(this.contatto_ID+" "+this.prefissoNome+" "+this.nome+" "+this.cognome) ;
+	}
+	public void aggiungiFoto(String path) {
+		pathFoto= new String("Foto/fotoDiUser"+contatto_ID);
+		copiaFoto(path);
+		
+	}
+	
+	
+	private void copiaFoto(String path) {
+		try {
+		    // retrieve image
+			File inputfile = new File(path);
+			System.out.println("Prova dio can");
+			
+			if(inputfile.canRead()) {
+				System.out.println("siiii");
+			}
+			else {
+				System.out.println("Noooooo");
+			}
+			try {
+
+				BufferedImage bufferFoto = ImageIO.read(new File(path));
+			    File outputfile = new File("C:\\Users\\Utente\\Documents\\Esame OO BD\\OO\\Progetto\\src\\Foto\\fotoDiUser1.jpg");
+			   // outputfile.createNewFile();
+			    ImageIO.write(bufferFoto, "jpg", outputfile);
+			    
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+		   e.printStackTrace();
+		}
+	}
 	
 }
 
