@@ -46,6 +46,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 
+@SuppressWarnings("unused")
 public class VisualizzaContattoFrame extends JFrame {
 	private BufferedImage imageFoto;
 	private JPanel contentPane;
@@ -73,10 +74,10 @@ public class VisualizzaContattoFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public VisualizzaContattoFrame() {
-		setTitle("Visualizzazione");
 		setResizable(false);
+		setTitle("Visualizzazione");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1061, 474);
+		setBounds(100, 100, 1060, 500);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -88,70 +89,76 @@ public class VisualizzaContattoFrame extends JFrame {
 		JLabel labelNumeriTelefono = new JLabel("Numeri di Telefono");
 		
 		JLabel labelNome = new JLabel("Nome");
+		SpringLayout sl_contentPane = new SpringLayout();
+		sl_contentPane.putConstraint(SpringLayout.WEST, panelFoto, 50, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, panelFoto, 205, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, panelFoto, 203, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, labelNumeriTelefono, 196, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, labelNumeriTelefono, 224, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, labelNumeriTelefono, 342, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, labelNome, 85, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, labelNome, 224, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, labelCognome, 115, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, labelCognome, 224, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, panelFoto, 55, SpringLayout.NORTH, contentPane);
+		contentPane.setLayout(sl_contentPane);
 		
+		//TODO una volta che il controller è completo aggiungere getter per prendere nome cognome e prefisso
 		
-		
-		contentPane.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("48px"),
-				ColumnSpec.decode("100px:grow"),
-				ColumnSpec.decode("67px"),
-				ColumnSpec.decode("118px"),
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(145dlu;default):grow"),
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(145dlu;default):grow"),
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(145dlu;default):grow"),
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,},
-			new RowSpec[] {
-				RowSpec.decode("50px"),
-				RowSpec.decode("20px"),
-				RowSpec.decode("10px"),
-				RowSpec.decode("20px"),
-				RowSpec.decode("10px"),
-				RowSpec.decode("20px"),
-				RowSpec.decode("10px"),
-				RowSpec.decode("20px"),
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("75px"),
-				RowSpec.decode("10px"),
-				RowSpec.decode("75px"),
-				RowSpec.decode("10px"),
-				RowSpec.decode("75px"),
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,}));
-		
-		JTextPane textPanePrefisso = new JTextPane();
+		JTextPane textPanePrefisso = new JTextPane(/*Controller.getterPrefisso()*/);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, textPanePrefisso, 55, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, textPanePrefisso, 348, SpringLayout.WEST, contentPane);
 		textPanePrefisso.setEditable(false);
-		contentPane.add(textPanePrefisso, "6, 2, 3, 1, default, fill");
+		contentPane.add(textPanePrefisso);
 		
 		JButton bottonModificaContatto = new JButton("Modifica Contatto");
+		sl_contentPane.putConstraint(SpringLayout.EAST, textPanePrefisso, -100, SpringLayout.WEST, bottonModificaContatto);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, bottonModificaContatto, 55, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, bottonModificaContatto, 898, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, bottonModificaContatto, 75, SpringLayout.NORTH, contentPane);
 		
-		contentPane.add(bottonModificaContatto, "10, 2, right, default");
+		contentPane.add(bottonModificaContatto);
 		
-		JTextPane textPaneNome = new JTextPane();
+		JTextPane textPaneNome = new JTextPane(/*Controller.getterNome()*/);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, textPaneNome, 85, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, textPaneNome, 348, SpringLayout.WEST, contentPane);
 		textPaneNome.setEditable(false);
-		contentPane.add(textPaneNome, "6, 4, 3, 1, default, fill");
+		contentPane.add(textPaneNome);
 		
 		JButton bottonModificaNumeri = new JButton(" Modifica Numeri  ");
+		sl_contentPane.putConstraint(SpringLayout.EAST, textPaneNome, -100, SpringLayout.WEST, bottonModificaNumeri);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, bottonModificaNumeri, 85, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, bottonModificaNumeri, 898, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, bottonModificaNumeri, 105, SpringLayout.NORTH, contentPane);
 		
-		contentPane.add(bottonModificaNumeri, "10, 4, right, default");
+		contentPane.add(bottonModificaNumeri);
 		
-		JTextPane textPaneCognome = new JTextPane();
+		JTextPane textPaneCognome = new JTextPane(/*Controller.getterCognome()*/);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, textPaneCognome, 115, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, textPaneCognome, 348, SpringLayout.WEST, contentPane);
 		textPaneCognome.setEditable(false);
-		contentPane.add(textPaneCognome, "6, 6, 3, 1, default, fill");
+		contentPane.add(textPaneCognome);
 		
 		JButton bottonModificaIndirizzi = new JButton(" Modifica Indirizzi ");
+		sl_contentPane.putConstraint(SpringLayout.EAST, textPaneCognome, -100, SpringLayout.WEST, bottonModificaIndirizzi);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, bottonModificaIndirizzi, 115, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, bottonModificaIndirizzi, 898, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, bottonModificaIndirizzi, 135, SpringLayout.NORTH, contentPane);
 		
-		contentPane.add(bottonModificaIndirizzi, "10, 6, right, default");
+		contentPane.add(bottonModificaIndirizzi);
 		
 		JButton bottonModificaAccount = new JButton("Modifica Account ");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, bottonModificaAccount, 145, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, bottonModificaAccount, 898, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, bottonModificaAccount, 165, SpringLayout.NORTH, contentPane);
 		
-		contentPane.add(bottonModificaAccount, "10, 8, right, default");
+		contentPane.add(bottonModificaAccount);
 		
 		JScrollPane scrollPaneNumeri = new JScrollPane();
-		contentPane.add(scrollPaneNumeri, "6, 10, 5, 1, fill, fill");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPaneNumeri, 196, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPaneNumeri, 348, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPaneNumeri, 1015, SpringLayout.WEST, contentPane);
+		contentPane.add(scrollPaneNumeri);
 		
 		ArrayList<String> arrayListContatti = new ArrayList<>(Arrays.asList("Rai", "Lore", "Ale","Jesico"));
 		ArrayList<String> arrayListContattiCognome = new ArrayList<>(Arrays.asList("Mor", "Sep", "Tri","Cal"));
@@ -165,7 +172,7 @@ public class VisualizzaContattoFrame extends JFrame {
 	        }};
 		
 		tableNumeri = new JTable(modelNumeri);
-		ListSelectionModel listener=tableNumeri.getSelectionModel();
+		ListSelectionModel listenerNumeri=tableNumeri.getSelectionModel();
 		tableNumeri.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 	
@@ -176,128 +183,114 @@ public class VisualizzaContattoFrame extends JFrame {
 		
 		// Append a row 
 		for(int i=0;i<arrayListContatti.size();i++) {
-			modelNumeri.addRow(new Object[]{arrayListContatti.get(i), arrayListContattiCognome.get(i), arrayListContattiCognome.get(i),arrayListContattiCognome.get(i)});
-			
+			modelNumeri.addRow(new Object[]{arrayListContatti.get(i), arrayListContattiCognome.get(i), arrayListContattiCognome.get(i),arrayListContattiCognome.get(i)});	
 		}
 		 
-		/*
-		tableNumeri = new JTable();
-		tableNumeri.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableNumeri.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-			},
-			new String[] {
-				"Numero", "Tipo Numero", "Principale", "Identificatore"
-			}
-		) {
-			boolean[] columnEditables = new boolean[] {
-				false, false, false, false
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
 		
-		tableNumeri.getColumnModel().getColumn(0).setResizable(false);
-		tableNumeri.getColumnModel().getColumn(1).setResizable(false);
-		tableNumeri.getColumnModel().getColumn(2).setResizable(false);
-		tableNumeri.getColumnModel().getColumn(3).setResizable(false);
-		*/
 		scrollPaneNumeri.setViewportView(tableNumeri);
 		
 		
 		
 		JButton modFotoButton = new JButton("Modifica Foto");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, modFotoButton, 217, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, modFotoButton, 50, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, modFotoButton, 200, SpringLayout.WEST, contentPane);
 		
-		contentPane.add(modFotoButton, "2, 12, fill, top");
-		contentPane.add(panelFoto, "2, 2, 1, 9, fill, fill");
+		contentPane.add(modFotoButton);
+		contentPane.add(panelFoto);
 	
 		panelFoto.setLayout(null);
 		
 		//TODO aggiungi funzionalità dinamica
 		JLabel labelFoto = new JLabel("");
 		labelFoto.setIcon(new ImageIcon(VisualizzaContattoFrame.class.getResource("/imagini/User1.png")));
-		labelFoto.setBounds(0, 0, 100, 100);
+		labelFoto.setBounds(0, 0, 150, 150);
 		panelFoto.add(labelFoto);
 		
 		
-		contentPane.add(labelCognome, "4, 6, left, top");
-		contentPane.add(labelNome, "4, 4, left, top");
-		contentPane.add(labelNumeriTelefono, "4, 10, fill, top");
+		contentPane.add(labelCognome);
+		contentPane.add(labelNome);
+		contentPane.add(labelNumeriTelefono);
 		
 		JScrollPane scrollPaneIndirizzi = new JScrollPane();
-		contentPane.add(scrollPaneIndirizzi, "6, 12, 5, 1, fill, fill");
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPaneNumeri, -10, SpringLayout.NORTH, scrollPaneIndirizzi);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPaneIndirizzi, 281, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPaneIndirizzi, 348, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPaneIndirizzi, 1015, SpringLayout.WEST, contentPane);
+		contentPane.add(scrollPaneIndirizzi);
 		
-		tableIndirizzi = new JTable();
+		
+		DefaultTableModel modelIndirizzi =  new DefaultTableModel() {
+	        @Override
+	        public boolean isCellEditable(int row, int column) {
+	           //all cells false
+	           return false;
+	        }};
+		
+		tableIndirizzi = new JTable(modelIndirizzi);
+		ListSelectionModel listenerIndirizzi=tableIndirizzi.getSelectionModel();
 		tableIndirizzi.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableIndirizzi.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-			},
-			new String[] {
-				"New column", "New column", "New column", "New column", "New column", "New column"
-			}
-		) {
-			boolean[] columnEditables = new boolean[] {
-				false, false, false, false, false, false
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
-		tableIndirizzi.getColumnModel().getColumn(0).setResizable(false);
-		tableIndirizzi.getColumnModel().getColumn(1).setResizable(false);
-		tableIndirizzi.getColumnModel().getColumn(2).setResizable(false);
-		tableIndirizzi.getColumnModel().getColumn(3).setResizable(false);
-		tableIndirizzi.getColumnModel().getColumn(4).setResizable(false);
-		tableIndirizzi.getColumnModel().getColumn(5).setResizable(false);
 		
+	
+		modelIndirizzi.addColumn("Via"); 
+		modelIndirizzi.addColumn("Città"); 
+		modelIndirizzi.addColumn("Codice Postale");
+		modelIndirizzi.addColumn("Nazione");
+		
+		// Append a row TODO aggiungere metodo in Controller
+		for(int i=0;i<arrayListContatti.size();i++) {
+			modelIndirizzi.addRow(new Object[]{arrayListContatti.get(i), arrayListContattiCognome.get(i), arrayListContattiCognome.get(i),arrayListContattiCognome.get(i)});	
+		}
 		scrollPaneIndirizzi.setViewportView(tableIndirizzi);
 		
-		JScrollPane scrollPaneAccounts = new JScrollPane();
-		contentPane.add(scrollPaneAccounts, "6, 14, 5, 1, fill, fill");
 		
-		tableAccounts = new JTable();
+		JScrollPane scrollPaneAccounts = new JScrollPane();
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPaneIndirizzi, -10, SpringLayout.NORTH, scrollPaneAccounts);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPaneAccounts, 366, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPaneAccounts, 348, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPaneAccounts, 441, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPaneAccounts, 1015, SpringLayout.WEST, contentPane);
+		contentPane.add(scrollPaneAccounts);
+		//tableAccounts
+		DefaultTableModel modelAccounts =  new DefaultTableModel() {
+	        @Override
+	        public boolean isCellEditable(int row, int column) {
+	           //all cells false
+	           return false;
+	        }};
+		
+		tableAccounts = new JTable(modelAccounts);
+		ListSelectionModel listenerAccount = tableAccounts.getSelectionModel();
 		tableAccounts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		//da modificare per dare accesso ai DAO
-		tableAccounts.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-			},
-			new String[] {
-				"New column", "New column", "New column", "Messaggio di Benvenuto"
-			}
-		) {
-			boolean[] columnEditables = new boolean[] {
-				false, false, false, false
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
-		tableAccounts.getColumnModel().getColumn(3).setPreferredWidth(200);
+		
+	
+		modelAccounts.addColumn("Fornitore"); 
+		modelAccounts.addColumn("Nickname"); 
+		modelAccounts.addColumn("E-Mail");
+		modelAccounts.addColumn("Frase di Benvenuto");
+		
+		// Append a row TODO aggiungere metodo in Controller
+		for(int i=0;i<arrayListContatti.size();i++) {
+			modelAccounts.addRow(new Object[]{arrayListContatti.get(i), arrayListContattiCognome.get(i), arrayListContattiCognome.get(i),arrayListContattiCognome.get(i)});	
+		}
+
 		scrollPaneAccounts.setViewportView(tableAccounts);
 		
+		
 		JLabel labelAccounts = new JLabel("Accounts");
-		contentPane.add(labelAccounts, "4, 14, left, top");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, labelAccounts, 366, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, labelAccounts, 224, SpringLayout.WEST, contentPane);
+		contentPane.add(labelAccounts);
 		
 		JLabel labelIndirizzi = new JLabel("Indirizzi");
-		contentPane.add(labelIndirizzi, "4, 12, left, top");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, labelIndirizzi, 281, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, labelIndirizzi, 224, SpringLayout.WEST, contentPane);
+		contentPane.add(labelIndirizzi);
 		
 		JLabel labelPrefisso = new JLabel("Prefisso Nome");
-		contentPane.add(labelPrefisso, "4, 2, left, top");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, labelPrefisso, 55, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, labelPrefisso, 224, SpringLayout.WEST, contentPane);
+		contentPane.add(labelPrefisso);
 		//action listeners
 		
 		modFotoButton.addMouseListener(new MouseAdapter() {
