@@ -1,6 +1,9 @@
 package Model;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
 
 public class Rubrica {
 	private String nome;
