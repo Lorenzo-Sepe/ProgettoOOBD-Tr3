@@ -38,4 +38,20 @@ public class Rubrica {
 			c.AggiungiEmail(modifica);
 		}
 	}
+	public ArrayList<Contatto> getListaContatti(){
+		return contatti;
+		
+	}
+	/**
+	 * 
+	 * @param id
+	 * @return contatto associato al id inserito
+	 */
+	public Contatto getContatto(int id) {
+		for (Contatto contatto : contatti) {
+			if(contatto.getID()==id)
+				return contatto;
+		}
+		return null;
+	}
 }
