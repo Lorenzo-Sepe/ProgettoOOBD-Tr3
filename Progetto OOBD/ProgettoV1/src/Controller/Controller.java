@@ -4,12 +4,14 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-import Model.Contatto;
-import Model.Rubrica;
+import ProvaMAin.MainGetpath;
+import model.Contatto;
+import model.Rubrica;
 
 public class Controller {
 	Rubrica rubrica;
@@ -37,46 +39,39 @@ public class Controller {
 		 */
 		rubrica.aggiungiContatto(contatto);
 	}
-	
-	/**
-	 * Setta foto di un contatto
-	 *
-	 * @param Path path foto, 
-	 * @param  Contatto IDcontatto
-	 */
-	public void setFotoContatto(String path, int id) {
-		
-		int pxw=100;
-		int pxh=100;
-		//TODO ContattoImplementazionePostgresDao
-		/*Aggiungi al db
-		 *ContattoDao contattoDao = new ContattoImplementazionePostgresDao();
-		 *contattoDao.SetPath(contatto)
-		 *
-		 */
-		
-		try {
-			//rubrica.getContatto(id).aggiungiFoto(path);
-			String pathdest=new String("C:\\Users\\Utente\\Documents\\Esame OO BD\\OO\\Progetto\\srcFoto\\FotoUserDiPath.png");
-			CaricaESettaFoto(path, pathdest, pxw, pxh);
-		} catch (Exception e) {
-			e.getStackTrace();
-			System.out.println("Errore hai provato a settare una foto a un contatto non esistente");
-		
-		}
-		
-	}
 	/**
 	 * 
-	 * @param pathSorgente
-	 * @param pathDest
-	 * @param w
+	 * @param id 
+	 * @return Il percorso completo di dove salvare la foto profilo
+	 */
+	private String GetFuturePathDestinazione() {
+		String pathDestIniziale = null;
+		try {
+			pathDestIniziale = Controller.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+		} catch (URISyntaxException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		String pathSenzaBin = pathDestIniziale.substring(0,pathDestIniziale.length()-4);
+         String pathDestiCompSenzaNomefile=pathSenzaBin+"src/Immagini/";	
+         
+         return pathDestiCompSenzaNomefile;
+	}
+	
+	/**
+	 * 
+	 * @param pathSorgente  path della foto da salvare 
+	 * @param id ID del contatto 
+	 * @param w 
 	 * @param h
 	 * @throws IOException
+	 * @return Ritorna il Path della foto Creata
 	 */
-	public void CaricaESettaFoto(String pathSorgente, String pathDest, int w, int h)
+	
+	private String CaricaESettaFoto(String pathSorgente, int id, int w, int h)
 			 throws IOException 
 			 {
+				String pathDestinazione=null;
 			      // leggi file
 			      File f = new File(pathSorgente);
 			      
@@ -92,18 +87,60 @@ public class Controller {
 			     
 			          // extract the extension of the output file
 			          String name = pathSorgente.substring(pathSorgente.lastIndexOf("\\")+1);
-			          pathDest = pathDest + name; // concatenazione directory di salvataggio più il nome del file sorgente
+			          
 			          // writes to the output file
 			          String estenzione = name.substring(name.lastIndexOf(".")+1);
-			          ImageIO.write(img, estenzione, new File(pathDest));
-			     
+			          pathDestinazione = GetFuturePathDestinazione()+ "FotoDiContattoID"+id; // concatenazione directory di salvataggio piï¿½ l' ID del contatto
+			          ImageIO.write(img, estenzione, new File(pathDestinazione));
+			          //Modifico il Path Destinazione mettendo estenzione 
+			          pathDestinazione=pathDestinazione+estenzione;
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			      
 			     // BufferedImage inputImage = ImageIO.read(f);
-			 
-			      }
+			 return pathDestinazione;
 
+			 }
+	
+	/**
+	 * Setta foto di un contatto
+	 *
+	 * @param Path path foto, 
+	 * @param  Contatto IDcontatto
+	 */
+	public void setFotoContatto(String path, int id) {
+		String pathDestiCompleto=null;
+		String nomeFileContatto=null;
+		int pxw=100;
+		int pxh=100;
+		//TODO ContattoImplementazionePostgresDao
+		/*Aggiungi al db
+		 *ContattoDao contattoDao = new ContattoImplementazionePostgresDao();
+		 *contattoDao.SetPath(contatto)
+		 *
+		 */
+		
+		
+    
+			
+            try {
+				pathDestiCompleto=CaricaESettaFoto(path, id,pxw, pxh );
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            
+            
+            try {
+    			rubrica.getContatto(id).aggiungiFoto(pathDestiCompleto);
+    		} catch (Exception e) {
+    			e.getStackTrace();
+    			System.out.println("Errore hai provato a settare una foto a un contatto non esistente");
+    		
+    		}
+		
+		
+	}
 	
 }
