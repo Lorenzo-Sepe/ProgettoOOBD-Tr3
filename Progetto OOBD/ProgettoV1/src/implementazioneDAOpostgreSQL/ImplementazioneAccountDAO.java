@@ -9,10 +9,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import dao.AccountDAO;
-import dao.Connessione;
-import model.Account;
-import model.Contatto;
+import DAO.AccountDAO;
+import DAO.Connessione;
+import Model.Account;
+import Model.Contatto;
 
 /**
  * @author LorenzoSepe
