@@ -1,20 +1,20 @@
-package Model;
+package model;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
-import javax.imageio.ImageIO;
+import java.util.Iterator;
 
 public class Rubrica {
 	private String nome;
-	private ArrayList<Contatto> contatti = null;
+	private ArrayList<Contatto> contatti= new ArrayList<>();
+	
 	
 	public Rubrica (String nome) {
 		this.nome = nome;
 	}
 	
-	public void aggiungiContatto (Contatto c) {
+	public void aggiungiContatto (final Contatto c) {
 		contatti.add(c);
+		
 	}
 	
 	public boolean eliminaContatto (Contatto c) {
