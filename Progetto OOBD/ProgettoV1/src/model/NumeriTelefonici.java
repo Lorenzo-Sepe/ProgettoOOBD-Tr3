@@ -3,31 +3,31 @@ package Model;
 
 public class NumeriTelefonici {
 
-	private String Prefisso;
-    private String Numero;
+	private String prefisso;
+    private String numero;
     private String tipoNumero;
     private NumeriTelefonici deputato;
     
-    NumeriTelefonici (String Prefisso, String Numero, String tipoNumero) {
-    	this.Prefisso = Prefisso;
-    	this.Numero = Numero;
+    NumeriTelefonici (String prefisso, String numero, String tipoNumero) {
+    	this.prefisso = prefisso;
+    	this.numero = numero;
     	this.tipoNumero = tipoNumero;
     }
     
-    public void setPrefisso (String Prefisso) {
-    	this.Prefisso = Prefisso;
+    public void setPrefisso (String prefisso) {
+    	this.prefisso = prefisso;
     }
     
     public String getPrefisso () {
-    	return Prefisso;
+    	return prefisso;
     }
     
-    public void setNumero (String Numero) {
-    	this.Numero = Numero;
+    public void setNumero (String numero) {
+    	this.numero = numero;
     }
     
     public String getNumero () {
-    	return Numero;
+    	return numero;
     }
     
     public void setTipoNumero (String tipoNumero) {
