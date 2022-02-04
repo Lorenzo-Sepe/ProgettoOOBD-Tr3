@@ -1,4 +1,4 @@
-package model;
+package Model;
 
 
 import java.security.NoSuchAlgorithmException;
@@ -41,7 +41,7 @@ import javax.crypto.spec.PBEKeySpec;
     	password=f.generateSecret(spec).getEncoded().toString();
     	}
     
-    private String CifraturaPassword(String pass) {
+    private String cifraturaPassword(String pass) {
     	// TODO gestire veramente la cifrattura
     	byte [] salt= "E*.^%j=+Z6-Ed9c,".getBytes();
     	KeySpec spec = new PBEKeySpec(pass.toCharArray(), salt,1,16*8);
