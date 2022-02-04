@@ -8,10 +8,10 @@ public class Contatto {
 	private String nome;
 	private String cognome;
 	private String pathFoto;
-	private ArrayList<String> ListaEmail = null;
-	private ArrayList<Indirizzi> ListaIndirizzi = null;
-	private ArrayList<NumeriTelefonici> ListaNumeri = null;
-	private ArrayList<account> ListaAccount = null;
+	private ArrayList<String> listaEmail = null;
+	private ArrayList<Indirizzi> listaIndirizzi = null;
+	private ArrayList<NumeriTelefonici> listaNumeri = null;
+	private ArrayList<account> listaAccount = null;
 	
 	public Contatto (String prefisso, String nome, String cognome, String pathFoto) {
 		if (prefisso == null) {
@@ -71,42 +71,42 @@ public class Contatto {
 	}
 	
 	public void AggiungiIndirizzo (Indirizzi i) {
-		ListaIndirizzi.add(i);
+		listaIndirizzi.add(i);
 	}
 	
 	public boolean EliminaIndirizzo (Indirizzi i) {
 		boolean riuscita;
-		riuscita = ListaIndirizzi.remove(i);
+		riuscita = listaIndirizzi.remove(i);
 		return riuscita;
 	}
 	
 	public void AggiungiEmail (String e) {
-		ListaEmail.add(e);
+		listaEmail.add(e);
 	}
 	
 	public boolean EliminaEmail (String e) {
 		boolean riuscita;
-		riuscita = ListaEmail.remove(e);
+		riuscita = listaEmail.remove(e);
 		return riuscita;
 	}
 	
 	public void AggiungiNumero (NumeriTelefonici n) {
-		ListaNumeri.add(n);
+		listaNumeri.add(n);
 	}
 	
 	public boolean EliminaNumero (NumeriTelefonici n) {
 		boolean riuscita;
-		riuscita = ListaNumeri.remove(n);
+		riuscita = listaNumeri.remove(n);
 		return riuscita;
 	}
 	
 	public void AggiungiAccount (account a) {
-		ListaAccount.add(a);
+		listaAccount.add(a);
 	}
 	
 	public boolean EliminaAccount (account a) {
 		boolean riuscita;
-		riuscita = ListaAccount.remove(a);
+		riuscita = listaAccount.remove(a);
 		return riuscita;
 	}
 	public String StampaContatto() {
