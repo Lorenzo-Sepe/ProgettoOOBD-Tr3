@@ -13,4 +13,6 @@ public interface ContattoDAO {
 	public void updateContattoDB (Contatto c, String prefisso, String nome, String cognome, String pathFoto);
 	
 	public ArrayList<Contatto> readContattoDB (Contatto c);
+	
+	public ArrayList<Contatto> selectAllDB ();
 }
