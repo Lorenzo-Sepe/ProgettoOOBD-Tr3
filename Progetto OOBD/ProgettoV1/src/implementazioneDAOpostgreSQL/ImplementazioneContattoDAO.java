@@ -82,4 +82,22 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 		}
 		return listaContatti;
 	}
+	
+	public ArrayList<Contatto> selectAllDB () {
+		PreparedStatement selectAllPS;
+		ArrayList<Contatto> listaContatti = new ArrayList<>();
+		try {
+			selectAllPS = connection.prepareStatement("SELECT * FROM Contatto ORDER BY contatto_id");
+			ResultSet rs = selectAllPS.executeQuery();
+			while (rs.next()) {
+				Contatto i = new Contatto (rs.getString("prefisso_nome"), rs.getString("nome"), rs.getString("cognome"),rs.getString("path_foto"));
+				listaContatti.add(i);
+				connection.close();
+			}
+	}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return listaContatti;
+	}
 }
