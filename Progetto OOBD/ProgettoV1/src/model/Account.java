@@ -1,11 +1,11 @@
-package model;
+package Model;
 
 /**
  * 
  */
 public class Account {
 
-	 	private String fornitore;
+	    private String fornitore;
 	    private String nickname;
 	    private String benvenuto;
 	    private String mail;
