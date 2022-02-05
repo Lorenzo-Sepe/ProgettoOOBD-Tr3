@@ -8,16 +8,59 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.swing.plaf.multi.MultiPopupMenuUI;
 
 import ProvaMAin.MainGetpath;
+import model.Account;
 import model.Contatto;
+import model.Indirizzi;
+import model.NumeriTelefonici;
 import model.Rubrica;
 
 public class Controller {
 	Rubrica rubrica;
+	@SuppressWarnings("unused")
 	private boolean ync =false;
 	
 	//metodi 
+	
+	
+	public void  dumpDati() {
+		int id=0;
+		rubrica=new Rubrica("mio");
+		rubrica.aggiungiContatto(new Contatto(id++,"sig","ale","tri",null));
+		rubrica.aggiungiContatto(new Contatto(id++,"sig","lor","sep",null));
+		rubrica.aggiungiContatto(new Contatto(id++,"sig","rai","mor",null));
+		for(int i=0;i<id;i++) {
+			for (int j=1;j<  3+1;j++) {
+				String emailtmp= j+"EsimaMaiDilUser"+i+"@salcazzo.dio";
+				String numero="555-"+j+rubrica.getContatto(i).getCognome()+i+i+i;
+				NumeriTelefonici numeroComp=new NumeriTelefonici("tag","+39",numero, "fisso");
+			
+				rubrica.getContatto(i).aggiungiEmail(emailtmp);
+				//System.out.println(numeroComp.stampaNumero());
+				String via = "Via Sal Cazzo numero "+j;
+				String tag= "casa Numero"+j;
+				rubrica.getContatto(i).aggiungiIndirizzo(new Indirizzi(i, false, via,"Napoli", i, "Italia", tag));
+				
+				String nomeContatto = rubrica.getContatto(i).getNome();	
+				String indirizzoComp=rubrica.getContatto(i).getIndirizzo(j-1).stampaIndirizzo();
+				//System.out.println("Indirizzo di User "+nomeContatto+": "+indirizzoComp);
+				rubrica.getContatto(i).aggiungiNumero(numeroComp);
+				
+				//System.out.println("numero "+rubrica.getContatto(i).getNumero(0).getNumero());
+				String fornitore ="servizio "+j;
+				String nickname = "Itz_"+rubrica.getContatto(i).getPrefissoNome()+rubrica.getContatto(i).getCognome();
+				String benvenuto="frase di benvenuto di "+rubrica.getContatto(i).getNome();
+				String email=emailtmp;
+				Account account =new Account(fornitore, nickname, benvenuto, email);
+				rubrica.getContatto(i).aggiungiAccount(account);
+				
+			}
+		}
+		
+		
+	}
 	/**
 	 * 
 	 * @return ArrayList di Contatti della rubrica
@@ -31,7 +74,12 @@ public class Controller {
 				 */
 		return rubrica.getListaContatti();
 	}
-	public void aggiungiContatto(Contatto contatto) {
+	
+public Contatto getContatto(int id) {
+	return rubrica.getContatto(id);
+	
+}
+public void aggiungiContatto(Contatto contatto) {
 		//TODO ContattoImplementazionePostgresDao
 		/*Aggiungi al db
 		 *ContattoDao contattoDao = new ContattoImplementazionePostgresDao();
@@ -47,7 +95,7 @@ public class Controller {
 	private String GetFuturePathDestinazione() {
 		String pathDestIniziale = null;
 		try {
-			pathDestIniziale = Controller.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+			pathDestIniziale = MainGetpath.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
 		} catch (URISyntaxException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -59,7 +107,7 @@ public class Controller {
 	}
 	
 	/**
-	 * 
+	 * Copia e fa un resize 
 	 * @param pathSorgente  path della foto da salvare 
 	 * @param id ID del contatto 
 	 * @param w 
@@ -90,10 +138,11 @@ public class Controller {
 			          
 			          // writes to the output file
 			          String estenzione = name.substring(name.lastIndexOf(".")+1);
-			          pathDestinazione = GetFuturePathDestinazione()+ "FotoDiContattoID"+id; // concatenazione directory di salvataggio pi� l' ID del contatto
+			          pathDestinazione = GetFuturePathDestinazione()+ "User"+id+"."+estenzione; // concatenazione directory di salvataggio pi� l' ID del contatto
+			          System.out.println("pathDestinazione: "+pathDestinazione+"\n estensione: "+estenzione);
 			          ImageIO.write(img, estenzione, new File(pathDestinazione));
 			          //Modifico il Path Destinazione mettendo estenzione 
-			          pathDestinazione=pathDestinazione+estenzione;
+			      
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -111,9 +160,9 @@ public class Controller {
 	 */
 	public void setFotoContatto(String path, int id) {
 		String pathDestiCompleto=null;
-		String nomeFileContatto=null;
-		int pxw=100;
-		int pxh=100;
+		
+		int pxw=150;
+		int pxh=150;
 		//TODO ContattoImplementazionePostgresDao
 		/*Aggiungi al db
 		 *ContattoDao contattoDao = new ContattoImplementazionePostgresDao();
@@ -122,8 +171,7 @@ public class Controller {
 		 */
 		
 		
-    
-			
+ 	
             try {
 				pathDestiCompleto=CaricaESettaFoto(path, id,pxw, pxh );
 			} catch (IOException e) {
@@ -142,5 +190,20 @@ public class Controller {
 		
 		
 	}
+	
+	public String getPathContatto(int id) {
+		String path=rubrica.getContatto(id).getPathFoto();
+	
+		if(path==" ") {
+			
+			return GetFuturePathDestinazione()+"NoImage.jpg";
+		}else {
+			return path;
+		}
+	}
+	
+	
+	
+	
 	
 }
