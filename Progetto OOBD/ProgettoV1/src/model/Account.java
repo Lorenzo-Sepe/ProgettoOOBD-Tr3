@@ -1,11 +1,11 @@
-package Model;
+package model;
 
 /**
  * 
  */
 public class Account {
 
-	    private String fornitore;
+	 	private String fornitore;
 	    private String nickname;
 	    private String benvenuto;
 	    private String mail;
@@ -15,11 +15,11 @@ public class Account {
 	/**
      * Default constructor
      */
-    public  Account(String f, String n, String b, String m) {
-    	fornitore = f;
-    	nickname = n;
-    	benvenuto = b;
-    	mail = m;
+    public  Account(String fornitore, String nickname, String benvenuto, String mail) {
+    	this.fornitore = fornitore;
+    	this.nickname = nickname; 
+    	this.benvenuto = benvenuto;
+    	this.mail = mail;
     }
 
     //Setter

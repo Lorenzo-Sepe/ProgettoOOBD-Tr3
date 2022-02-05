@@ -1,29 +1,31 @@
-package Model;
+package model;
 
 
 public class NumeriTelefonici {
-
+;
+	private String tag;
 	private String prefisso;
     private String numero;
     private String tipoNumero;
     private NumeriTelefonici deputato;
     
-    NumeriTelefonici (String prefisso, String numero, String tipoNumero) {
-    	this.prefisso = prefisso;
-    	this.numero = numero;
+    public NumeriTelefonici (String tag,String Prefisso, String Numero, String tipoNumero) {
+    	this.tag=tag;
+    	this.prefisso = Prefisso;
+    	this.numero = Numero;
     	this.tipoNumero = tipoNumero;
     }
     
-    public void setPrefisso (String prefisso) {
-    	this.prefisso = prefisso;
+    public void setPrefisso (String Prefisso) {
+    	this.prefisso = Prefisso;
     }
     
     public String getPrefisso () {
     	return prefisso;
     }
     
-    public void setNumero (String numero) {
-    	this.numero = numero;
+    public void setNumero (String Numero) {
+    	this.numero = Numero;
     }
     
     public String getNumero () {
@@ -51,5 +53,15 @@ public class NumeriTelefonici {
     	}
     	return riuscita;
     }
+
+	public String stampaNumero() {
+		return prefisso+numero+" tipo: "+tipoNumero ;
+	}
+
+	public String  gettag() {
+		return tag;
+	}
+
+	
     
 }

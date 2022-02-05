@@ -18,15 +18,15 @@ public class Indirizzi {
 	   
 //Costruttore
 	   
-	   public Indirizzi (int d, boolean p, String v, String c, int cp, String n, String i)
+	   public Indirizzi (int id, boolean principale, String via, String città, int codicePostale, String nazione, String identificatore)
 	   {
-		id = d;    
-		principale = p;   
-		via = v;
-		città=c;
-		codicePostale=cp;
-		nazione=n;	
-		identificatore = i;
+		this.id = id;    
+		this.principale = principale;   
+		this.via = via;
+		this.città=città;
+		this.codicePostale=codicePostale; 
+		this.nazione=nazione;	
+		this.identificatore = identificatore;
 	   }
 	   
 //Setter	   
@@ -90,5 +90,9 @@ public class Indirizzi {
     public void setPrincipale() {
         // TODO implement here
     }
+
+	public String stampaIndirizzo() {
+		return  identificatore+" "+ via+" "+città+" "+codicePostale;
+	}
 
 }
