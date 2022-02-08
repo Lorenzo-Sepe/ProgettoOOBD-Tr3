@@ -1,14 +1,3 @@
-package implementazioneDAOpostgreSQL;
-
-import DAO.ContattoDAO;
-import Model.Contatto;
-import DAO.Connessione;
-import java.util.ArrayList;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 public class ImplementazioneContattoDAO implements ContattoDAO {
 	
 	private Connection connection;
@@ -72,7 +61,7 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 			readContattoPS.setInt(1, c.getID());
 			ResultSet rs = readContattoPS.executeQuery();
 			while (rs.next()) {
-				Contatto i = new Contatto (rs.getString("prefisso_nome"), rs.getString("nome"), rs.getString("cognome"),rs.getString("path_foto"));
+				Contatto i = new Contatto (rs.getInt(0), rs.getString("prefisso_nome"), rs.getString("nome"), rs.getString("cognome"),rs.getString("path_foto"));
 				listaContatti.add(i);
 				connection.close();
 			}
@@ -90,7 +79,7 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 			selectAllPS = connection.prepareStatement("SELECT * FROM Contatto ORDER BY contatto_id");
 			ResultSet rs = selectAllPS.executeQuery();
 			while (rs.next()) {
-				Contatto i = new Contatto (rs.getString("prefisso_nome"), rs.getString("nome"), rs.getString("cognome"),rs.getString("path_foto"));
+				Contatto i = new Contatto (rs.getInt("contatto_id"),rs.getString("prefisso_nome"), rs.getString("nome"), rs.getString("cognome"),rs.getString("path_foto"));
 				listaContatti.add(i);
 				connection.close();
 			}
