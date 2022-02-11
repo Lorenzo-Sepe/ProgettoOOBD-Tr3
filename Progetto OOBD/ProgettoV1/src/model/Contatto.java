@@ -1,4 +1,4 @@
-package model;
+package Model;
 
 import java.awt.Component;
 import java.awt.image.BufferedImage;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-import model.NumeriTelefonici;
+import Model.NumeriTelefonici;
 
 public class Contatto {
 	private int contatto_ID;
@@ -20,6 +20,8 @@ public class Contatto {
 	private ArrayList<Indirizzi> listaIndirizzi = new ArrayList<Indirizzi>();
 	private ArrayList<NumeriTelefonici> listaNumeri = new ArrayList<NumeriTelefonici>();
 	private ArrayList<Account> listaAccount = new ArrayList<Account>();
+	private ArrayList<Gruppo> listaGruppo= new ArrayList<Gruppo>();
+	private Cassaforte visibilita = null;
 	
 
 	public Contatto (int contattoID ,String prefisso, String nome, String cognome,String path) {
@@ -27,11 +29,13 @@ public class Contatto {
 			this.prefissoNome = null;
 		}
 		else {
-			this.prefissoNome = new String (prefisso);
+			this.prefissoNome = prefisso;
 		}
+		
+		this.cognome = cognome;
 		this.contatto_ID=contattoID;
-		this.nome = new String (nome);
-		this.cognome = new String (cognome);
+		this.nome = nome;
+		
 		if(path==null) {
 			this.pathFoto= " ";
 		}else {
@@ -40,7 +44,10 @@ public class Contatto {
 		
 	}
 
-
+public void provaDao() {
+	
+}
+	
 	public static void main(String[] args) {
 		String path="C:\\Users\\Utente\\Pictures\\Camera";
 		
@@ -90,6 +97,13 @@ public class Contatto {
 	public void aggiungiIndirizzo (Indirizzi i) {
 		listaIndirizzi.add(i);
 	}
+	public void aggiungiIndirizzo(ArrayList<Indirizzi>arraylist){
+		if(listaIndirizzi.isEmpty()) {
+			listaIndirizzi=arraylist;
+		}else {
+			listaIndirizzi.addAll(arraylist);
+		}
+	}
 	
 	public boolean EliminaIndirizzo (Indirizzi i) {
 		boolean riuscita;
@@ -109,12 +123,32 @@ public class Contatto {
 		// TODO Auto-generated method stub
 		ListaEmail.add(modifica);
 	}
+	public void aggiungiEmail(ArrayList<String>arraylist){
+		if(ListaEmail.isEmpty()) {
+			ListaEmail=arraylist;
+		}else {
+			ListaEmail.addAll(arraylist);
+		}
+	}
 public void aggiungiNumero(NumeriTelefonici numero){
 	listaNumeri.add(numero);
 }
-
+public void aggiungiNumero(ArrayList<NumeriTelefonici>numeri){
+	if(listaNumeri.isEmpty()) {
+		listaNumeri=numeri;
+	}else {
+		listaNumeri.addAll(numeri);
+	}
+}
 public void aggiungiAccount(Account a) {
 	listaAccount.add(a);
+}
+public void aggiungiAccount(ArrayList<Account>arraylist){
+	if(listaAccount.isEmpty()) {
+		listaAccount=arraylist;
+	}else {
+		listaAccount.addAll(arraylist);
+	}
 }
 	public String StampaContatto() { 
 		
@@ -147,6 +181,29 @@ public void aggiungiAccount(Account a) {
 
 	public ArrayList<Account> getListaAccount() {
 		return listaAccount;
+	}
+
+	public ArrayList<Gruppo> getListaGruppo() {
+		return listaGruppo;
+	}
+
+	public void aggiungiGruppo(Gruppo gruppo) {
+		this.listaGruppo.add(gruppo) ;
+	}
+	public void aggiungiGruppo(ArrayList<Gruppo>arraylist){
+		if(listaGruppo.isEmpty()) {
+			listaGruppo=arraylist;
+		}else {
+			listaGruppo.addAll(arraylist);
+		}
+	}
+
+	public Cassaforte getVisibilita() {
+		return visibilita;
+	}
+
+	public void setCassaforte(Cassaforte visibilita) {
+		this.visibilita = visibilita;
 	}
 	
 }	
