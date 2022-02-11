@@ -90,15 +90,15 @@ public class Home extends JFrame {
 		contentPane.add(toolBar);
 		
 		JButton btnAggiungiContatto = new JButton("Aggiungi contatto");
-		btnAggiungiContatto.setIcon(new ImageIcon(Home.class.getResource("/Immagini/flat-round-plus-sign-green-260nw-652023094.jpg")));
+		btnAggiungiContatto.setIcon(new ImageIcon(Home.class.getResource("/Immagini/aggiungi.jpg")));
 		toolBar.add(btnAggiungiContatto);
 		
 		JButton btnEliminaContatto = new JButton("Elimina Contatto");
-		btnEliminaContatto.setIcon(new ImageIcon(Home.class.getResource("/Immagini/istockphoto-1205733160-170667a.jpg")));
+		btnEliminaContatto.setIcon(new ImageIcon(Home.class.getResource("/Immagini/elimina.jpg")));
 		toolBar.add(btnEliminaContatto);
 		
 		JButton btnCercaContatto = new JButton("Cerca Contatto");
-		btnCercaContatto.setIcon(new ImageIcon(Home.class.getResource("/Immagini/1022479.png")));
+		btnCercaContatto.setIcon(new ImageIcon(Home.class.getResource("/Immagini/ricerca.png")));
 		toolBar.add(btnCercaContatto);
 		
 		JScrollPane scrollPaneRubrica = new JScrollPane();
