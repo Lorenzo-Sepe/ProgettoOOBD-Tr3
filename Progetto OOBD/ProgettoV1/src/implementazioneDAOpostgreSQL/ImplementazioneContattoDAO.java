@@ -1,3 +1,18 @@
+package ImplementazioneDAOpostgreSQL;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import DAO.ContattoDAO;
+import Model.Account;
+import Model.Contatto;
+import Model.Indirizzi;
+import Model.NumeriTelefonici;
+import DAO.Connessione;
+
 public class ImplementazioneContattoDAO implements ContattoDAO {
 	
 	private Connection connection;
@@ -88,5 +103,70 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 			e.printStackTrace();
 		}
 		return listaContatti;
+	}
+	
+	public ArrayList<NumeriTelefonici> getListaNumeri (int id) {
+		PreparedStatement getListaNumeriFissiPS;
+		PreparedStatement getListaNumeriMobiliPS;
+		ArrayList<NumeriTelefonici> listaNumeri = new ArrayList<>();
+		try {
+			getListaNumeriFissiPS = connection.prepareStatement("SELECT * FROM numeri_telefonici_fissi WHERE contatto_associato = ? ORDER BY numero_id" );
+			getListaNumeriFissiPS.setInt(1,id);
+			ResultSet rsF = getListaNumeriFissiPS.executeQuery();
+			while (rsF.next()) {
+				NumeriTelefonici i = new NumeriTelefonici(rsF.getString("identificatore"), rsF.getString("prefisso_nazionale")  , rsF.getString("numero"),"Fisso" );
+				listaNumeri.add(i);
+			}
+			getListaNumeriMobiliPS = connection.prepareStatement("SELECT * FROM numeri_telefonici_mobili WHERE contatto_associato = ? ORDER BY numero_id");
+			getListaNumeriMobiliPS.setInt(1, id);
+			ResultSet rsM = getListaNumeriMobiliPS.executeQuery();
+			while (rsM.next()) {
+				NumeriTelefonici i = new NumeriTelefonici(rsM.getString("identificatore"), rsM.getString("prefisso_nazionale")  , rsM.getString("numero"),"Mobile" );
+				listaNumeri.add(i);
+			}
+			
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return listaNumeri;
+	}
+	
+	public ArrayList<Indirizzi> getListaIndirizzi (int id){
+		PreparedStatement getListaIndirizziPS;
+		ArrayList<Indirizzi> listaIndirizzi = new ArrayList<>();
+		try {
+			getListaIndirizziPS = connection.prepareStatement("SELECT i.*,ab.abitazione_principale, ab.identificatore FROM indirizzi i,abita ab WHERE ab.contatto_associato = ? AND ab.indirizzo_associato = i.indirizzi_id ORDER BY indirizzi_id\r\n"
+					+ "");
+			getListaIndirizziPS.setInt(1, id);
+			ResultSet rs = getListaIndirizziPS.executeQuery();
+			while (rs.next()) {
+				Indirizzi i = new Indirizzi(rs.getBoolean("abitazione_principale"), rs.getString("via"),rs.getString("città"),rs.getInt("codice_postale"),rs.getString("nazione"),rs.getString("identificatore"));
+				listaIndirizzi.add(i);
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			// TODO: handle exception
+		}
+		return listaIndirizzi;
+	}
+	
+	public ArrayList<Account> getListaAccount (int id) {
+		PreparedStatement getListaAccountPS;
+		ArrayList<Account> listaAccount = new ArrayList<>();
+		try {
+			getListaAccountPS = connection.prepareStatement("SELECT * FROM account WHERE contatto_associato = ? ORDER BY account_id");
+			getListaAccountPS.setInt(1, id);
+			ResultSet rs = getListaAccountPS.executeQuery();
+			while (rs.next()) {
+				Account i = new Account(rs.getString("fornitore"), rs.getString("nickname"), rs.getString("frase_di_benvenuto"), rs.getString("mail"));
+				listaAccount.add(i);
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return listaAccount;
 	}
 }
