@@ -1,7 +1,12 @@
 package DAO;
 
 import java.sql.Connection;
+
+import Model.Account;
 import Model.Contatto;
+import Model.Indirizzi;
+import Model.NumeriTelefonici;
+
 import java.util.ArrayList;
 
 public interface ContattoDAO {
@@ -15,4 +20,10 @@ public interface ContattoDAO {
 	public ArrayList<Contatto> readContattoDB (Contatto c);
 	
 	public ArrayList<Contatto> selectAllDB ();
+	
+	public ArrayList<NumeriTelefonici> getListaNumeri (int id);
+	
+	public ArrayList<Indirizzi> getListaIndirizzi (int id);
+	
+	public ArrayList<Account> getListaAccount (int id);
 }
