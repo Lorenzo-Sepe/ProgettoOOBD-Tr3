@@ -1,216 +1,229 @@
 package Controller;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.time.LocalDate;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
-import DAO.GiocatoreDAO;
-import DAO.ListinoDAO;
-import DAO.SocietaDAO;
-import Database.ConnessioneDatabase;
-import ImplementazioniPostgresDAO.GiocatoreImplementazionePostgresDAO;
-import ImplementazioniPostgresDAO.GiocatoreImplementazionePostgresDAO;
-import ImplementazioniPostgresDAO.ListinoImplementazionePostgresDAO;
-import ImplementazioniPostgresDAO.SocietaImplementazionePostgresDAO;
-import Model.Acquisto;
-import Model.Borsa;
-import Model.Giocatore;
-import Model.Listino;
-import Model.Societa;
+import javax.imageio.ImageIO;
+import javax.swing.plaf.multi.MultiPopupMenuUI;
 
-// TODO: Auto-generated Javadoc
-/**
- * The Class Controller.
- */
+import DAO.ContattoDAO;
+import DAO.RubricaDAO;
+import ImplementazioneDAOpostgreSQL.ImplementazioneContattoDAO;
+import ImplementazioneDAOpostgreSQL.ImplementazioneRubricaDAO;
+import Model.Account;
+import Model.Contatto;
+import Model.Indirizzi;
+import Model.NumeriTelefonici;
+import Model.Rubrica;
+
 public class Controller {
+	Rubrica rubrica;
+	@SuppressWarnings("unused")
+	private boolean ync =false;
 	
-	/** The b. */
-	Borsa b;
-	
-	/** The g. */
-	Giocatore g;
-
-	public Controller() {
-	}
+	//metodi 
 	
 	
-	/**
-	 * Nuova borsa.
-	 *
-	 * @param citta the citta
-	 * @throws SQLException 
-	 */
-	public void nuovaBorsa(String citta){
-		b=new Borsa(citta);
-		ListinoDAO l=new ListinoImplementazionePostgresDAO();
-		// assegno al listino in memoria il risultato che ottengo dal db
-		b.setListino(l.leggiListinoDB(b));
-	}
-
-	/**
-	 * Gets the citta borsa.
-	 *
-	 * @return the citta borsa
-	 */
-	public String getCittaBorsa() {
-		if (b==null)
-			return "";
-		else
-			return b.getCitta();
-	}
-
-	/**
-	 * Nuova societa.
-	 *
-	 * @param nomeSocieta the nome societa
-	 * @param prezzoAzione the prezzo azione
-	 * @return the string
-	 * @throws SQLException 
-	 */
-	public String nuovaSocieta(String nomeSocieta, String prezzoAzione){
-		// TODO Verificare che la societa non esista gi�
-		float p;
-		String errore="OK";
-		try {
-			p=Float.parseFloat(prezzoAzione);
-			// Crea in memoria una nuova societa
-			Societa s= new Societa(nomeSocieta,p);
-			b.getListino().addSocieta(s);
-			//Aggiungi al db
-			ListinoDAO l=new ListinoImplementazionePostgresDAO();
-			l.addSocietaDB(s,b);
+	public void  dumpDati() {
+		int id=0;
+		rubrica=new Rubrica("mio");
+		rubrica.aggiungiContatto(new Contatto(id++,"sig","ale","tri",null));
+		rubrica.aggiungiContatto(new Contatto(id++,"sig","lor","sep",null));
+		rubrica.aggiungiContatto(new Contatto(id++,"sig","rai","mor",null));
+		for(int i=0;i<id;i++) {
+			for (int j=1;j<  3+1;j++) {
+				String emailtmp= j+"EsimaMaiDilUser"+i+"@salcazzo.dio";
+				String numero="555-"+j+rubrica.getContatto(i).getCognome()+i+i+i;
+				NumeriTelefonici numeroComp=new NumeriTelefonici("tag","+39",numero, "fisso");
 			
-		}catch (NumberFormatException e) {
-			errore=new String("Il prezzo non � un numero valido");
+				rubrica.getContatto(i).aggiungiEmail(emailtmp);
+				//System.out.println(numeroComp.stampaNumero());
+				String via = "Via Sal Cazzo numero "+j;
+				String tag= "casa Numero"+j;
+				rubrica.getContatto(i).aggiungiIndirizzo(new Indirizzi(i, false, via,"Napoli", i, "Italia", tag));
+				
+				String nomeContatto = rubrica.getContatto(i).getNome();	
+				String indirizzoComp=rubrica.getContatto(i).getIndirizzo(j-1).stampaIndirizzo();
+				//System.out.println("Indirizzo di User "+nomeContatto+": "+indirizzoComp);
+				rubrica.getContatto(i).aggiungiNumero(numeroComp);
+				
+				//System.out.println("numero "+rubrica.getContatto(i).getNumero(0).getNumero());
+				String fornitore ="servizio "+j;
+				String nickname = "Itz_"+rubrica.getContatto(i).getPrefissoNome()+rubrica.getContatto(i).getCognome();
+				String benvenuto="frase di benvenuto di "+rubrica.getContatto(i).getNome();
+				String email=emailtmp;
+				Account account =new Account(fornitore, nickname, benvenuto, email);
+				rubrica.getContatto(i).aggiungiAccount(account);
+				
+				//Leggi dal Database
+				RubricaDAO rubricaDao= new ImplementazioneRubricaDAO();
+				ContattoDAO contattoDao = new ImplementazioneContattoDAO();
+                ArrayList<Contatto> contattiDB = rubricaDao.selectAllDB();
+                ArrayList<NumeriTelefonici> numeriDB;
+                ArrayList<Indirizzi> indirizziDB;
+                ArrayList<Account> accountDB;
+                for (Contatto contatto : contattiDB) {
+                    numeriDB = contattoDao.getListaNumeri(contatto.getID());
+                    indirizziDB = contattoDao.getListaIndirizzi(contatto.getID());
+                    accountDB = contattoDao.getListaAccount(contatto.getID());
+                    contatto.aggiungiNumero(numeriDB);
+                    contatto.aggiungiIndirizzo(indirizziDB);
+                    contatto.aggiungiAccount(accountDB);
+                    rubrica.aggiungiContatto(contatto);
+				
+                }
+			}
 		}
 		
-		return errore;
-	}
-
-
-
-
-	/**
-	 * Gets the listino societa prezzo.
-	 *
-	 * @return the listino societa prezzo
-	 */
-	public ArrayList getListinoSocietaPrezzo() {
-		ArrayList a = new ArrayList();
-		if (b.getListino().getSocieta()!=null)
-			for (Societa s:b.getListino().getSocieta()) {
-				a.add(s.getNome());
-				a.add(s.getPrezzoAzione());
-			}
-		else 
-			a=null;
-		return a;
-	}
-
-	/**
-	 * Cerca societa.
-	 *
-	 * @param nomeSocieta the nome societa
-	 * @return true, if successful
-	 */
-	public boolean cercaSocieta(String nomeSocieta) {
-		boolean trovato=false;
-		for (Societa s:b.getListino().getSocieta())
-			if (s.getNome().contentEquals(nomeSocieta)) {
-				trovato=true;
-			}
-		return trovato;
-	}
-
-	/**
-	 * Sets the prezzo azione.
-	 *
-	 * @param societa the societa
-	 * @param nuovoPrezzo the nuovo prezzo
-	 */
-	public void setPrezzoAzione(String societa, float nuovoPrezzo) {
-		for (Societa s:b.getListino().getSocieta())
-			if (s.getNome().contentEquals(societa)) {
-				s.setPrezzo(nuovoPrezzo);
-				//scrivo sul db
-				SocietaDAO sDAO = new SocietaImplementazionePostgresDAO();
-				sDAO.updatePrezzo(s,nuovoPrezzo);
-			}		
-	}
-
-	/**
-	 * Nuovo giocatore.
-	 *
-	 * @param nomeGiocatore the nome giocatore
-	 */
-	public void nuovoGiocatore(String nomeGiocatore) {
-		// TODO Controllare anche se il giocatore esiste gi�
-		//assumo 1000 come dotazione iniziale
-		g= new Giocatore(nomeGiocatore,1000.0f);
 		
 	}
-
 	/**
-	 * Acquista.
-	 *
-	 * @param nomeSocieta the nome societa
-	 * @param quantita the quantita
-	 * @return true, if successful
+	 * 
+	 * @return ArrayList di Contatti della rubrica
 	 */
-	public boolean acquista(String nomeSocieta, int quantita) {
-		boolean ok=true;
-		// TODO Verificare che ci sia disponibilita
-		for (Societa s:b.getListino().getSocieta())
-			if (s.getNome().contentEquals(nomeSocieta)) {
-				//verifica
-				if (ok) {
-					//System.out.println("Capitale attuale : "+ g.getCapitale());
-					//Aggiungo l'acquisto in memoria
-					g.acquista(quantita, LocalDate.now(), s.getPrezzoAzione(), s);
-					//Inserisco nel DB
-					GiocatoreDAO gDAO=new GiocatoreImplementazionePostgresDAO();
-					gDAO.acquistaDB(g,quantita, LocalDate.now(), s.getPrezzoAzione(), s);
-
-					//aggiorno il capitale (calcolo con i dati in memoria)
-					g.calcolaCapitale();
-					
-					//System.out.println("Capitale dopo l'acquisto : "+ g.getCapitale());
-					//if(g.getLiquidita()<0) 
-					//    throw new RuntimeException("Errore: non avevi soldi per questo acquisto");
-					return true;
+	public ArrayList<Contatto> getListaContatti() {
+		//TODO RubricaImplementazionePostgresDao
+				/*if(sync ==false) then //TODO vedere come fare il sync in un modo meno barbaro 
+				 * Lettura al db
+				 *RubricaDao borsaDao = new RubricaImplementazionePostgresDao();
+				 *RubricaDao.GetListaContatto()
+				 */
+		return rubrica.getListaContatti();
+	}
+	
+public Contatto getContatto(int id) {
+	return rubrica.getContatto(id);
+	
+}
+public void aggiungiContatto(Contatto contatto) {
+		//TODO ContattoImplementazionePostgresDao
+		/*Aggiungi al db
+		 *ContattoDao contattoDao = new ContattoImplementazionePostgresDao();
+		 *contattoDao.aggiungiContatto(contatto)
+		 */
+		rubrica.aggiungiContatto(contatto);
+	}
+	/**
+	 * 
+	 * @param id 
+	 * @return Il percorso completo di dove salvare la foto profilo
+	 */
+	private String GetFuturePathDestinazione() {
+		String pathDestIniziale = null;
+		try {
+			pathDestIniziale =Controller.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+		} catch (URISyntaxException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		String pathSenzaBin = pathDestIniziale.substring(0,pathDestIniziale.length()-4);
+         String pathDestiCompSenzaNomefile=pathSenzaBin+"src/Immagini/";	
+         
+         return pathDestiCompSenzaNomefile;
+	}
+	
+	/**
+	 * Copia e fa un resize 
+	 * @param pathSorgente  path della foto da salvare 
+	 * @param id ID del contatto 
+	 * @param w 
+	 * @param h
+	 * @throws IOException
+	 * @return Ritorna il Path della foto Creata
+	 */
+	
+	private String CaricaESettaFoto(String pathSorgente, int id, int w, int h)
+			 throws IOException 
+			 {
+				String pathDestinazione=null;
+			      // leggi file
+			      File f = new File(pathSorgente);
+			      
+			      try {
+			    	  BufferedImage inputImage = ImageIO.read(f);
+			    	// creates the output image
+			          BufferedImage img = new BufferedImage(w, h, inputImage.getType());
+			     
+			          // balance the input image to the output image
+			          Graphics2D g = img.createGraphics();
+			          g.drawImage(inputImage, 0, 0, w, h, null);
+			          g.dispose();
+			     
+			          // extract the extension of the output file
+			          String name = pathSorgente.substring(pathSorgente.lastIndexOf("\\")+1);
+			          
+			          // writes to the output file
+			          String estenzione = name.substring(name.lastIndexOf(".")+1);
+			          pathDestinazione = GetFuturePathDestinazione()+ "User"+id+"."+estenzione; // concatenazione directory di salvataggio pi� l' ID del contatto
+			          System.out.println("pathDestinazione: "+pathDestinazione+"\n estensione: "+estenzione);
+			          ImageIO.write(img, estenzione, new File(pathDestinazione));
+			          //Modifico il Path Destinazione mettendo estenzione 
+			      
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
+			      
+			     // BufferedImage inputImage = ImageIO.read(f);
+			 return pathDestinazione;
+
+			 }
+	
+	/**
+	 * Setta foto di un contatto
+	 *
+	 * @param Path path foto, 
+	 * @param  Contatto IDcontatto
+	 */
+	public void setFotoContatto(String path, int id) {
+		String pathDestiCompleto=null;
+		
+		int pxw=150;
+		int pxh=150;
+		//TODO ContattoImplementazionePostgresDao
+		/*Aggiungi al db
+		 *ContattoDao contattoDao = new ContattoImplementazionePostgresDao();
+		 *contattoDao.SetPath(contatto)
+		 *
+		 */
+		
+		
+ 	
+            try {
+				pathDestiCompleto=CaricaESettaFoto(path, id,pxw, pxh );
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		return false;
+            
+            
+            try {
+    			rubrica.getContatto(id).aggiungiFoto(pathDestiCompleto);
+    		} catch (Exception e) {
+    			e.getStackTrace();
+    			System.out.println("Errore hai provato a settare una foto a un contatto non esistente");
+    		
+    		}
+		
+		
 	}
-
-	/**
-	 * Gets the nome giocatore.
-	 *
-	 * @return the nome giocatore
-	 */
-	public String getNomeGiocatore() {
-		return g.getNome();
+	
+	public String getPathContatto(int id) {
+		String path=rubrica.getContatto(id).getPathFoto();
+	
+		if(path==" ") {
+			
+			return GetFuturePathDestinazione()+"NoImage.jpg";
+		}else {
+			return path;
+		}
 	}
-
-	/**
-	 * Gets the bilancio.
-	 *
-	 * @return the bilancio
-	 */
-	public String getBilancio() {
-		g.calcolaCapitale();
-		return ((Float)g.getCapitale()).toString();
-	}
-
-	/**
-	 * Gets the lista acquisti.
-	 *
-	 * @return the lista acquisti
-	 */
-	public ArrayList<Acquisto> getListaAcquisti() {
-		return g.getListaAcquisti();
-	}
-
-
+	
+	
+	
+	
+	
 }
