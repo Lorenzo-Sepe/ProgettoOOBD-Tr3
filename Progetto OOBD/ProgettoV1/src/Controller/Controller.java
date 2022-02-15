@@ -81,6 +81,8 @@ public class Controller {
 		
 		
 	}
+	
+	
 	/**
 	 * 
 	 * @return ArrayList di Contatti della rubrica
@@ -99,23 +101,35 @@ public Contatto getContatto(int id) {
 	return rubrica.getContatto(id);
 	
 }
+
+/**
+ * Funzione che aggiunge un membro nella arraylist delle rubrica 
+ * @param prefisso
+ * @param nome
+ * @param cognome
+ * @param path
+ */
+public void aggiungiContatto(String prefisso, String nome, String cognome,String path ) {
+		RubricaDAO rubricadao=new ImplementazioneRubricaDAO();
+		int id =rubricadao.addContattoDB(prefisso, nome, cognome, path);
+		setFotoContatto(path, id);
+		
+		rubrica.aggiungiContatto(new Contatto(id, prefisso, nome, cognome, path));
+}
+
+@Deprecated
 public void aggiungiContatto(Contatto contatto) {
-		//TODO ContattoImplementazionePostgresDao
-		/*Aggiungi al db
-		 *ContattoDao contattoDao = new ContattoImplementazionePostgresDao();
-		 *contattoDao.aggiungiContatto(contatto)
-		 */
-		rubrica.aggiungiContatto(contatto);
-	}
+	rubrica.aggiungiContatto(contatto);
+}
 	/**
 	 * 
 	 * @param id 
 	 * @return Il percorso completo di dove salvare la foto profilo
 	 */
-	private String GetFuturePathDestinazione() {
+	public  String GetRelativePath() {
 		String pathDestIniziale = null;
 		try {
-			pathDestIniziale =Controller.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+			pathDestIniziale = Controller.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
 		} catch (URISyntaxException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -125,6 +139,64 @@ public void aggiungiContatto(Contatto contatto) {
          
          return pathDestiCompSenzaNomefile;
 	}
+	
+	/**
+	 * 
+	 * @param width 
+	 * @param height
+	 * @param file
+	 * @return  
+	 */
+	public BufferedImage  getImageModificata(int width, int height, File file) {
+		BufferedImage img=null;
+		BufferedImage inputImage = null;
+		try {
+			inputImage = ImageIO.read(file);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	// creates the output image
+          img = new BufferedImage(width, height, inputImage.getType());
+     
+          // balance the input image to the output image
+          Graphics2D g = img.createGraphics();
+          g.drawImage(inputImage, 0, 0, width, height, null);
+          g.dispose();
+          
+          return img ;
+		
+	}
+	
+	/**
+	 * 
+	 * @param width 
+	 * @param height
+	 * @param file
+	 * @return  
+	 */
+	public BufferedImage  getImageModificata(int width, int height,String pathRelativo) {
+		BufferedImage img=null;
+		BufferedImage inputImage = null;
+		File file= new File(GetRelativePath() +pathRelativo);
+		try {
+			inputImage = ImageIO.read(file);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	// creates the output image
+          img = new BufferedImage(width, height, inputImage.getType());
+     
+          // balance the input image to the output image
+          Graphics2D g = img.createGraphics();
+          g.drawImage(inputImage, 0, 0, width, height, null);
+          g.dispose();
+          
+          return img ;
+		
+	}
+	
 	
 	/**
 	 * Copia e fa un resize 
@@ -142,35 +214,72 @@ public void aggiungiContatto(Contatto contatto) {
 				String pathDestinazione=null;
 			      // leggi file
 			      File f = new File(pathSorgente);
-			      
-			      try {
-			    	  BufferedImage inputImage = ImageIO.read(f);
-			    	// creates the output image
-			          BufferedImage img = new BufferedImage(w, h, inputImage.getType());
-			     
-			          // balance the input image to the output image
-			          Graphics2D g = img.createGraphics();
-			          g.drawImage(inputImage, 0, 0, w, h, null);
-			          g.dispose();
-			     
-			          // extract the extension of the output file
+			      		BufferedImage img = getImageModificata(w, h, f);
 			          String name = pathSorgente.substring(pathSorgente.lastIndexOf("\\")+1);
 			          
 			          // writes to the output file
 			          String estenzione = name.substring(name.lastIndexOf(".")+1);
-			          pathDestinazione = GetFuturePathDestinazione()+ "User"+id+"."+estenzione; // concatenazione directory di salvataggio pi� l' ID del contatto
+			          pathDestinazione = GetRelativePath()+ "User"+id+"."+estenzione; // concatenazione directory di salvataggio pi� l' ID del contatto
+			          System.out.println("pathSorgente: "+pathSorgente+"\n estensione: "+estenzione);
 			          System.out.println("pathDestinazione: "+pathDestinazione+"\n estensione: "+estenzione);
 			          ImageIO.write(img, estenzione, new File(pathDestinazione));
 			          //Modifico il Path Destinazione mettendo estenzione 
 			      
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+
 			      
 			     // BufferedImage inputImage = ImageIO.read(f);
 			 return pathDestinazione;
 
 			 }
+	/**
+	 * Setta foto di un contatto
+	 *
+	 * @param File file con la foto,
+	 * @param  Contatto IDcontatto
+	 */
+	public void setFotoContatto(File file, int id) {
+
+	String pathSorgente= file.getAbsolutePath();
+		 String estenzione = pathSorgente.substring(pathSorgente.lastIndexOf(".")+1);
+		String pathDestiCompleto= GetRelativePath()+"User"+id+"."+estenzione;
+        System.out.println("Stringa con pathSorgente : \n"+pathSorgente);
+		copiaFoto(pathSorgente, pathDestiCompleto);
+		
+
+		//TODO ContattoImplementazionePostgresDao
+		/*Aggiungi al db
+		 *ContattoDao contattoDao = new ContattoImplementazionePostgresDao();
+		 *contattoDao.SetPath(contatto)
+		 *
+		 */
+
+
+
+            System.out.println("Stringa con pathCompleto che viene restituito dal metodo CaricaESettaFoto: \n"+pathDestiCompleto);
+            try {
+    			rubrica.getContatto(id).aggiungiFoto("User"+id+"."+estenzione);
+    		} catch (Exception e) {
+    			e.getStackTrace();
+    			System.out.println("Errore hai provato a settare una foto a un contatto non esistente");
+
+    		}
+            System.out.println("contatto "+id+" "+rubrica.getContatto(id).getNome()+" path: "+rubrica.getContatto(id).getPathFoto());
+
+	}
+	
+	public  void copiaFoto(String pathSorgente, String pathDestiCompleto) {
+		BufferedImage bufferFoto = null;
+		String estenzione = pathSorgente.substring(pathSorgente.lastIndexOf(".")+1);
+		try {
+			bufferFoto = ImageIO.read(new File(pathSorgente));
+			File outputfile = new File(pathDestiCompleto);
+			ImageIO.write(bufferFoto, estenzione, outputfile);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	
 	
 	/**
 	 * Setta foto di un contatto
@@ -178,6 +287,7 @@ public void aggiungiContatto(Contatto contatto) {
 	 * @param Path path foto, 
 	 * @param  Contatto IDcontatto
 	 */
+	@Deprecated
 	public void setFotoContatto(String path, int id) {
 		String pathDestiCompleto=null;
 		
@@ -199,7 +309,7 @@ public void aggiungiContatto(Contatto contatto) {
 				e.printStackTrace();
 			}
             
-            
+            System.out.println("Stringa con pathCompleto che viene restituito dal metodo CaricaESettaFoto: \n"+pathDestiCompleto);
             try {
     			rubrica.getContatto(id).aggiungiFoto(pathDestiCompleto);
     		} catch (Exception e) {
@@ -207,7 +317,7 @@ public void aggiungiContatto(Contatto contatto) {
     			System.out.println("Errore hai provato a settare una foto a un contatto non esistente");
     		
     		}
-		
+            System.out.println("contatto "+id+" "+rubrica.getContatto(id).getNome()+" path "+rubrica.getContatto(id).getPathFoto());
 		
 	}
 	
@@ -216,14 +326,53 @@ public void aggiungiContatto(Contatto contatto) {
 	
 		if(path==" ") {
 			
-			return GetFuturePathDestinazione()+"NoImage.jpg";
+			return GetRelativePath()+"NoImage.jpg";
 		}else {
-			return path;
+			return GetRelativePath()+path;
 		}
 	}
 	
+	//metodi di Rubrica e Cassaforte
 	
+	public void CreaCassaforte(String pass) throws Exception {
+		if(rubrica.getCassaforte()==null){
+			rubrica.creaCassaforte(cifraPassword(pass));
+		}else {
+			throw new Exception("Errore non puoi creare un ulteriore cassaforte");
+		}		
+	}
+	public void cambiaPasswordCassaforte(String oldPass, String newPass) throws Exception {
+		if(ceckPassword(oldPass) ){
+			rubrica.getCassaforte().setPassword(newPass);
+		}else {
+			throw new Exception("Errore la passoword inserita non è uguale alla precedente password");
+		}		
+	}
+	private boolean ceckPassword(String oldPass) throws Exception {
+		if( rubrica.getCassaforte().getPassword().compareTo(oldPass) ==0) {
+			return true;
+		}else {
+			return false;
+		}		
+	}
 	
+	private String cifraPassword(String pass) {
+		//TODO Creare metodo funzionate ;
+		return pass;
+	}
+
+public ArrayList<Contatto> getContattiCassaforte(String pass) throws Exception{
+	if(ceckPassword(pass)) {
+	 return	rubrica.getCassaforte().getListaGruppo();
+	}else {
+		throw new Exception("La password inserita non è corretta, ");
+		}
+}
+
+public void aggiungiContattoCassaforte(String pass,int id) {
 	
-	
+	rubrica.getCassaforte().aggiungiContatto(rubrica.getContatto(id));
+	getListaContatti().remove(rubrica.getContatto(id));
+}
+
 }
