@@ -1,6 +1,9 @@
 package GUI;
 
-import model.*;
+
+
+import Model.*;
+import Controller.Controller;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.util.Arrays;
@@ -20,14 +23,31 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
+/**
+ * 
+ * @author AlessandroTrincone
+ *
+ */
 public class CreaCassaforteFrame extends JFrame {
 
 	private JPanel contentPane;
-	private JTable Contatti;
-	private JTable Cassaforte;
+	private JTable ContattiTable;
+	private JTable CassaforteTable;
 	private JTextField textFieldPassword;
 	private JTextField textFieldCassaforte;
+	private JButton buttonAnnulla;
+	private JButton btnSalva;
+	private JButton buttonAggiungi;
+	private JButton buttonElimina;
+	
+	/** The controller. */
+	private static Controller controller;
+	
+	/**Il FrameChiamante 	 */
+	static JFrame frameChiamante;
+	
+	/** The frame. */
+	private JFrame frame;
 
 	/**
 	 * Launch the application.
@@ -36,7 +56,7 @@ public class CreaCassaforteFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					CreaCassaforteFrame frame = new CreaCassaforteFrame();
+					CreaCassaforteFrame frame = new CreaCassaforteFrame(controller, frameChiamante);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -48,7 +68,9 @@ public class CreaCassaforteFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public CreaCassaforteFrame() {
+	public CreaCassaforteFrame(Controller controller, JFrame frameChiamante) {
+		frame=this;
+		setResizable(false);
 		setTitle("Crea Cassaforte");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 950, 375);
@@ -73,9 +95,9 @@ public class CreaCassaforteFrame extends JFrame {
 	           return false;
 	        }};
 		
-		Contatti = new JTable(modelloContatti);
-		ListSelectionModel listenerContattoSelezionato=Contatti.getSelectionModel();
-		Contatti.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		ContattiTable = new JTable(modelloContatti);
+		ListSelectionModel listenerContattoSelezionato=ContattiTable.getSelectionModel();
+		ContattiTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		modelloContatti.addColumn("prefisso");
 		modelloContatti.addColumn("nome"); 
@@ -90,7 +112,7 @@ public class CreaCassaforteFrame extends JFrame {
 			modelloContatti.addRow(new Object[]{arrayListContattiPrefisso.get(i), arrayListContattiNome.get(i), arrayListContattiCognome.get(i)});
 			
 		}
-		scrollPaneRubrica.setViewportView(Contatti);
+		scrollPaneRubrica.setViewportView(ContattiTable);
 		
 		JScrollPane scrollPaneCassaforte = new JScrollPane();
 		scrollPaneCassaforte.setBounds(530, 85, 390, 190);
@@ -104,37 +126,40 @@ public class CreaCassaforteFrame extends JFrame {
 	           return false;
 	        }};
 		
-	    Cassaforte = new JTable(modelloCassaforte);
-		ListSelectionModel listenerGruppoSelezionato=Cassaforte.getSelectionModel();
-		Cassaforte.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	    CassaforteTable = new JTable(modelloCassaforte);
+		ListSelectionModel listenerGruppoSelezionato=CassaforteTable.getSelectionModel();
+		CassaforteTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		modelloCassaforte.addColumn("prefisso");
 		modelloCassaforte.addColumn("nome"); 
 		modelloCassaforte.addColumn("cognome"); 
 		
 
-		scrollPaneCassaforte.setViewportView(Cassaforte);
+		scrollPaneCassaforte.setViewportView(CassaforteTable);
 		
-		JButton buttonAggiungi = new JButton("Aggiungi ->");
+		ArrayList <Contatto> MembriCassaforte = new ArrayList<>();
+		
+		buttonAggiungi = new JButton("Aggiungi ->");
 		buttonAggiungi.setBounds(410, 125, 115, 25);
 		buttonAggiungi.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int row;
 				if (!listenerContattoSelezionato.isSelectionEmpty()) {
-					row = Contatti.getSelectedRow();
-					String prefisso = (String) Contatti.getValueAt(row, 0);
-					String nome = (String) Contatti.getValueAt(row, 1);
-					String cognome = (String) Contatti.getValueAt(row, 2);
-					DefaultTableModel contattiModel = (DefaultTableModel) Contatti.getModel();
+					row = ContattiTable.getSelectedRow();
+					String prefisso = (String) ContattiTable.getValueAt(row, 0);
+					String nome = (String) ContattiTable.getValueAt(row, 1);
+					String cognome = (String) ContattiTable.getValueAt(row, 2);
+					DefaultTableModel contattiModel = (DefaultTableModel) ContattiTable.getModel();
 					contattiModel.removeRow(row);
 					modelloCassaforte.addRow(new Object[]{prefisso, nome, cognome});
+					//TODO MembriCassaforte.add();
 					}
 			}
 		});
 		contentPane.add(buttonAggiungi);
 		
-		JButton buttonElimina = new JButton("<- Elimina");
+		buttonElimina = new JButton("<- Elimina");
 		buttonElimina.setBounds(410, 155, 115, 25);
 		buttonElimina.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -145,23 +170,38 @@ public class CreaCassaforteFrame extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				int row;
 				if (!listenerGruppoSelezionato.isSelectionEmpty()) {
-					row = Cassaforte.getSelectedRow();
-					String prefisso = (String) Cassaforte.getValueAt(row, 0);
-					String nome = (String) Cassaforte.getValueAt(row, 1);
-					String cognome = (String) Cassaforte.getValueAt(row, 2);
-					DefaultTableModel gruppoModel = (DefaultTableModel) Cassaforte.getModel();
+					row = CassaforteTable.getSelectedRow();
+					String prefisso = (String) CassaforteTable.getValueAt(row, 0);
+					String nome = (String) CassaforteTable.getValueAt(row, 1);
+					String cognome = (String) CassaforteTable.getValueAt(row, 2);
+					DefaultTableModel gruppoModel = (DefaultTableModel) CassaforteTable.getModel();
 					gruppoModel.removeRow(row);
 					modelloContatti.addRow(new Object[]{prefisso, nome, cognome});
+					//TODO MembriCassaforte.remove(object);
 				}
 			}
 		});
 		contentPane.add(buttonElimina);
 		
 		JButton buttonSalva = new JButton("Salva");
+		buttonSalva.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO salvataggio della password
+				String password = textFieldPassword.getText();
+				
+			}
+		});
 		buttonSalva.setBounds(690, 325, 90, -45);
 		contentPane.add(buttonSalva);
 		
-		JButton buttonAnnulla = new JButton("Annulla");
+		buttonAnnulla = new JButton("Annulla");
+		buttonAnnulla.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.setVisible(false);
+				frameChiamante.setVisible(true);
+				frame.dispose();
+			}
+		});
 		buttonAnnulla.setBounds(735, 305, 90, 23);
 		contentPane.add(buttonAnnulla);
 		
@@ -174,7 +214,7 @@ public class CreaCassaforteFrame extends JFrame {
 		contentPane.add(textFieldPassword);
 		textFieldPassword.setColumns(10);
 		
-		JButton btnSalva = new JButton("Salva");
+		btnSalva = new JButton("Salva");
 		btnSalva.setBounds(835, 305, 90, 23);
 		contentPane.add(btnSalva);
 		

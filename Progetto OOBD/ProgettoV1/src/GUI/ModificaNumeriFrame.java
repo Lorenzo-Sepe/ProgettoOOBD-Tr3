@@ -23,7 +23,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
 import javax.swing.table.DefaultTableModel;
 
-import controller.Controller;
+import Controller.Controller;
 
 public class ModificaNumeriFrame extends JFrame {
 	private JTextField textFieldPrefisso;

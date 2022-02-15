@@ -36,15 +36,10 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListSelectionModel;
 import javax.swing.JTextPane;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
 
-import GUI.ProvaScegliFile.ImageFilter;
+import Model.Contatto;
 import Controller.Controller;
-import model.Contatto;
 
-import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JFormattedTextField;
@@ -58,6 +53,11 @@ import java.awt.Font;
 import java.awt.Frame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
+import javax.swing.border.TitledBorder;
+import java.awt.Component;
+import javax.swing.Box;
+import java.awt.Dimension;
+import javax.swing.border.BevelBorder;
 
 
 @SuppressWarnings({ "unused", "serial" })
@@ -68,12 +68,37 @@ public class VisualizzaContattoFrame extends JFrame {
 	private JTable tableAccounts;
 	private JTable tableNumeri;
 	//TODO togliere static quando si collega ad altri frame
+	/** Il Controller*/
 	static Controller c;
+	/**L'id del contatto visualizzatp*/
 	private static int contattoID;
-	static Frame frameChiamante;
+	/**Il Chiamante	 */
+	static JFrame frameChiamante;
+	static JFrame frame;
 	Contatto Contatto;
 	private JPanel panelFoto;
 	private JLabel labelFoto;
+	private JScrollPane scrollPaneNumeri;
+	private JPanel panelNumeri;
+	private JPanel panelIndirizzi;
+	private JPanel panelAccount;
+	private JButton buttonModificaMail;
+	private JScrollPane scrollPane;
+	private JLabel labelMail;
+	private JList listMail;
+	private JLabel labelPrefisso;
+	private JLabel labelNome;
+	private JLabel labelCognome;
+	private JButton modFotoButton;
+	private JButton bottonModificaAccount;
+	private JButton bottonModificaIndirizzi;
+	private JTextPane textPaneCognome;
+	private JButton bottonModificaNumeri;
+	private JTextPane textPaneNome;
+	private JButton bottonModificaContatto;
+	private JTextPane textPanePrefisso;
+	private JButton buttonIndietro;
+	private JPanel panel;
 
 	/**
 	 * Launch the application.
@@ -95,14 +120,14 @@ public class VisualizzaContattoFrame extends JFrame {
 	 * Create the frame.
 	 */
 	
-	public VisualizzaContattoFrame(Controller controller, Frame Chiamante,int id) {
+	public VisualizzaContattoFrame(Controller controller, JFrame Chiamante,int id) {
+		frame = this;
 		c=controller;
 		contattoID=id;
 		frameChiamante=Chiamante;
-		setResizable(false);
 		setTitle("Visualizzazione");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1110, 535);
+		setBounds(100, 100, 1110, 700);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -114,62 +139,84 @@ public class VisualizzaContattoFrame extends JFrame {
 		setContentPane(contentPane);
 		
 		panelFoto = new JPanel();
-		panelFoto.setBounds(60, 65, 150, 150);
+		panelFoto.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
-		JLabel labelCognome = new JLabel("Cognome");
-		labelCognome.setBounds(235, 125, 115, 14);
+		labelCognome = new JLabel("Cognome");
 		
-		JLabel labelNumeriTelefono = new JLabel("Numeri di Telefono");
-		labelNumeriTelefono.setBounds(235, 225, 120, 14);
-		
-		JLabel labelNome = new JLabel("Nome");
-		labelNome.setBounds(235, 95, 115, 14);
-		contentPane.setLayout(null);
+		labelNome = new JLabel("Nome");
+		SpringLayout sl_contentPane = new SpringLayout();
+		sl_contentPane.putConstraint(SpringLayout.WEST, panelFoto, 30, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, panelFoto, 180, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, labelNome, 62, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, labelCognome, 92, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, panelFoto, 30, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, panelFoto, 180, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, labelNome, 245, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, labelNome, 360, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, labelCognome, 245, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, labelCognome, 360, SpringLayout.WEST, contentPane);
+		contentPane.setLayout(sl_contentPane);
 		
 		//TODO una volta che il controller è completo aggiungere getter per prendere nome cognome e prefisso
 		
-		JTextPane textPanePrefisso = new JTextPane();
-		textPanePrefisso.setBounds(360, 65, 450, 20);
+		textPanePrefisso = new JTextPane();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, textPanePrefisso, 30, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, textPanePrefisso, 370, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, textPanePrefisso, -250, SpringLayout.EAST, contentPane);
 		textPanePrefisso.setEditable(false);
 		textPanePrefisso.setText(c.getContatto(id).getPrefissoNome());
 		
 		contentPane.add(textPanePrefisso);
 		
-		JButton bottonModificaContatto = new JButton("Modifica Contatto");
-		bottonModificaContatto.setBounds(910, 65, 150, 20);
+		bottonModificaContatto = new JButton("Modifica Contatto");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, bottonModificaContatto, 30, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, bottonModificaContatto, -165, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, bottonModificaContatto, 50, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, bottonModificaContatto, -15, SpringLayout.EAST, contentPane);
 		
 		contentPane.add(bottonModificaContatto);
 		
-		JTextPane textPaneNome = new JTextPane(/*Controller.getterNome()*/);
-		textPaneNome.setBounds(360, 95, 450, 20);
+		textPaneNome = new JTextPane(/*Controller.getterNome()*/);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, textPaneNome, 60, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, textPaneNome, 370, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, textPaneNome, -250, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, bottonModificaContatto, -165, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, bottonModificaContatto, -15, SpringLayout.EAST, contentPane);
 		textPaneNome.setEditable(false);
 		textPaneNome.setText(c.getContatto(id).getNome());
 		contentPane.add(textPaneNome);
 		
-		JButton bottonModificaNumeri = new JButton(" Modifica Numeri  ");
-		bottonModificaNumeri.setBounds(910, 95, 150, 20);
+		bottonModificaNumeri = new JButton(" Modifica Numeri  ");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, bottonModificaNumeri, 60, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, bottonModificaNumeri, -165, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, bottonModificaNumeri, 80, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, bottonModificaNumeri, -15, SpringLayout.EAST, contentPane);
 		
 		contentPane.add(bottonModificaNumeri);
 		
-		JTextPane textPaneCognome = new JTextPane(/*Controller.getterCognome()*/);
-		textPaneCognome.setBounds(360, 125, 450, 20);
+		textPaneCognome = new JTextPane(/*Controller.getterCognome()*/);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, textPaneCognome, 90, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, textPaneCognome, 370, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, textPaneCognome, -250, SpringLayout.EAST, contentPane);
 		textPaneCognome.setEditable(false);
 		textPaneCognome.setText(c.getContatto(id).getCognome());
 		contentPane.add(textPaneCognome);
 		
-		JButton bottonModificaIndirizzi = new JButton(" Modifica Indirizzi ");
-		bottonModificaIndirizzi.setBounds(910, 125, 150, 20);
+		bottonModificaIndirizzi = new JButton(" Modifica Indirizzi ");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, bottonModificaIndirizzi, 90, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, bottonModificaIndirizzi, -165, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, bottonModificaIndirizzi, 110, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, bottonModificaIndirizzi, -15, SpringLayout.EAST, contentPane);
 		
 		contentPane.add(bottonModificaIndirizzi);
 		
-		JButton bottonModificaAccount = new JButton("Modifica Account ");
-		bottonModificaAccount.setBounds(910, 155, 150, 20);
+		bottonModificaAccount = new JButton("Modifica Account ");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, bottonModificaAccount, 120, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, bottonModificaAccount, -165, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, bottonModificaAccount, 140, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, bottonModificaAccount, -15, SpringLayout.EAST, contentPane);
 		
 		contentPane.add(bottonModificaAccount);
-		
-		JScrollPane scrollPaneNumeri = new JScrollPane();
-		scrollPaneNumeri.setBounds(360, 225, 700, 75);
-		contentPane.add(scrollPaneNumeri);
 		
 		ArrayList<String> arrayListContatti = new ArrayList<>(Arrays.asList("Rai", "Lore", "Ale","Jesico"));
 		ArrayList<String> arrayListContattiCognome = new ArrayList<>(Arrays.asList("Mor", "Sep", "Tri","Cal"));
@@ -182,36 +229,29 @@ public class VisualizzaContattoFrame extends JFrame {
 	           return false;
 	        }};
 		
-		tableNumeri = new JTable(modelNumeri);
-		ListSelectionModel listenerNumeri=tableNumeri.getSelectionModel();
-		tableNumeri.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		
 		modelNumeri.addColumn("Identificatore");
 		modelNumeri.addColumn("Prefisso");
 		modelNumeri.addColumn("Numero"); 
 		modelNumeri.addColumn("Tipo Numero"); 
 		
 		
-		
 		// Inserimento nella tabella dei numeri del contatto
 		
 		for(int i=0;i<c.getContatto(id).getListaNumeri().size();i++) {
 			modelNumeri.addRow(new Object[]{
-					c.getContatto(id).getNumero(i).gettag(),
+					c.getContatto(id).getNumero(i).getTag(),
 					c.getContatto(id).getNumero(i).getPrefisso(),
 					c.getContatto(id).getNumero(i).getNumero(),
-					c.getContatto(id).getNumero(i).getTipoNumero()
 					
 			});	
 		}
-		 
-		
-		scrollPaneNumeri.setViewportView(tableNumeri);
 		
 		
 		
-		JButton modFotoButton = new JButton("Modifica Foto");
-		modFotoButton.setBounds(60, 230, 150, 23);
+		modFotoButton = new JButton("Modifica Foto");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, modFotoButton, 190, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, modFotoButton, 30, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, modFotoButton, 180, SpringLayout.WEST, contentPane);
 		
 		contentPane.add(modFotoButton);
 		contentPane.add(panelFoto);
@@ -227,11 +267,6 @@ public class VisualizzaContattoFrame extends JFrame {
 		
 		contentPane.add(labelCognome);
 		contentPane.add(labelNome);
-		contentPane.add(labelNumeriTelefono);
-		
-		JScrollPane scrollPaneIndirizzi = new JScrollPane();
-		scrollPaneIndirizzi.setBounds(360, 310, 700, 75);
-		contentPane.add(scrollPaneIndirizzi);
 		
 		
 		DefaultTableModel modelIndirizzi =  new DefaultTableModel() {
@@ -240,10 +275,6 @@ public class VisualizzaContattoFrame extends JFrame {
 	           //all cells false
 	           return false;
 	        }};
-		
-		tableIndirizzi = new JTable(modelIndirizzi);
-		ListSelectionModel listenerIndirizzi=tableIndirizzi.getSelectionModel();
-		tableIndirizzi.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 	
 		modelIndirizzi.addColumn("Via"); 
@@ -261,12 +292,6 @@ public class VisualizzaContattoFrame extends JFrame {
 					c.getContatto(id).getIndirizzo(i).getNazione()
 			});	
 		}
-		scrollPaneIndirizzi.setViewportView(tableIndirizzi);
-		
-		
-		JScrollPane scrollPaneAccounts = new JScrollPane();
-		scrollPaneAccounts.setBounds(360, 395, 700, 76);
-		contentPane.add(scrollPaneAccounts);
 		//tableAccounts
 		DefaultTableModel modelAccounts =  new DefaultTableModel() {
 	        @Override
@@ -274,10 +299,6 @@ public class VisualizzaContattoFrame extends JFrame {
 	           //all cells false
 	           return false;
 	        }};
-		
-		tableAccounts = new JTable(modelAccounts);
-		ListSelectionModel listenerAccount = tableAccounts.getSelectionModel();
-		tableAccounts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 	
 		modelAccounts.addColumn("Fornitore"); 
@@ -295,33 +316,28 @@ public class VisualizzaContattoFrame extends JFrame {
 					c.getContatto(id).getAccount(i).getBenvenuto()
 			});	
 		}
-
-		scrollPaneAccounts.setViewportView(tableAccounts);
 		
-		
-		JLabel labelAccounts = new JLabel("Accounts");
-		labelAccounts.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		labelAccounts.setBounds(235, 395, 115, 14);
-		contentPane.add(labelAccounts);
-		
-		JLabel labelIndirizzi = new JLabel("Indirizzi");
-		labelIndirizzi.setBounds(235, 310, 115, 14);
-		contentPane.add(labelIndirizzi);
-		
-		JLabel labelPrefisso = new JLabel("Prefisso Nome");
+		labelPrefisso = new JLabel("Prefisso Nome");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, labelPrefisso, 32, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, labelPrefisso, 245, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, labelPrefisso, 360, SpringLayout.WEST, contentPane);
 		labelPrefisso.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		labelPrefisso.setBounds(235, 65, 115, 14);
 		contentPane.add(labelPrefisso);
 		
-		JLabel labelMail = new JLabel("E-Mails");
-		labelMail.setBounds(235, 158, 115, 14);
+		labelMail = new JLabel("E-Mails");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, labelMail, 122, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, labelMail, 245, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, labelMail, 360, SpringLayout.WEST, contentPane);
 		contentPane.add(labelMail);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(360, 156, 450, 20);
+		scrollPane = new JScrollPane();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 120, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 370, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, 140, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -250, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPane);
 		
-		JList listMail = new JList<Object>();
+		listMail = new JList<Object>();
 		listMail.setModel(new AbstractListModel() {
 			String[] values = new String[] {"Mail", "Mail", "Mail"};
 			public int getSize() {
@@ -334,9 +350,117 @@ public class VisualizzaContattoFrame extends JFrame {
 		listMail.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(listMail);
 		
-		JButton buttonModificaMail = new JButton("Modifica E-Mail");
-		buttonModificaMail.setBounds(910, 186, 150, 20);
+		buttonModificaMail = new JButton("Modifica E-Mail");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, buttonModificaMail, 150, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, buttonModificaMail, -165, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, buttonModificaMail, 170, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, buttonModificaMail, -15, SpringLayout.EAST, contentPane);
 		contentPane.add(buttonModificaMail);
+		
+		panelNumeri = new JPanel();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, panelNumeri, -400, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, panelNumeri, 230, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, panelNumeri, -15, SpringLayout.EAST, contentPane);
+		contentPane.add(panelNumeri);
+		SpringLayout sl_panelNumeri = new SpringLayout();
+		panelNumeri.setLayout(sl_panelNumeri);
+		
+		JLabel labelNumeriTelefono = new JLabel("Numeri di Telefono");
+		sl_panelNumeri.putConstraint(SpringLayout.NORTH, labelNumeriTelefono, 0, SpringLayout.NORTH, panelNumeri);
+		sl_panelNumeri.putConstraint(SpringLayout.WEST, labelNumeriTelefono, 10, SpringLayout.WEST, panelNumeri);
+		sl_panelNumeri.putConstraint(SpringLayout.EAST, labelNumeriTelefono, 125, SpringLayout.WEST, panelNumeri);
+		panelNumeri.add(labelNumeriTelefono);
+		
+		scrollPaneNumeri = new JScrollPane();
+		sl_panelNumeri.putConstraint(SpringLayout.NORTH, scrollPaneNumeri, 0, SpringLayout.NORTH, panelNumeri);
+		sl_panelNumeri.putConstraint(SpringLayout.WEST, scrollPaneNumeri, 140, SpringLayout.WEST, panelNumeri);
+		sl_panelNumeri.putConstraint(SpringLayout.SOUTH, scrollPaneNumeri, 0, SpringLayout.SOUTH, panelNumeri);
+		sl_panelNumeri.putConstraint(SpringLayout.EAST, scrollPaneNumeri, 0, SpringLayout.EAST, panelNumeri);
+		panelNumeri.add(scrollPaneNumeri);
+		
+		tableNumeri = new JTable(modelNumeri);
+		ListSelectionModel listenerNumeri=tableNumeri.getSelectionModel();
+		tableNumeri.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		
+		scrollPaneNumeri.setViewportView(tableNumeri);
+				
+				panelIndirizzi = new JPanel();
+				sl_contentPane.putConstraint(SpringLayout.SOUTH, panelNumeri, -5, SpringLayout.NORTH, panelIndirizzi);
+				sl_contentPane.putConstraint(SpringLayout.WEST, panelIndirizzi, 230, SpringLayout.WEST, contentPane);
+				sl_contentPane.putConstraint(SpringLayout.EAST, panelIndirizzi, -15, SpringLayout.EAST, contentPane);
+				contentPane.add(panelIndirizzi);
+				SpringLayout sl_panelIndirizzi = new SpringLayout();
+				panelIndirizzi.setLayout(sl_panelIndirizzi);
+				
+				JLabel labelIndirizzi = new JLabel("Indirizzi");
+				sl_panelIndirizzi.putConstraint(SpringLayout.NORTH, labelIndirizzi, 0, SpringLayout.NORTH, panelIndirizzi);
+				sl_panelIndirizzi.putConstraint(SpringLayout.WEST, labelIndirizzi, 5, SpringLayout.WEST, panelIndirizzi);
+				panelIndirizzi.add(labelIndirizzi);
+				
+				JScrollPane scrollPaneIndirizzi = new JScrollPane();
+				sl_panelIndirizzi.putConstraint(SpringLayout.NORTH, scrollPaneIndirizzi, 0, SpringLayout.NORTH, panelIndirizzi);
+				sl_panelIndirizzi.putConstraint(SpringLayout.WEST, scrollPaneIndirizzi, 140, SpringLayout.WEST, panelIndirizzi);
+				sl_panelIndirizzi.putConstraint(SpringLayout.SOUTH, scrollPaneIndirizzi, 0, SpringLayout.SOUTH, panelIndirizzi);
+				sl_panelIndirizzi.putConstraint(SpringLayout.EAST, scrollPaneIndirizzi, 0, SpringLayout.EAST, panelIndirizzi);
+				panelIndirizzi.add(scrollPaneIndirizzi);
+				
+				tableIndirizzi = new JTable(modelIndirizzi);
+				ListSelectionModel listenerIndirizzi=tableIndirizzi.getSelectionModel();
+				tableIndirizzi.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				scrollPaneIndirizzi.setViewportView(tableIndirizzi);
+				
+				panelAccount = new JPanel();
+				sl_contentPane.putConstraint(SpringLayout.NORTH, panelAccount, -170, SpringLayout.SOUTH, contentPane);
+				
+				sl_contentPane.putConstraint(SpringLayout.SOUTH, panelAccount, -45, SpringLayout.SOUTH, contentPane);
+				sl_contentPane.putConstraint(SpringLayout.SOUTH, panelIndirizzi, -5, SpringLayout.NORTH, panelAccount);
+				sl_contentPane.putConstraint(SpringLayout.WEST, panelAccount, 230, SpringLayout.WEST, contentPane);
+				sl_contentPane.putConstraint(SpringLayout.EAST, panelAccount, -15, SpringLayout.EAST, contentPane);
+				contentPane.add(panelAccount);
+				SpringLayout sl_panelAccount = new SpringLayout();
+				panelAccount.setLayout(sl_panelAccount);
+				
+				
+				JLabel labelAccounts = new JLabel("Accounts");
+				sl_panelAccount.putConstraint(SpringLayout.NORTH, labelAccounts, 0, SpringLayout.NORTH, panelAccount);
+				sl_panelAccount.putConstraint(SpringLayout.WEST, labelAccounts, 10, SpringLayout.WEST, panelAccount);
+				sl_panelAccount.putConstraint(SpringLayout.EAST, labelAccounts, 125, SpringLayout.WEST, panelAccount);
+				panelAccount.add(labelAccounts);
+				labelAccounts.setFont(new Font("Tahoma", Font.PLAIN, 11));
+				
+				
+				JScrollPane scrollPaneAccounts = new JScrollPane();
+				sl_panelAccount.putConstraint(SpringLayout.NORTH, scrollPaneAccounts, 0, SpringLayout.NORTH, panelAccount);
+				sl_panelAccount.putConstraint(SpringLayout.WEST, scrollPaneAccounts, 140, SpringLayout.WEST, panelAccount);
+				sl_panelAccount.putConstraint(SpringLayout.SOUTH, scrollPaneAccounts, 0, SpringLayout.SOUTH, panelAccount);
+				sl_panelAccount.putConstraint(SpringLayout.EAST, scrollPaneAccounts, 0, SpringLayout.EAST, panelAccount);
+				panelAccount.add(scrollPaneAccounts);
+				
+				tableAccounts = new JTable(modelAccounts);
+				ListSelectionModel listenerAccount = tableAccounts.getSelectionModel();
+				tableAccounts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				
+						scrollPaneAccounts.setViewportView(tableAccounts);
+						
+						buttonIndietro = new JButton("Indietro");
+						buttonIndietro.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								//TODO serve per cambiare da un frame ad un'altro
+								frameChiamante.setVisible(true);
+								frame.setVisible(false);
+								frame.dispose();
+							}
+						});
+						sl_contentPane.putConstraint(SpringLayout.WEST, buttonIndietro, 0, SpringLayout.WEST, bottonModificaContatto);
+						sl_contentPane.putConstraint(SpringLayout.SOUTH, buttonIndietro, -10, SpringLayout.SOUTH, contentPane);
+						sl_contentPane.putConstraint(SpringLayout.EAST, buttonIndietro, 150, SpringLayout.WEST, bottonModificaContatto);
+						contentPane.add(buttonIndietro);
+						
+						panel = new JPanel();
+						sl_contentPane.putConstraint(SpringLayout.NORTH, panelIndirizzi, 10, SpringLayout.NORTH, panel);
+						sl_contentPane.putConstraint(SpringLayout.SOUTH, panel, -280, SpringLayout.SOUTH, contentPane);
+						contentPane.add(panel);
 		
 		//action listeners foto
 		

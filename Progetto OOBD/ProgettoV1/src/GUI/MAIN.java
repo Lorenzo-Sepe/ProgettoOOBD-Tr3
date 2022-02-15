@@ -4,7 +4,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
-import controller.Controller;
+import Controller.Controller;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -22,6 +22,7 @@ public class MAIN {
 			public void run() {
 				try {
 					Controller c=new Controller();
+					c.dumpDati();
 					Home window = new Home(c);
 				} catch (Exception e) {
 					e.printStackTrace();

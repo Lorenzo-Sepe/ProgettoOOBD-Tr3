@@ -23,7 +23,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
 import javax.swing.table.DefaultTableModel;
 
-import controller.Controller;
+import Controller.Controller;
 /**
  * 
  * @author LorenzoSepe
@@ -37,8 +37,9 @@ public class ModificaIndirizziFrame extends JFrame {
 	private JTextField textFieldNazione;
 	private JTable tableIndirizziMod;
 	private Boolean IsPrincipale;
-	JFrame frame;
-	private Controller controller;
+	static JFrame frameChiamante;
+	static JFrame frame;
+	static Controller controller;
 	
 	/**
 	 * Launch the application.
@@ -47,7 +48,7 @@ public class ModificaIndirizziFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ModificaIndirizziFrame frame = new ModificaIndirizziFrame();
+					ModificaIndirizziFrame frame = new ModificaIndirizziFrame(controller, frameChiamante);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -59,7 +60,8 @@ public class ModificaIndirizziFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ModificaIndirizziFrame() {
+	public ModificaIndirizziFrame(Controller controller, JFrame frameChiamante) {
+		frame= this;
 		setResizable(false);
 		setTitle("Modifica Indirizzi");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -173,9 +175,8 @@ public class ModificaIndirizziFrame extends JFrame {
 		springLayout.putConstraint(SpringLayout.NORTH, buttonIndietro, 31, SpringLayout.SOUTH, scrollPaneIndirizzi);
 		buttonIndietro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//JFrame chiamante del frame;
 				frame.setVisible(false);
-				//frame chiamante frameBorsa.setVisible(true);
+				frameChiamante.setVisible(true);
 				}
 		});
 		springLayout.putConstraint(SpringLayout.EAST, buttonIndietro, -119, SpringLayout.EAST, getContentPane());
