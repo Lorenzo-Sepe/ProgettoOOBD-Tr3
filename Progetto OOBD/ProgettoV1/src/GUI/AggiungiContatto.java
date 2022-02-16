@@ -21,6 +21,7 @@ import javax.swing.JScrollPane;
 import java.awt.CardLayout;
 //import net.miginfocom.swing.MigLayout;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.ImageIcon;
 import java.awt.image.BufferedImage;
@@ -39,6 +40,7 @@ import javax.swing.JTextPane;
 
 import Model.Contatto;
 import Controller.Controller;
+import Model.NumeriTelefonici;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -97,7 +99,8 @@ public class AggiungiContatto extends JFrame {
 	private JButton btnAggiungiNumero;
 	private JButton btnAggiungiIndirizzo;
 	private JButton btnNewButton_1;
-	private String pathFoto;
+	private File fileFoto;
+	private ArrayList<NumeriTelefonici> listaNumeri;
 
 	/**
 	 * Launch the application.
@@ -355,7 +358,8 @@ public class AggiungiContatto extends JFrame {
 								String prefisso = new String(textPanePrefisso.getText());
 								String nome = new String(textPaneNome.getText());
 								String cognome = new String(textPaneCognome.getText());
-								c.aggiungiContatto(prefisso, nome, cognome, pathFoto);
+								int id = c.aggiungiContatto(prefisso, nome, cognome, "null");
+								c.setFotoContatto(fileFoto, id);
 								frameChiamante.setVisible(true);
 								frame.setVisible(false);
 								frame.dispose();
@@ -366,6 +370,15 @@ public class AggiungiContatto extends JFrame {
 						contentPane.add(btnNewButton);
 						
 						btnAggiungiNumero = new JButton("Aggiungi Numero");
+						btnAggiungiNumero.addMouseListener(new MouseAdapter() {
+							@Override
+							public void mouseClicked(MouseEvent e) {
+								JDialog aggiungiNumero = new AggiungiNumeroFrame(c,frame);
+								aggiungiNumero.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+								aggiungiNumero.setModal(true);
+								aggiungiNumero.setVisible(true);
+							}
+						});
 						btnAggiungiNumero.setBounds(65, 281, 120, 23);
 						contentPane.add(btnAggiungiNumero);
 						
@@ -396,10 +409,9 @@ public class AggiungiContatto extends JFrame {
 
 		            int option = fileChooser.showOpenDialog(new JPanel());
 		            if(option == JFileChooser.APPROVE_OPTION){
-		                File file = fileChooser.getSelectedFile();
+		                fileFoto = fileChooser.getSelectedFile();
 		                    
-		                pathFoto = file.getAbsolutePath();
-		                ImageIcon iconFoto = new ImageIcon(c.getImageModificata(150, 150, file));
+		                ImageIcon iconFoto = new ImageIcon(c.getImageModificata(150, 150, fileFoto));
 		                labelFoto.setIcon(iconFoto);
 		            	labelFoto.setBounds(0, 0, 150, 150);
 		            		

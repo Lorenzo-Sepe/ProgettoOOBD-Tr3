@@ -12,6 +12,8 @@ import javax.swing.table.DefaultTableModel;
 
 import Controller.Controller;
 import Model.Contatto;
+import Model.*;
+import GUI.*;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -23,13 +25,18 @@ import javax.swing.JToolBar;
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SpringLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class Home extends JFrame {
 
 	private JPanel contentPane;
-	private JTable Rubrica;
+	private JTable RubricaTable;
+	Rubrica rubrica;
+	Controller c;
+	JFrame frame;
+
 
 	/**
 	 * Launch the application.
@@ -53,10 +60,11 @@ public class Home extends JFrame {
 	 * Create the frame.
 	 */
 	public Home(Controller c) {
-		JFrame frameHome;
+		frame=this;
+		c.dumpDati();
+		setTitle("Rubrica");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 470, 300);
-		frameHome = this;
+		setBounds(100, 100, 650, 400);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -87,20 +95,23 @@ public class Home extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		SpringLayout sl_contentPane = new SpringLayout();
+		contentPane.setLayout(sl_contentPane);
 		
 		JToolBar toolBar = new JToolBar();
-		toolBar.setBounds(10, 0, 438, 33);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, toolBar, 0, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, toolBar, 10, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, toolBar, 35, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, toolBar, 450, SpringLayout.WEST, contentPane);
 		contentPane.add(toolBar);
 		
 		JButton btnAggiungiContatto = new JButton("Aggiungi contatto");
 		btnAggiungiContatto.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				JFrame aggiungiContatto = new AggiungiContatto(c,frameHome);
-				frameHome.setVisible(false);
+				JFrame aggiungiContatto = new AggiungiContatto (c,frame);
+				frame.setVisible(false);
 				aggiungiContatto.setVisible(true);
-				
 			}
 		});
 		btnAggiungiContatto.setIcon(new ImageIcon(Home.class.getResource("/Immagini/aggiungi.jpg")));
@@ -115,7 +126,10 @@ public class Home extends JFrame {
 		toolBar.add(btnCercaContatto);
 		
 		JScrollPane scrollPaneRubrica = new JScrollPane();
-		scrollPaneRubrica.setBounds(20, 44, 404, 184);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPaneRubrica, 45, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPaneRubrica, 15, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPaneRubrica, -15, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPaneRubrica, -15, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPaneRubrica);
 		
 		//Rubrica = new JTable();
@@ -126,10 +140,21 @@ public class Home extends JFrame {
 	           return false;
 		}};
 		
-		Rubrica = new JTable(modelloRubrica);
-		ListSelectionModel listenerContattoSelezionato=Rubrica.getSelectionModel();
-		Rubrica.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		RubricaTable = new JTable(modelloRubrica);
+		RubricaTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+		            if(e.getClickCount()==2) {
+		                System.out.println(RubricaTable.getSelectedRow());
+		            	int id = (int) RubricaTable.getModel().getValueAt(RubricaTable.getSelectedRow(),0);
+		            	VisualizzaContattoFrame newFrame = new VisualizzaContattoFrame(c, frame, id);
+		            }
+		    }
+		});
+		ListSelectionModel listenerContattoSelezionato=RubricaTable.getSelectionModel();
+		RubricaTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
+		modelloRubrica.addColumn("Id");
 		modelloRubrica.addColumn("prefisso");
 		modelloRubrica.addColumn("nome"); 
 		modelloRubrica.addColumn("cognome"); 
@@ -138,12 +163,13 @@ public class Home extends JFrame {
 		
 		for(int i=0;i<arrayListContatti.size();i++) {
 			modelloRubrica.addRow(new Object[]{
+					arrayListContatti.get(i).getID(),
 					arrayListContatti.get(i).getPrefissoNome(),
 					arrayListContatti.get(i).getNome(),
 					arrayListContatti.get(i).getCognome()
 			});
 		}
-		
-		scrollPaneRubrica.setViewportView(Rubrica);
+		RubricaTable.removeColumn(RubricaTable.getColumnModel().getColumn(0));
+		scrollPaneRubrica.setViewportView(RubricaTable);
 	}
 }
