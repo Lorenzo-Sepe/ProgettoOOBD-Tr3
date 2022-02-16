@@ -35,7 +35,7 @@ public class Controller {
 			for (int j=1;j<  3+1;j++) {
 				String emailtmp= j+"EsimaMaiDilUser"+i+"@salcazzo.dio";
 				String numero="555-"+j+rubrica.getContatto(i).getCognome()+i+i+i;
-				NumeriTelefonici numeroComp=new NumeriTelefonici("tag","+39",numero, "fisso");
+				NumeriTelefonici numeroComp=new NumeriTelefonici(0,"+39",numero,"tag","fisso");
 			
 				rubrica.getContatto(i).aggiungiEmail(emailtmp);
 				//System.out.println(numeroComp.stampaNumero());
