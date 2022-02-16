@@ -483,10 +483,10 @@ public class VisualizzaContattoFrame extends JFrame {
 		                int option = fileChooser.showOpenDialog(new JPanel());
 		                if(option == JFileChooser.APPROVE_OPTION){
 		                   File file = fileChooser.getSelectedFile();
-		                    c.setFotoContatto(file.getAbsolutePath(), contattoID);
+		                    c.setFotoContatto(file, contattoID);
 		                    
-		          
-		                    ImageIcon iconFoto = new ImageIcon(c.getContatto(contattoID).getPathFoto());
+		                    ImageIcon iconFoto = new ImageIcon(c.getImageModificata(150, 150, new File(c.getPathContatto(contattoID))));
+		                    
 		                    labelFoto.setIcon(iconFoto);
 		            		labelFoto.setBounds(0, 0, 150, 150);
 		            		
