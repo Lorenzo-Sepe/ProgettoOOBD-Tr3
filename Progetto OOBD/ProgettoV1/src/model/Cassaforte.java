@@ -10,42 +10,51 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 /**
- * 
+ *
  */
- public class Cassaforte extends Gruppo {
-	
-	private String password;
+ public class Cassaforte{
 
+	private String password;
+	private ArrayList<Contatto> contatti =null;
     /**
      * Default constructor
      */
-    public Cassaforte(Gruppo gruppo, String pass) {
-    	super(gruppo.getNomeGruppo());
-    	password=CifraturaPassword(pass);
-    	if(!gruppo.getListaGruppo().isEmpty()) {
-    		membriGruppo =new ArrayList<Contatto>(gruppo.getListaGruppo());
-    	}else {
-    		membriGruppo =new ArrayList<Contatto>();
-    	}
+    public Cassaforte(String pass) {
+    	password=pass;
+
     }
-    
+
 
     public String getPassword(){
     	return password;
     }
+    public ArrayList<Contatto> getListaGruppo(){
+    	return contatti;
+    }
+    public void aggiungiContatto (Contatto i) {
+    	contatti.add(i);
+	}
+	public void aggiungiContatto(ArrayList<Contatto>arraylist){
+		if(contatti.isEmpty()) {
+			contatti=arraylist;
+		}else {
+			contatti.addAll(arraylist);
+		}
+	}
     //questo script è per fare dei test
-    public void setPassword(String pass) throws NoSuchAlgorithmException, InvalidKeySpecException {
-    	byte [] salt= "E*.^%j=+Z6-Ed9c,".getBytes();
-    	KeySpec spec = new PBEKeySpec(pass.toCharArray(), salt,1,16*8);
-    	SecretKeyFactory f =SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-    	password=f.generateSecret(spec).getEncoded().toString();
+    public void setPassword(String pass) {
+//    	byte [] salt= "E*.^%j=+Z6-Ed9c,".getBytes();
+//    	KeySpec spec = new PBEKeySpec(pass.toCharArray(), salt,1,16*8);
+//    	SecretKeyFactory f =SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+//    	password=f.generateSecret(spec).getEncoded().toString();
+    	password=pass;
     	}
-    
-    private String cifraturaPassword(String pass) {
+
+    public  String CifraturaPassword(String pass) {
     	// TODO gestire veramente la cifrattura
     	byte [] salt= "E*.^%j=+Z6-Ed9c,".getBytes();
     	KeySpec spec = new PBEKeySpec(pass.toCharArray(), salt,1,16*8);
-    	
+
 		try {
 			SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
 			return f.generateSecret(spec).getEncoded().toString();
@@ -55,20 +64,21 @@ import javax.crypto.spec.PBEKeySpec;
 		} catch (InvalidKeySpecException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}    	
+		}
     	  return pass;
     }
+
+//    public ArrayList<Contatto> getListaGruppo(String pass){
+//		if(pass.compareTo(password)==0) {
+//			System.out.println("yess ti do il gruppo");
+//			return contatti;
+//		}else {
+//			System.out.println("Noooo password errata, niente gruppo >-<");
+//			return contatti;
+//		}
+//	}
     
-    public ArrayList<Contatto> getListaGruppo(String pass){
-		if(CifraturaPassword(pass).compareTo(password)==0) {
-			System.out.println("yess ti do il gruppo");
-			return membriGruppo;
-		}else {
-			System.out.println("Noooo password errata, niente gruppo >-<");
-			return membriGruppo;
-		}
-	}
-    public static byte[] getEncryptedPassword(String password,byte[] salt,int iterations,int derivedKeyLength) throws NoSuchAlgorithmException, InvalidKeySpecException 
+    public byte[] getEncryptedPassword(String password,byte[] salt,int iterations,int derivedKeyLength) throws NoSuchAlgorithmException, InvalidKeySpecException
 	{
 		KeySpec spec = new PBEKeySpec(password.toCharArray(),salt,iterations,derivedKeyLength * 8);
 		SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
