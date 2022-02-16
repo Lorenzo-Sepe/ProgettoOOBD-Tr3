@@ -1,18 +1,25 @@
 package Model;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class Rubrica {
 	private String nome;
 	private ArrayList<Contatto> contatti= new ArrayList<>();
 	
+	private Cassaforte cassaforte =null;
 	
 	public Rubrica (String nome) {
+		this.setNome(nome);
+	}
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
 		this.nome = nome;
 	}
 	
-	public void aggiungiContatto (final Contatto c) {
+	public void aggiungiContatto ( Contatto c) {
 		contatti.add(c);
 		
 	}
@@ -38,7 +45,7 @@ public class Rubrica {
 			c.setPathFoto(modifica);
 		break;
 		case 5:
-			c.AggiungiEmail(modifica);
+			c.aggiungiEmail(modifica);
 		}
 	}
 	public ArrayList<Contatto> getListaContatti(){
@@ -57,4 +64,27 @@ public class Rubrica {
 		}
 		return null;
 	}
+	public void creaGruppo() {
+		//TODO
+	}
+	public void eliminaGruppo() {
+		//TODO
+	}
+	
+	public void creaCassaforte(String password) {
+		if(cassaforte==null)
+		cassaforte = new Cassaforte( password);
+	}
+	
+	public void aggiungiContattoCassaforte(int id) {
+		
+		cassaforte.aggiungiContatto(getContatto(id));
+		contatti.remove(getContatto(id));
+	}
+
+	public Cassaforte  getCassaforte() {
+		return cassaforte;
+	}
+
+	
 }
