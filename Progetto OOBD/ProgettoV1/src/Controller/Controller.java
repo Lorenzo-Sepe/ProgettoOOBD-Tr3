@@ -15,7 +15,7 @@ import Model.Contatto;
 import Model.Indirizzi;
 import Model.NumeriTelefonici;
 import Model.Rubrica;
-import implementazioneDAOpostgreSQL.*;
+import ImplementazioneDAOpostgreSQL.*;
 
 public class Controller {
 	Rubrica rubrica;
