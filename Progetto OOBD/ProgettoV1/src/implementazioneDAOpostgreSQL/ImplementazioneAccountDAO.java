@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import DAO.AccountDAO;
-import DAO.Connessione;
+import Database.Connessione;
 import Model.Account;
 import Model.Contatto;
 
@@ -19,7 +19,7 @@ import Model.Contatto;
  *
  */
 public class ImplementazioneAccountDAO implements AccountDAO {
-	
+
 private Connection connection;
 	
 	public ImplementazioneAccountDAO() {
@@ -30,6 +30,14 @@ private Connection connection;
 			e.printStackTrace();
 		}
 	}
+	public void  chiudiConnessione() {
+		 try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	 }
 
 	@Override
 	public void addAccountDB(Account a, Contatto c) {
@@ -61,7 +69,8 @@ private Connection connection;
 			while (rs.next()) {
 				Account i = new Account (rs.getString("Fornitore"), rs.getString("Nickname"),rs.getString("Frase_di_Benvenuto"),  rs.getString("Mail") );
 				listaAccount.add(i);
-				connection.close();
+
+
 			}
 			rs.close();
 			} catch (SQLException e) {

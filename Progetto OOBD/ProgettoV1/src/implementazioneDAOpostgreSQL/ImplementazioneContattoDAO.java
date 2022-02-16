@@ -1,4 +1,4 @@
-package ImplementazioneDAOpostgreSQL;
+package implementazioneDAOpostgreSQL;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,11 +7,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import DAO.ContattoDAO;
+import Database.Connessione;
 import Model.Account;
 import Model.Contatto;
 import Model.Indirizzi;
 import Model.NumeriTelefonici;
-import DAO.Connessione;
 
 public class ImplementazioneContattoDAO implements ContattoDAO {
 	
@@ -25,6 +25,17 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 			e.printStackTrace();
 		}
 	}
+	
+	public void  chiudiConnessione() {
+		 try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	 }
+		
+	
 	
 	public void addContattoDB (Contatto c) {
 		PreparedStatement addContattoPS;
@@ -78,7 +89,6 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 			while (rs.next()) {
 				Contatto i = new Contatto (rs.getInt(0), rs.getString("prefisso_nome"), rs.getString("nome"), rs.getString("cognome"),rs.getString("path_foto"));
 				listaContatti.add(i);
-				connection.close();
 			}
 		}
 		catch (SQLException e) {
@@ -96,7 +106,6 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 			while (rs.next()) {
 				Contatto i = new Contatto (rs.getInt("contatto_id"),rs.getString("prefisso_nome"), rs.getString("nome"), rs.getString("cognome"),rs.getString("path_foto"));
 				listaContatti.add(i);
-				connection.close();
 			}
 	}
 		catch (SQLException e) {
@@ -123,25 +132,29 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 			while (rsM.next()) {
 				NumeriTelefonici i = new NumeriTelefonici(rsM.getString("identificatore"), rsM.getString("prefisso_nazionale")  , rsM.getString("numero"),"Mobile" );
 				listaNumeri.add(i);
+				
 			}
-			
+			//connection.close();
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		
 		return listaNumeri;
 	}
 	
-	public ArrayList<Indirizzi> getListaIndirizzi (int id){
+	public ArrayList<Indirizzi> getListaIndirizzi (int contattoID){
 		PreparedStatement getListaIndirizziPS;
 		ArrayList<Indirizzi> listaIndirizzi = new ArrayList<>();
 		try {
 			getListaIndirizziPS = connection.prepareStatement("SELECT i.*,ab.abitazione_principale, ab.identificatore FROM indirizzi i,abita ab WHERE ab.contatto_associato = ? AND ab.indirizzo_associato = i.indirizzi_id ORDER BY indirizzi_id\r\n"
 					+ "");
-			getListaIndirizziPS.setInt(1, id);
+			getListaIndirizziPS.setInt(1, contattoID);
 			ResultSet rs = getListaIndirizziPS.executeQuery();
 			while (rs.next()) {
-				Indirizzi i = new Indirizzi(rs.getBoolean("abitazione_principale"), rs.getString("via"),rs.getString("citt‡"),rs.getInt("codice_postale"),rs.getString("nazione"),rs.getString("identificatore"));
+				Indirizzi i = new Indirizzi(rs.getInt("indirizzi_id"), rs.getBoolean("abitazione_principale"), rs.getString("via"),rs.getString("citt√†"),rs.getInt("codice_postale"),rs.getString("nazione"),rs.getString("identificatore"));
+			
 				listaIndirizzi.add(i);
 			}
 		}

@@ -15,10 +15,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import dao.Connessione;
-import dao.IndirizziDAO;
-import model.Contatto;
-import model.Indirizzi;
+import DAO.IndirizziDAO;
+import Database.Connessione;
+import Model.Contatto;
+import Model.Indirizzi;
 
 
 
@@ -39,6 +39,15 @@ public class ImplementazioneIndirizziDAO implements IndirizziDAO {
 		}
 	}
 
+	public void  chiudiConnessione() {
+		 try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	 }
+	
 	@Override
 	public void addIndirizzoDB(Indirizzi i, Contatto c) {
 		PreparedStatement addIndirizzoPS;
@@ -92,7 +101,7 @@ public class ImplementazioneIndirizziDAO implements IndirizziDAO {
 		while (rs.next()) {
 			Indirizzi i = new Indirizzi (rs.getInt("Indirizzo_ID"), rs.getBoolean("Abitazione_Principale"),  rs.getString("Via"), rs.getString("Città"), rs.getInt("Codice_Postale"), rs.getString("Nazione"), rs.getString("Identificatore") );
 			listaIndirizzi.add(i);
-			connection.close();
+			
 		}
 		rs.close();
 		} catch (SQLException e) {
