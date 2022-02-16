@@ -8,22 +8,18 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
-import javax.swing.plaf.multi.MultiPopupMenuUI;
 
-import DAO.ContattoDAO;
-import DAO.RubricaDAO;
-import ImplementazioneDAOpostgreSQL.ImplementazioneContattoDAO;
-import ImplementazioneDAOpostgreSQL.ImplementazioneRubricaDAO;
+import DAO.*;
 import Model.Account;
 import Model.Contatto;
 import Model.Indirizzi;
 import Model.NumeriTelefonici;
 import Model.Rubrica;
+import implementazioneDAOpostgreSQL.*;
 
 public class Controller {
 	Rubrica rubrica;
-	@SuppressWarnings("unused")
-	private boolean ync =false;
+	//private boolean ync =false;
 	
 	//metodi 
 	
@@ -34,6 +30,7 @@ public class Controller {
 		rubrica.aggiungiContatto(new Contatto(id++,"sig","ale","tri",null));
 		rubrica.aggiungiContatto(new Contatto(id++,"sig","lor","sep",null));
 		rubrica.aggiungiContatto(new Contatto(id++,"sig","rai","mor",null));
+		
 		for(int i=0;i<id;i++) {
 			for (int j=1;j<  3+1;j++) {
 				String emailtmp= j+"EsimaMaiDilUser"+i+"@salcazzo.dio";
@@ -46,8 +43,8 @@ public class Controller {
 				String tag= "casa Numero"+j;
 				rubrica.getContatto(i).aggiungiIndirizzo(new Indirizzi(i, false, via,"Napoli", i, "Italia", tag));
 				
-				String nomeContatto = rubrica.getContatto(i).getNome();	
-				String indirizzoComp=rubrica.getContatto(i).getIndirizzo(j-1).stampaIndirizzo();
+//				String nomeContatto = rubrica.getContatto(i).getNome();	
+//				String indirizzoComp=rubrica.getContatto(i).getIndirizzo(j-1).stampaIndirizzo();
 				//System.out.println("Indirizzo di User "+nomeContatto+": "+indirizzoComp);
 				rubrica.getContatto(i).aggiungiNumero(numeroComp);
 				
@@ -58,29 +55,42 @@ public class Controller {
 				String email=emailtmp;
 				Account account =new Account(fornitore, nickname, benvenuto, email);
 				rubrica.getContatto(i).aggiungiAccount(account);
+			}
+		}
+				//leggi dal database
 				
-				//Leggi dal Database
 				RubricaDAO rubricaDao= new ImplementazioneRubricaDAO();
 				ContattoDAO contattoDao = new ImplementazioneContattoDAO();
                 ArrayList<Contatto> contattiDB = rubricaDao.selectAllDB();
                 ArrayList<NumeriTelefonici> numeriDB;
                 ArrayList<Indirizzi> indirizziDB;
                 ArrayList<Account> accountDB;
-                for (Contatto contatto : contattiDB) {
-                    numeriDB = contattoDao.getListaNumeri(contatto.getID());
-                    indirizziDB = contattoDao.getListaIndirizzi(contatto.getID());
-                    accountDB = contattoDao.getListaAccount(contatto.getID());
-                    contatto.aggiungiNumero(numeriDB);
-                    contatto.aggiungiIndirizzo(indirizziDB);
-                    contatto.aggiungiAccount(accountDB);
+//               Contatto contatto;
+//                int max=contattiDB.size();
+//                
+//                for(int cont =0;cont<max;cont++) {
+//                	contatto=contattiDB.get(cont);
+             
+               for (Contatto contatto : contattiDB) {
+                
+                	System.out.println("prova ripeti for "+contatto.StampaContatto());
+                	
+//                   numeriDB = contattoDao.getListaNumeri(contatto.getID());
+//                    indirizziDB = contattoDao.getListaIndirizzi(contatto.getID());
+//                    accountDB = contattoDao.getListaAccount(contatto.getID());
+//                    contatto.aggiungiNumero(numeriDB);
+//                    contatto.aggiungiIndirizzo(indirizziDB);
+//                    contatto.aggiungiAccount(accountDB);
                     rubrica.aggiungiContatto(contatto);
 				
-                }
+              }
+				
 			}
-		}
 		
 		
-	}
+	
+	
+
 	
 	
 	/**
@@ -115,6 +125,7 @@ public void aggiungiContatto(String prefisso, String nome, String cognome,String
 		setFotoContatto(path, id);
 		
 		rubrica.aggiungiContatto(new Contatto(id, prefisso, nome, cognome, path));
+		
 }
 
 @Deprecated
@@ -175,27 +186,28 @@ public void aggiungiContatto(Contatto contatto) {
 	 * @param file
 	 * @return  
 	 */
-	public BufferedImage  getImageModificata(int width, int height,String pathRelativo) {
-		BufferedImage img=null;
-		BufferedImage inputImage = null;
-		File file= new File(GetRelativePath() +pathRelativo);
-		try {
-			inputImage = ImageIO.read(file);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	// creates the output image
-          img = new BufferedImage(width, height, inputImage.getType());
-     
-          // balance the input image to the output image
-          Graphics2D g = img.createGraphics();
-          g.drawImage(inputImage, 0, 0, width, height, null);
-          g.dispose();
-          
-          return img ;
-		
-	}
+	
+//	
+//		BufferedImage img=null;
+//		BufferedImage inputImage = null;
+//		File file= new File(GetRelativePath() +pathRelativo);
+//		try {
+//			inputImage = ImageIO.read(file);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//    	// creates the output image
+//          img = new BufferedImage(width, height, inputImage.getType());
+//     
+//          // balance the input image to the output image
+//          Graphics2D g = img.createGraphics();
+//          g.drawImage(inputImage, 0, 0, width, height, null);
+//          g.dispose();
+//          
+//          return img ;
+//		
+//	}
 	
 	
 	/**
