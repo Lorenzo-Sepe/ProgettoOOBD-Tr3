@@ -1,4 +1,4 @@
-package implementazioneDAOpostgreSQL;
+package ImplementazioneDAOpostgreSQL;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -79,40 +79,9 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 		}
 	}
 	
-	public ArrayList<Contatto> readContattoDB (Contatto c) {
-		PreparedStatement readContattoPS;
-		ArrayList<Contatto> listaContatti = new ArrayList<>();
-		try {
-			readContattoPS = connection.prepareStatement("SELECT * FROM Contatto WHERE contatto_id = ?");
-			readContattoPS.setInt(1, c.getID());
-			ResultSet rs = readContattoPS.executeQuery();
-			while (rs.next()) {
-				Contatto i = new Contatto (rs.getInt(0), rs.getString("prefisso_nome"), rs.getString("nome"), rs.getString("cognome"),rs.getString("path_foto"));
-				listaContatti.add(i);
-			}
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return listaContatti;
-	}
 	
-	public ArrayList<Contatto> selectAllDB () {
-		PreparedStatement selectAllPS;
-		ArrayList<Contatto> listaContatti = new ArrayList<>();
-		try {
-			selectAllPS = connection.prepareStatement("SELECT * FROM Contatto ORDER BY contatto_id");
-			ResultSet rs = selectAllPS.executeQuery();
-			while (rs.next()) {
-				Contatto i = new Contatto (rs.getInt("contatto_id"),rs.getString("prefisso_nome"), rs.getString("nome"), rs.getString("cognome"),rs.getString("path_foto"));
-				listaContatti.add(i);
-			}
-	}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return listaContatti;
-	}
+	
+	
 	
 	public ArrayList<NumeriTelefonici> getListaNumeri (int id) {
 		PreparedStatement getListaNumeriFissiPS;
@@ -182,4 +151,70 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 		}
 		return listaAccount;
 	}
-}
+	
+	public void setDeputatoMobileSuFIsso(String mobilePrefisso,String mobileNumero,String fissoPrefisso,String fissoNumero) {
+		PreparedStatement getDeputato ;
+		String nomeProcedura=" SetDeputatoMobileSuFisso ";
+		try {
+			getDeputato=connection.prepareStatement("CALL "+nomeProcedura+"( ?, ?)");
+			getDeputato.setInt(1, getIDNumeroMobile(mobilePrefisso, mobileNumero));
+			getDeputato.setInt(2, getIDNumeroFisso(fissoPrefisso, fissoNumero));
+			ResultSet rs= getDeputato.executeQuery();
+			//TODO SI deve fare altro ?
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+			
+		} 
+	public void setDeputatoFissoSuMobile(String mobilePrefisso,String mobileNumero,String fissoPrefisso,String fissoNumero) {
+		PreparedStatement getDeputato ;
+		String nomeProcedura=" SetDeputatoMobileSuFisso ";
+		try {
+			getDeputato=connection.prepareStatement("CALL "+nomeProcedura+"( ?, ?)");
+			getDeputato.setInt(1, getIDNumeroMobile(mobilePrefisso, mobileNumero));
+			getDeputato.setInt(2, getIDNumeroFisso(fissoPrefisso, fissoNumero));
+			ResultSet rs= getDeputato.executeQuery();
+			//TODO SI deve fare altro ?
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+			
+		} 
+	private int getIDNumeroMobile(String prefissoMobile,String numeroMobile) throws Exception {
+		PreparedStatement getIDNumero;
+		int id = 0;
+		try {
+			getIDNumero=connection.prepareStatement("Select ID Numero_ID from NUMERI_TELEFONICI_MOBILI Where PREFISSO_NAZIONALE = ? AND NUMERO = ? ");
+			getIDNumero.setString(1, prefissoMobile);
+			getIDNumero.setString(2, numeroMobile);
+			ResultSet rs= getIDNumero.executeQuery();
+			rs.next();
+			id =rs.getInt("Numero_ID");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		if(id==0) throw new Exception("Id Numero Mobile non trovato ");
+		return id;
+	}
+	private int getIDNumeroFisso(String prefissoFisso,String numeroFisso) throws Exception {
+		PreparedStatement getIDNumero;
+		int id = 0;
+		try {
+			getIDNumero=connection.prepareStatement("Select ID Numero_ID from NUMERI_TELEFONICI_FISSI Where PREFISSO_NAZIONALE = ? AND NUMERO = ? ");
+			getIDNumero.setString(1, prefissoFisso);
+			getIDNumero.setString(2, numeroFisso);
+			ResultSet rs= getIDNumero.executeQuery();
+			rs.next();
+			id =rs.getInt("Numero_ID");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		if(id==0) throw new Exception("Id Numero Fisso non trovato ");
+		return id;
+	}	
+	
+	
+	
+}//Fine classe
