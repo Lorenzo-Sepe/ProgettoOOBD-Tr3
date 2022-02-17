@@ -38,7 +38,9 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListSelectionModel;
 import javax.swing.JTextPane;
 
+import Model.Account;
 import Model.Contatto;
+import Model.Indirizzi;
 import Controller.Controller;
 import Model.NumeriTelefonici;
 
@@ -126,6 +128,9 @@ public class AggiungiContatto extends JFrame {
 		frame = this;
 		c=controller;
 		frameChiamante=Chiamante;
+		ArrayList<NumeriTelefonici> listaNumeri = new ArrayList<>();
+		ArrayList<Indirizzi> listaIndirizzi = new ArrayList<>();
+		ArrayList<Account> listaAccount = new ArrayList<>();
 		setTitle("Visualizzazione");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1110, 700);
@@ -277,7 +282,31 @@ public class AggiungiContatto extends JFrame {
 		sl_panelNumeri.putConstraint(SpringLayout.EAST, scrollPaneNumeri, 0, SpringLayout.EAST, panelNumeri);
 		panelNumeri.add(scrollPaneNumeri);
 		
-		tableNumeri = new JTable(modelNumeri);
+		//tableNumeri = new JTable(modelNumeri);
+		DefaultTableModel modelloNumeri = new DefaultTableModel() {
+			@Override
+			 public boolean isCellEditable(int row, int column) {
+		           //all cells false
+		           return false;
+			 }
+		};
+		
+		tableNumeri = new JTable(modelloNumeri);
+		
+		modelloNumeri.addColumn("prefisso");
+		modelloNumeri.addColumn("numero");
+		modelloNumeri.addColumn("tipo");
+		modelloNumeri.addColumn("tag");
+		
+		for (NumeriTelefonici num : listaNumeri) {
+			modelloNumeri.addRow(new Object[] {
+				num.getPrefisso(),
+				num.getNumero(),
+				num.getTipoNumero(),
+				num.getTag()
+			});
+		}
+		
 		ListSelectionModel listenerNumeri=tableNumeri.getSelectionModel();
 		tableNumeri.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
@@ -373,7 +402,7 @@ public class AggiungiContatto extends JFrame {
 						btnAggiungiNumero.addMouseListener(new MouseAdapter() {
 							@Override
 							public void mouseClicked(MouseEvent e) {
-								JDialog aggiungiNumero = new AggiungiNumeroFrame(c,frame);
+								JDialog aggiungiNumero = new AggiungiNumeroFrame(c,frame,listaNumeri);
 								aggiungiNumero.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 								aggiungiNumero.setModal(true);
 								aggiungiNumero.setVisible(true);
@@ -383,10 +412,28 @@ public class AggiungiContatto extends JFrame {
 						contentPane.add(btnAggiungiNumero);
 						
 						btnAggiungiIndirizzo = new JButton("Aggiungi Indirizzo");
+						btnAggiungiIndirizzo.addMouseListener(new MouseAdapter() {
+							@Override
+							public void mouseClicked(MouseEvent e) {
+								JDialog aggiungiIndirizzo = new AggiungiIndirizzoFrame(c, frame);
+								aggiungiIndirizzo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+								aggiungiIndirizzo.setModal(true);
+								aggiungiIndirizzo.setVisible(true);
+							}
+						});
 						btnAggiungiIndirizzo.setBounds(65, 385, 120, 23);
 						contentPane.add(btnAggiungiIndirizzo);
 						
 						btnNewButton_1 = new JButton("Aggiungi Accout");
+						btnNewButton_1.addMouseListener(new MouseAdapter() {
+							@Override
+							public void mouseClicked(MouseEvent e) {
+								JDialog aggiungiAccoun = new AggiungiAccountFrame(c,frame);
+								aggiungiAccoun.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+								aggiungiAccoun.setModal(true);
+								aggiungiAccoun.setVisible(true);
+							}
+						});
 						btnNewButton_1.setBounds(65, 508, 120, 23);
 						contentPane.add(btnNewButton_1);
 		
