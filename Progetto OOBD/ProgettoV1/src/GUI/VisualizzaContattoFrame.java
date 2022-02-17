@@ -99,6 +99,7 @@ public class VisualizzaContattoFrame extends JFrame {
 	private JTextPane textPanePrefisso;
 	private JButton buttonIndietro;
 	private JPanel panel;
+	private JButton ritornaInRubrica;
 
 	/**
 	 * Launch the application.
@@ -134,6 +135,17 @@ public class VisualizzaContattoFrame extends JFrame {
 		
 		JMenu voceMenuIdietro = new JMenu("New menu");
 		menuBar.add(voceMenuIdietro);
+		
+		ritornaInRubrica = new JButton("Ritorna in Rubrica");
+		ritornaInRubrica.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				frame.setVisible(false);
+				frame.dispose();
+				frameChiamante.setVisible(true);
+			}
+		});
+		voceMenuIdietro.add(ritornaInRubrica);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -260,7 +272,8 @@ public class VisualizzaContattoFrame extends JFrame {
 		
 		//TODO aggiungi funzionalità dinamica
 		labelFoto = new JLabel("");
-		labelFoto.setIcon(new ImageIcon(c.getPathContatto(id)));
+		//ImageIcon PROVA = new ImageIcon(c.getImageModificata(id, id, new File("path")));
+		labelFoto.setIcon(new ImageIcon(c.getImageModificata(150, 150, new File (c.getPathContatto(id)))));
 		labelFoto.setBounds(0, 0, 150, 150);
 		panelFoto.add(labelFoto);
 		
@@ -486,7 +499,6 @@ public class VisualizzaContattoFrame extends JFrame {
 		                    c.setFotoContatto(file, contattoID);
 		                    
 		                    ImageIcon iconFoto = new ImageIcon(c.getImageModificata(150, 150, new File(c.getPathContatto(contattoID))));
-		                    
 		                    labelFoto.setIcon(iconFoto);
 		            		labelFoto.setBounds(0, 0, 150, 150);
 		            		
