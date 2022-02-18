@@ -20,7 +20,7 @@ import ImplementazioneDAOpostgreSQL.*;
 
 public class Controller {
 	Rubrica rubrica;
-	//private boolean ync =false;
+	//private boolean sync =false;
 	
 	//metodi 
 	
@@ -36,7 +36,7 @@ public class Controller {
 			for (int j=1;j<  3+1;j++) {
 				String emailtmp= j+"EsimaMaiDilUser"+i+"@salcazzo.dio";
 				String numero="555-"+j+rubrica.getContatto(i).getCognome()+i+i+i;
-				NumeriTelefonici numeroComp=new NumeriTelefonici("tag",EnumPrefissoNumero.Italia,numero, "fisso");
+				NumeriTelefonici numeroComp=new NumeriTelefonici("tag",EnumPrefissoNumero.Italia.getPrefisso(),numero, "fisso");
 			
 				rubrica.getContatto(i).aggiungiEmail(emailtmp);
 				//System.out.println(numeroComp.stampaNumero());
@@ -373,5 +373,36 @@ public void aggiungiContattoCassaforte(String pass,int id) {
 	rubrica.getCassaforte().aggiungiContatto(rubrica.getContatto(id));
 	getListaContatti().remove(rubrica.getContatto(id));
 }
+
+
+
+
+
+
+public ArrayList<Contatto> searchMail(String mail) {
+	if (mail == null) {mail = "true";};
+	ArrayList <Contatto> ListRisultati = new ArrayList <>();
+	ArrayList<Integer> ListID = ImplementazioneContattoDAO.SearchMail(mail);
+	// TODO Auto-generated method stub
+	return ListRisultati;
+}
+
+
+
+//public ArrayList<Contatto> SearchAnagrafica(String prefisso, String nome, String cognome) {
+//	// TODO Auto-generated method stub
+//	if (prefisso == null) {prefisso="true";}; 
+//	if (nome == null) {nome="true";}; 
+//	if (cognome == null) {cognome="true";};
+//	ArrayList<Integer> ListID = ImplementazioneContattoDAO.SearchAnagrafica(prefisso,nome,cognome);
+//	ArrayList <Contatto> ListRisultati = new ArrayList <>();
+////	ArrayList <Contatto> List = new ArrayList <>();
+////	List = getListaContatti();
+//	
+//	for (Integer id : ListID) {
+//		ListRisultati.add(Rubrica.getContatto(id));
+//	}
+//	return ListRisultati;
+//}
 
 }
