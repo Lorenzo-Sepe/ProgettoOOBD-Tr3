@@ -202,6 +202,23 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 		}
 		return listaRisultato;
 	}
+
+	public static ArrayList<Integer> SearchMail(String mail) {
+		PreparedStatement searchMailPS;
+		ArrayList<Integer> listaRisultato = new ArrayList<>();
+		try {
+			searchMailPS = connection.prepareStatement("SELECT Contatto FROM Mail_Associata JOIN Contatto ON Mail_Associata.Contatto =Contatto.Contatto_ID WHERE Mail = ?");
+			searchMailPS.setString(1,mail);
+			ResultSet rs = searchMailPS.executeQuery();
+			while (rs.next()) {
+				listaRisultato.add(rs.getInt("Contatto_ID"));
+			}	
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return listaRisultato;
+	}
 	
 	
 	
