@@ -131,18 +131,49 @@ public Contatto getContatto(int id) {
  * @param path
  * @return 
  */
-public int aggiungiContatto(String prefisso, String nome, String cognome,String path ) {
+public int aggiungiContatto(String prefisso, String nome, String cognome,String path ) throws SQLException {
 		RubricaDAO rubricadao=new ImplementazioneRubricaDAO();
-		int id =rubricadao.addContattoDB(prefisso, nome, cognome, path);
+		int id = 0;
+		
+			id = rubricadao.addContattoDB(prefisso, nome, cognome, path);
+		
 		setFotoContatto(new File(path), id);
 		
 		rubrica.aggiungiContatto(new Contatto(id, prefisso, nome, cognome, " "));
 		return id;
 }
 
-@Deprecated
-public void aggiungiContatto(Contatto contatto) {
-	rubrica.aggiungiContatto(contatto);
+/**
+ *	dato un contatto salva in locale soltanto le anagrafiche il database inserisce tutto
+ * @param contatto
+ * @throws SQLException 
+ */
+public void aggiungiContatto(Contatto contatto) throws SQLException {
+	int id=0;
+	ContattoDAO contattoDao = new ImplementazioneContattoDAO();
+	id =aggiungiContatto(contatto.getPrefissoNome(), contatto.getNome(), contatto.getCognome(), contatto.getPathFoto());
+	if(!contatto.getListaNumeri().isEmpty()) {
+		for (NumeriTelefonici numero : contatto.getListaNumeri()) {
+		contattoDao.addNumeriDB (id, numero.getPrefisso(), numero.getNumero(), numero.getTag(), numero.getTipoNumero());
+		}
+	}
+	if(!contatto.getListaIndirizzi().isEmpty()) {
+		for (Indirizzi indirizzo : contatto.getListaIndirizzi()) {
+			contattoDao.addIndirizziDB(id, indirizzo.getVia(), indirizzo.getCittà(), indirizzo.getCodicePostale(), indirizzo.getNazione(), indirizzo.getIdentificatore(), indirizzo.getPrincipale().booleanValue());
+		}
+	}
+	if(!contatto.getListaEmail().isEmpty()) {
+		for (String mail: contatto.getListaEmail()) {
+			contattoDao.addEmailDB(id, mail);
+		}
+	}
+	if(!contatto.getListaAccount().isEmpty()) {
+		for (Account account: contatto.getListaAccount()) {
+			contattoDao.addAccountDB(id, account.getNickname(), account.getFornitore(), account.getBenvenuto(), account.getMail());
+		}
+	}
+	
+	
 }
 	/**
 	 * 
