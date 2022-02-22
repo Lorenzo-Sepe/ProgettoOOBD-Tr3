@@ -56,6 +56,7 @@ import javax.swing.AbstractListModel;
 import java.awt.Font;
 import java.awt.Frame;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JMenu;
 import javax.swing.border.TitledBorder;
 import java.awt.Component;
@@ -88,7 +89,6 @@ public class AggiungiContatto extends JFrame {
 	private JPanel panelAccount;
 	private JScrollPane scrollPane;
 	private JLabel labelMail;
-	private JList listMail;
 	private JLabel labelPrefisso;
 	private JLabel labelNome;
 	private JLabel labelCognome;
@@ -98,11 +98,19 @@ public class AggiungiContatto extends JFrame {
 	private JTextPane textPanePrefisso;
 	private JButton buttonIndietro;
 	private JPanel panel;
-	private JButton btnAggiungiNumero;
-	private JButton btnAggiungiIndirizzo;
-	private JButton btnNewButton_1;
 	private File fileFoto;
-	private ArrayList<NumeriTelefonici> listaNumeri;
+	private JButton btnAggiungiNumero;
+	private JButton btnEliminaNumero;
+	private JButton btnModificaNumero;
+	private JButton btnNewButton_1;
+	private JButton btnNewButton_2;
+	private JButton btnNewButton_3;
+	private JButton btnNewButton_4;
+	private JButton btnNewButton_5;
+	private JButton btnNewButton_6;
+	
+	private ArrayList<NumeriTelefonici> listaNumeri = new ArrayList<>();
+	private ArrayList<String> listaMail = new ArrayList<String>();
 
 	/**
 	 * Launch the application.
@@ -168,17 +176,7 @@ public class AggiungiContatto extends JFrame {
 		ArrayList<String> arrayListContattiCognome = new ArrayList<>(Arrays.asList("Mor", "Sep", "Tri","Cal"));
 		
 		
-		  DefaultTableModel modelNumeri =  new DefaultTableModel() {
-	        @Override
-	        public boolean isCellEditable(int row, int column) {
-	           //all cells false
-	           return false;
-	        }};
-		
-		modelNumeri.addColumn("Identificatore");
-		modelNumeri.addColumn("Prefisso");
-		modelNumeri.addColumn("Numero"); 
-		modelNumeri.addColumn("Tipo Numero"); 
+
 		
 		
 		// Inserimento nella tabella dei numeri del contatto
@@ -247,24 +245,14 @@ public class AggiungiContatto extends JFrame {
 		contentPane.add(labelMail);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(375, 125, 464, 20);
+		scrollPane.setBounds(375, 125, 464, 23);
 		contentPane.add(scrollPane);
 		
-		listMail = new JList<Object>();
-		listMail.setModel(new AbstractListModel() {
-			String[] values = new String[] {"Mail", "Mail", "Mail"};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
-		listMail.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		scrollPane.setViewportView(listMail);
+		JComboBox comboBoxMail = new JComboBox();
+		scrollPane.setViewportView(comboBoxMail);
 		
 		panelNumeri = new JPanel();
-		panelNumeri.setBounds(235, 234, 839, 115);
+		panelNumeri.setBounds(235, 253, 839, 115);
 		contentPane.add(panelNumeri);
 		SpringLayout sl_panelNumeri = new SpringLayout();
 		panelNumeri.setLayout(sl_panelNumeri);
@@ -293,10 +281,10 @@ public class AggiungiContatto extends JFrame {
 		
 		tableNumeri = new JTable(modelloNumeri);
 		
+		modelloNumeri.addColumn("tag");
 		modelloNumeri.addColumn("prefisso");
 		modelloNumeri.addColumn("numero");
 		modelloNumeri.addColumn("tipo");
-		modelloNumeri.addColumn("tag");
 		
 		for (NumeriTelefonici num : listaNumeri) {
 			modelloNumeri.addRow(new Object[] {
@@ -312,9 +300,72 @@ public class AggiungiContatto extends JFrame {
 		
 		
 		scrollPaneNumeri.setViewportView(tableNumeri);
+		
+		btnAggiungiNumero = new JButton("Aggiungi");
+		btnAggiungiNumero.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				AggiungiNumeroPanel panelAggiungiNumero = new AggiungiNumeroPanel();
+                int result = JOptionPane.showConfirmDialog(null, panelAggiungiNumero, "Inserisci Numero",
+                        JOptionPane.OK_CANCEL_OPTION);
+
+                if (result == JOptionPane.OK_OPTION) {
+                	modelloNumeri.addRow(new Object[]{
+                			panelAggiungiNumero.getTag(),
+                			panelAggiungiNumero.getPrefisso(),
+                			panelAggiungiNumero.getNumero(),
+                			panelAggiungiNumero.getTipo()
+                    });
+                }
+			}
+		});
+		
+		sl_panelNumeri.putConstraint(SpringLayout.NORTH, btnAggiungiNumero, 6, SpringLayout.SOUTH, labelNumeriTelefono);
+		sl_panelNumeri.putConstraint(SpringLayout.EAST, btnAggiungiNumero, -10, SpringLayout.EAST, labelNumeriTelefono);
+		panelNumeri.add(btnAggiungiNumero);
+		
+		btnEliminaNumero = new JButton("Elimina");
+		btnEliminaNumero.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int row;
+				if (!listenerNumeri.isSelectionEmpty()) {
+					row = tableNumeri.getSelectedRow();
+					modelloNumeri.removeRow(row);
+				}
+			}
+		});
+		sl_panelNumeri.putConstraint(SpringLayout.NORTH, btnEliminaNumero, 6, SpringLayout.SOUTH, btnAggiungiNumero);
+		sl_panelNumeri.putConstraint(SpringLayout.WEST, btnEliminaNumero, 0, SpringLayout.WEST, btnAggiungiNumero);
+		sl_panelNumeri.putConstraint(SpringLayout.EAST, btnEliminaNumero, 73, SpringLayout.WEST, btnAggiungiNumero);
+		panelNumeri.add(btnEliminaNumero);
+		
+		btnModificaNumero = new JButton("Modifica");
+		sl_panelNumeri.putConstraint(SpringLayout.NORTH, btnModificaNumero, 6, SpringLayout.SOUTH, btnEliminaNumero);
+		sl_panelNumeri.putConstraint(SpringLayout.EAST, btnModificaNumero, 73, SpringLayout.WEST, btnAggiungiNumero);
+		btnModificaNumero.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row =tableNumeri.getSelectedRow();
+                int column=0;
+                AggiungiNumeroPanel panelModificaNumero = new AggiungiNumeroPanel();
+                panelModificaNumero.setAll(modelloNumeri.getValueAt(row, column++).toString(), modelloNumeri.getValueAt(row, column++).toString(), modelloNumeri.getValueAt(row, column++).toString(), modelloNumeri.getValueAt(row, column++).toString());
+
+                int result = JOptionPane.showConfirmDialog(null, panelModificaNumero, "Modifica Numero",  JOptionPane.OK_CANCEL_OPTION);
+
+                if (result == JOptionPane.OK_OPTION) {
+                    column=0;
+                    modelloNumeri.setValueAt(panelModificaNumero.getTag(), row, column++);
+                    modelloNumeri.setValueAt(panelModificaNumero.getPrefisso(), row, column++);
+                    modelloNumeri.setValueAt(panelModificaNumero.getNumero(), row, column++);
+                    modelloNumeri.setValueAt(panelModificaNumero.getTipo(), row, column++);
+                }
+			}
+		});
+		sl_panelNumeri.putConstraint(SpringLayout.WEST, btnModificaNumero, 0, SpringLayout.WEST, btnAggiungiNumero);
+		panelNumeri.add(btnModificaNumero);
 				
 				panelIndirizzi = new JPanel();
-				panelIndirizzi.setBounds(235, 354, 839, 105);
+				panelIndirizzi.setBounds(235, 379, 839, 105);
 				contentPane.add(panelIndirizzi);
 				SpringLayout sl_panelIndirizzi = new SpringLayout();
 				panelIndirizzi.setLayout(sl_panelIndirizzi);
@@ -336,8 +387,52 @@ public class AggiungiContatto extends JFrame {
 				tableIndirizzi.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				scrollPaneIndirizzi.setViewportView(tableIndirizzi);
 				
+				btnNewButton_1 = new JButton("Aggiungi");
+				btnNewButton_1.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						AggiungiIndirizzoPanel panelAggiungiIndirizzo = new AggiungiIndirizzoPanel();
+						int result = JOptionPane.showConfirmDialog(null, panelAggiungiIndirizzo, "Inserisci Indirizzo", JOptionPane.OK_CANCEL_OPTION);
+						
+						if (result == JOptionPane.OK_OPTION) {
+							modelIndirizzi.addRow(new Object[] {
+									panelAggiungiIndirizzo.getVia(),
+									panelAggiungiIndirizzo.getCittà(),
+									panelAggiungiIndirizzo.getCodicePostale(),
+									panelAggiungiIndirizzo.getNazione()
+							});
+						}
+					}
+				});
+				sl_panelIndirizzi.putConstraint(SpringLayout.NORTH, btnNewButton_1, 10, SpringLayout.NORTH, panelIndirizzi);
+				sl_panelIndirizzi.putConstraint(SpringLayout.WEST, btnNewButton_1, 6, SpringLayout.EAST, labelIndirizzi);
+				sl_panelIndirizzi.putConstraint(SpringLayout.SOUTH, btnNewButton_1, 33, SpringLayout.NORTH, panelIndirizzi);
+				panelIndirizzi.add(btnNewButton_1);
+				
+				btnNewButton_2 = new JButton("Elimina");
+				btnNewButton_2.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						int row;
+						if (!listenerIndirizzi.isSelectionEmpty()) {
+							row = tableIndirizzi.getSelectedRow();
+							modelIndirizzi.removeRow(row);
+						}
+					}
+				});
+				sl_panelIndirizzi.putConstraint(SpringLayout.NORTH, btnNewButton_2, 6, SpringLayout.SOUTH, btnNewButton_1);
+				sl_panelIndirizzi.putConstraint(SpringLayout.WEST, btnNewButton_2, 0, SpringLayout.WEST, btnNewButton_1);
+				sl_panelIndirizzi.putConstraint(SpringLayout.EAST, btnNewButton_2, -20, SpringLayout.WEST, scrollPaneIndirizzi);
+				panelIndirizzi.add(btnNewButton_2);
+				
+				btnNewButton_3 = new JButton("Modifica");
+				sl_panelIndirizzi.putConstraint(SpringLayout.NORTH, btnNewButton_3, 6, SpringLayout.SOUTH, btnNewButton_2);
+				sl_panelIndirizzi.putConstraint(SpringLayout.WEST, btnNewButton_3, 0, SpringLayout.WEST, btnNewButton_1);
+				sl_panelIndirizzi.putConstraint(SpringLayout.EAST, btnNewButton_3, -22, SpringLayout.WEST, scrollPaneIndirizzi);
+				panelIndirizzi.add(btnNewButton_3);
+				
 				panelAccount = new JPanel();
-				panelAccount.setBounds(235, 464, 839, 125);
+				panelAccount.setBounds(235, 513, 839, 125);
 				contentPane.add(panelAccount);
 				SpringLayout sl_panelAccount = new SpringLayout();
 				panelAccount.setLayout(sl_panelAccount);
@@ -364,6 +459,49 @@ public class AggiungiContatto extends JFrame {
 				
 						scrollPaneAccounts.setViewportView(tableAccounts);
 						
+						btnNewButton_4 = new JButton("Aggiungi");
+						btnNewButton_4.addMouseListener(new MouseAdapter() {
+							@Override
+							public void mouseClicked(MouseEvent e) {
+								AggiungiAccountPanel panelAggiungiAccount = new AggiungiAccountPanel(listaMail);
+								int result = JOptionPane.showConfirmDialog(null, panelAggiungiAccount, "Aggiungi Account", JOptionPane.OK_CANCEL_OPTION);
+								
+								if (result == JOptionPane.OK_OPTION) {
+									modelAccounts.addRow(new Object[] {
+											panelAggiungiAccount.getFornitore(),
+											panelAggiungiAccount.getNickname(),
+											panelAggiungiAccount.getMail(),
+											panelAggiungiAccount.getFraseDiBenvenuto()
+									});
+								}
+							}
+						});
+						sl_panelAccount.putConstraint(SpringLayout.NORTH, btnNewButton_4, 6, SpringLayout.SOUTH, labelAccounts);
+						sl_panelAccount.putConstraint(SpringLayout.EAST, btnNewButton_4, 0, SpringLayout.EAST, labelAccounts);
+						panelAccount.add(btnNewButton_4);
+						
+						btnNewButton_5 = new JButton("Elimina");
+						btnNewButton_5.addMouseListener(new MouseAdapter() {
+							@Override
+							public void mouseClicked(MouseEvent e) {
+								int row;
+								if (!listenerAccount.isSelectionEmpty()) {
+									row = tableAccounts.getSelectedRow();
+									modelAccounts.removeRow(row);
+								}
+							}
+						});
+						sl_panelAccount.putConstraint(SpringLayout.NORTH, btnNewButton_5, 6, SpringLayout.SOUTH, btnNewButton_4);
+						sl_panelAccount.putConstraint(SpringLayout.WEST, btnNewButton_5, 0, SpringLayout.WEST, btnNewButton_4);
+						sl_panelAccount.putConstraint(SpringLayout.EAST, btnNewButton_5, 0, SpringLayout.EAST, labelAccounts);
+						panelAccount.add(btnNewButton_5);
+						
+						btnNewButton_6 = new JButton("Modifica");
+						sl_panelAccount.putConstraint(SpringLayout.NORTH, btnNewButton_6, 6, SpringLayout.SOUTH, btnNewButton_5);
+						sl_panelAccount.putConstraint(SpringLayout.WEST, btnNewButton_6, 0, SpringLayout.WEST, btnNewButton_4);
+						sl_panelAccount.putConstraint(SpringLayout.EAST, btnNewButton_6, 0, SpringLayout.EAST, labelAccounts);
+						panelAccount.add(btnNewButton_6);
+						
 						buttonIndietro = new JButton("Indietro");
 						buttonIndietro.setBounds(752, 600, 150, 23);
 						buttonIndietro.addActionListener(new ActionListener() {
@@ -381,61 +519,48 @@ public class AggiungiContatto extends JFrame {
 						contentPane.add(panel);
 						
 						JButton btnNewButton = new JButton("Conferma");
-						btnNewButton.addMouseListener(new MouseAdapter() {
-							@Override
-							public void mouseClicked(MouseEvent e) {
-								String prefisso = new String(textPanePrefisso.getText());
-								String nome = new String(textPaneNome.getText());
-								String cognome = new String(textPaneCognome.getText());
-								int id = c.aggiungiContatto(prefisso, nome, cognome, "null");
-								c.setFotoContatto(fileFoto, id);
-								frameChiamante.setVisible(true);
-								frame.setVisible(false);
-								frame.dispose();
-								
-							}
-						});
+//						btnNewButton.addMouseListener(new MouseAdapter() {
+//							@Override
+//							public void mouseClicked(MouseEvent e) {
+//								String prefisso = new String(textPanePrefisso.getText());
+//								String nome = new String(textPaneNome.getText());
+//								String cognome = new String(textPaneCognome.getText());
+//								int id = c.aggiungiContatto(prefisso, nome, cognome, "null");
+//								c.setFotoContatto(fileFoto, id);
+//								frameChiamante.setVisible(true);
+//								frame.setVisible(false);
+//								frame.dispose();
+//								
+//							}
+//						});
 						btnNewButton.setBounds(927, 600, 150, 23);
 						contentPane.add(btnNewButton);
 						
-						btnAggiungiNumero = new JButton("Aggiungi Numero");
-						btnAggiungiNumero.addMouseListener(new MouseAdapter() {
+						JButton btnAggiungiEmail = new JButton("Aggiungi Email");
+						btnAggiungiEmail.addMouseListener(new MouseAdapter() {
 							@Override
 							public void mouseClicked(MouseEvent e) {
-								JDialog aggiungiNumero = new AggiungiNumeroFrame(c,frame,listaNumeri);
-								aggiungiNumero.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-								aggiungiNumero.setModal(true);
-								aggiungiNumero.setVisible(true);
+								String email = JOptionPane.showInputDialog("Inserire l'email");
+								comboBoxMail.addItem(email);
 							}
 						});
-						btnAggiungiNumero.setBounds(65, 281, 120, 23);
-						contentPane.add(btnAggiungiNumero);
+						btnAggiungiEmail.setBounds(366, 183, 135, 23);
+						contentPane.add(btnAggiungiEmail);
 						
-						btnAggiungiIndirizzo = new JButton("Aggiungi Indirizzo");
-						btnAggiungiIndirizzo.addMouseListener(new MouseAdapter() {
+						JButton btnEliminaEmail = new JButton("Elimina Email");
+						btnEliminaEmail.addMouseListener(new MouseAdapter() {
 							@Override
 							public void mouseClicked(MouseEvent e) {
-								JDialog aggiungiIndirizzo = new AggiungiIndirizzoFrame(c, frame);
-								aggiungiIndirizzo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-								aggiungiIndirizzo.setModal(true);
-								aggiungiIndirizzo.setVisible(true);
+								int result = JOptionPane.showConfirmDialog(null, "Sei sicuro di eliminare la mail?",  null, JOptionPane.OK_CANCEL_OPTION);
+								if (result == JOptionPane.OK_OPTION) {
+									comboBoxMail.removeItem(comboBoxMail.getSelectedItem());
+								}
 							}
 						});
-						btnAggiungiIndirizzo.setBounds(65, 385, 120, 23);
-						contentPane.add(btnAggiungiIndirizzo);
+						btnEliminaEmail.setBounds(592, 183, 135, 23);
+						contentPane.add(btnEliminaEmail);
 						
-						btnNewButton_1 = new JButton("Aggiungi Accout");
-						btnNewButton_1.addMouseListener(new MouseAdapter() {
-							@Override
-							public void mouseClicked(MouseEvent e) {
-								JDialog aggiungiAccoun = new AggiungiAccountFrame(c,frame);
-								aggiungiAccoun.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-								aggiungiAccoun.setModal(true);
-								aggiungiAccoun.setVisible(true);
-							}
-						});
-						btnNewButton_1.setBounds(65, 508, 120, 23);
-						contentPane.add(btnNewButton_1);
+						
 		
 		//action listeners foto
 		
