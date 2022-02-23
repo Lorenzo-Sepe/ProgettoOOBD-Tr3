@@ -276,6 +276,14 @@ public class SearchFrame extends JFrame {
 		textFieldFornitore.setColumns(10);
 		
 		buttonRicercaAccount = new JButton("Ricerca");
+		buttonRicercaAccount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String nickname = textFieldNickname.getText();
+				String fornitore = textFieldFornitore.getText();
+				ArrayList<Contatto> RisultatiRicercaAccount = Controller.searchAccount(nickname,fornitore);
+				//TODO Aggiornare la tabella 
+			}
+		});
 		sl_panelRicercaAccount.putConstraint(SpringLayout.NORTH, buttonRicercaAccount, 20, SpringLayout.NORTH, panelRicercaAccount);
 		sl_panelRicercaAccount.putConstraint(SpringLayout.WEST, buttonRicercaAccount, -130, SpringLayout.EAST, panelRicercaAccount);
 		sl_panelRicercaAccount.putConstraint(SpringLayout.SOUTH, buttonRicercaAccount, 0, SpringLayout.SOUTH, textFieldNickname);
