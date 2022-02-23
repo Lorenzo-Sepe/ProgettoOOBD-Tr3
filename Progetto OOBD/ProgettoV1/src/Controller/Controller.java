@@ -123,6 +123,44 @@ public Contatto getContatto(int id) {
 	
 }
 
+	public boolean isPrefissoNumero(String value) {
+		EnumPrefissoNumero[] arrayEnumPrefissi = EnumPrefissoNumero.class.getEnumConstants();
+		for (EnumPrefissoNumero enumPrefissoNumero : arrayEnumPrefissi) {
+			if (enumPrefissoNumero.getPrefisso().equals(value))
+				return true;
+		}
+		return false;
+	}
+
+	public boolean checkFormNumero(String prefisso, String numero) throws Exception {
+		boolean isValido = false;
+		// TODO Da decidere come dare
+		if (numero.matches("[0-9]+") == false && !isPrefissoNumero(prefisso)) {
+			if (numero.matches("[0-9]+") == false)
+				throw new Exception("Il numero contiene dei caratteri ");
+			else
+				throw new Exception("il prefisso inserito non compare tra i prefissi selezionabili");
+		}
+		isValido = true;
+		return isValido;
+
+	}
+
+	public boolean checkFormIndirizzo(String codicePostale) throws Exception {
+		if (codicePostale.matches("[0-9]+") == false) {
+			throw new Exception("il codice postale contiene dei caratteri");
+		}
+		return true;
+	}
+
+	public static boolean checkFormMail(String mail) {
+		Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$",
+				Pattern.CASE_INSENSITIVE);
+		Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(mail);
+		return matcher.find();
+	}
+	
+	
 /**
  * Funzione che aggiunge un membro nella arraylist delle rubrica 
  * @param prefisso
