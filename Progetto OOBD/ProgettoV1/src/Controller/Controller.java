@@ -97,11 +97,26 @@ public class Controller {
 		for (Contatto contatto : contattiDB) {
 
 			System.out.println("prova ripeti for " + contatto.StampaContatto());
-
+			String path = contatto.getPathFoto();
+			if(!path.isEmpty()&& path.lastIndexOf(".") >0&&path.lastIndexOf("/")>0) {
+				String estensione=path.substring(path.lastIndexOf("."));
+				int id =contatto.getID();
+				if(  ! new File( GetRelativePath()+path.substring(path.lastIndexOf("/") ) ).exists()   ) {
+						path=path.substring(path.lastIndexOf("/") );
+				}else path="User"+id+estensione;;
+			}else path=" ";
+				
+			contatto.setPathFoto(path);
+			
 			rubrica.aggiungiContatto(contatto);
 
 		}
 	}
+	public void aggiungiGruppo (String nomeGruppo, ArrayList<Integer> membriGruppo) throws SQLException {
+		RubricaDAO rubricaDao = new ImplementazioneRubricaDAO();
+		rubricaDao.addGruppoDB(nomeGruppo, membriGruppo);
+	}
+
 
 	public Contatto dumpContatto(int contattoID) {
 		ContattoDAO contattoDao = new ImplementazioneContattoDAO();
@@ -229,9 +244,11 @@ public class Controller {
 
 		id = rubricadao.addContattoDB(prefisso, nome, cognome, path);
 
-		setFotoContatto(new File(path), id);
+		if(path.compareTo(GetRelativePath()+"NoImage.jpg")!=0)
+		path=setFotoContatto(new File(path), id);
 
-		rubrica.aggiungiContatto(new Contatto(id, prefisso, nome, cognome, " "));
+		
+		rubrica.aggiungiContatto(new Contatto(id, prefisso, nome, cognome, path));
 		return id;
 	}
 
@@ -247,16 +264,10 @@ public class Controller {
 		ContattoDAO contattoDao = new ImplementazioneContattoDAO();
 		contattoDao.addEmailDB(id, mail);
 	}
-	public void aggiungiAccount(int id,String tag,String nickname,String fornitore,String benvenuto, String email) {
+	public void aggiungiAccount(int id,String nickname,String fornitore,String benvenuto, String email) {
 		ContattoDAO contattoDao = new ImplementazioneContattoDAO();
 		contattoDao.addAccountDB(id, nickname, fornitore, benvenuto, email);
 	}
-	
-	public void aggiungiGruppo (String nomeGruppo, ArrayList<Integer> membriGruppo) throws SQLException {
-		RubricaDAO rubricaDao = new ImplementazioneRubricaDAO();
-		rubricaDao.addGruppoDB(nomeGruppo, membriGruppo);
-	}
-	
 	/**
 	 * dato un contatto salva in locale soltanto le anagrafiche il database
 	 * inserisce tutto
@@ -381,10 +392,11 @@ public class Controller {
 	 * @param File     file con la foto,
 	 * @param Contatto IDcontatto
 	 */
-	public void setFotoContatto(File file, int id) {
+	public String  setFotoContatto(File file, int id) {
 
 		String pathSorgente = file.getAbsolutePath();
 		String estenzione = pathSorgente.substring(pathSorgente.lastIndexOf(".") + 1);
+		//TODO VEDERE SE FUNZIONA AMCHE SENZA ESTENSIONE
 		String pathDestiCompleto = GetRelativePath() + "User" + id + "." + estenzione;
 		if (esisteUnaFotoContatto(id))
 			eliminaFotoContatto(id);
@@ -410,6 +422,7 @@ public class Controller {
 		System.out.println("contatto " + id + " " + rubrica.getContatto(id).getNome() + " path: "
 				+ rubrica.getContatto(id).getPathFoto());
 
+		return "User" + id + "." + estenzione;
 	}
 
 	private void eliminaFotoContatto(int id) {
@@ -489,7 +502,7 @@ public class Controller {
 			path = "NoImageFound.png";
 		}
 
-		if (path == " ") {
+		if (path == " "  ) {
 			return GetRelativePath() + "NoImage.jpg";
 		} else {
 			if (!new File(GetRelativePath() + path).exists()) {
