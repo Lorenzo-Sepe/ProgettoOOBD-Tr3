@@ -121,3 +121,11 @@ CREATE TABLE IF NOT EXISTS APPARTENENZA
 	CONSTRAINT fk_APPARTENENZA_GRUPPO FOREIGN KEY(Gruppo_Nome) REFERENCES GRUPPI(NOME)
    		ON DELETE CASCADE 	ON UPDATE CASCADE
 );
+
+
+ALTER TABLE IF EXISTS public.numeri_telefonici_mobili
+    ADD CONSTRAINT "Unique_numero_Prefisso" UNIQUE (contatto_associato, prefisso_nazionale, numero);
+    
+    
+ALTER TABLE IF EXISTS public.numeri_telefonici_Fissi
+    ADD CONSTRAINT "Unique_numero_Prefisso" UNIQUE (contatto_associato, prefisso_nazionale, numero);
