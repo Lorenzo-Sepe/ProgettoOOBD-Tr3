@@ -251,6 +251,12 @@ public class Controller {
 		ContattoDAO contattoDao = new ImplementazioneContattoDAO();
 		contattoDao.addAccountDB(id, nickname, fornitore, benvenuto, email);
 	}
+	
+	public void aggiungiGruppo (String nomeGruppo, ArrayList<Integer> membriGruppo) throws SQLException {
+		RubricaDAO rubricaDao = new ImplementazioneRubricaDAO();
+		rubricaDao.addGruppoDB(nomeGruppo, membriGruppo);
+	}
+	
 	/**
 	 * dato un contatto salva in locale soltanto le anagrafiche il database
 	 * inserisce tutto
