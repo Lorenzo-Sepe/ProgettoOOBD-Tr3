@@ -1,74 +1,41 @@
 package GUI;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.BoxLayout;
+
 import javax.swing.JLabel;
-import java.awt.GridLayout;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
+
 import javax.swing.JButton;
-import java.awt.Image;
-import java.awt.Insets;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import java.awt.CardLayout;
 //import net.miginfocom.swing.MigLayout;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.ImageIcon;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-
-import javax.imageio.ImageIO;
 import javax.swing.SpringLayout;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListSelectionModel;
 import javax.swing.JTextPane;
 
-import Model.Account;
-import Model.Contatto;
-import Model.Indirizzi;
 import Controller.Controller;
-import Model.NumeriTelefonici;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.JFormattedTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JList;
-import javax.swing.AbstractListModel;
 import java.awt.Font;
-import java.awt.Frame;
-import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
-import javax.swing.JMenu;
 import javax.swing.border.TitledBorder;
-import java.awt.Component;
-import javax.swing.Box;
-import java.awt.Dimension;
-import javax.swing.border.BevelBorder;
 
 
-@SuppressWarnings({ "unused", "serial" })
+@SuppressWarnings({  "serial" })
 public class AggiungiContatto extends JFrame {
-	private BufferedImage imageFoto;
 	private JPanel contentPane;
 	private JTable tableIndirizzi;
 	private JTable tableAccounts;
@@ -77,11 +44,9 @@ public class AggiungiContatto extends JFrame {
 	/** Il Controller*/
 	static Controller c;
 	/**L'id del contatto visualizzatp*/
-	private static int contattoID;
 	/**Il Chiamante	 */
 	static JFrame frameChiamante;
 	static JFrame frame;
-	Contatto Contatto;
 	private JPanel panelFoto;
 	private JLabel labelFoto;
 	private JScrollPane scrollPaneNumeri;
@@ -110,7 +75,7 @@ public class AggiungiContatto extends JFrame {
 	private JButton btnEliminaAccount;
 	private JButton btnModificaAccount;
 	
-	private ArrayList<NumeriTelefonici> listaNumeri = new ArrayList<>();
+	private ArrayList<String> listaNumeri = new ArrayList<String>();
 	private ArrayList<String> listaMail = new ArrayList<String>();
 	private String pathFoto;
 
@@ -138,9 +103,6 @@ public class AggiungiContatto extends JFrame {
 		frame = this;
 		c=controller;
 		frameChiamante=Chiamante;
-		ArrayList<NumeriTelefonici> listaNumeri = new ArrayList<>();
-		ArrayList<Indirizzi> listaIndirizzi = new ArrayList<>();
-		ArrayList<Account> listaAccount = new ArrayList<>();
 		setTitle("Visualizzazione");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1110, 700);
@@ -174,10 +136,7 @@ public class AggiungiContatto extends JFrame {
 		textPaneCognome.setBounds(375, 95, 464, 20);
 		contentPane.add(textPaneCognome);
 		
-		ArrayList<String> arrayListContatti = new ArrayList<>(Arrays.asList("Rai", "Lore", "Ale","Jesico"));
-		ArrayList<String> arrayListContattiCognome = new ArrayList<>(Arrays.asList("Mor", "Sep", "Tri","Cal"));
-		
-		
+
 
 		
 		
@@ -194,7 +153,7 @@ public class AggiungiContatto extends JFrame {
 	
 		panelFoto.setLayout(null);
 		
-		//TODO aggiungi funzionalit‡ dinamica
+		//TODO aggiungi funzionalit√† dinamica
 		labelFoto = new JLabel("");
 		labelFoto.setIcon(new ImageIcon(AggiungiContatto.class.getResource("/Immagini/NoImage.jpg")));
 		labelFoto.setBounds(0, 0, 150, 150);
@@ -205,7 +164,7 @@ public class AggiungiContatto extends JFrame {
 		contentPane.add(labelNome);
 		
 		
-		DefaultTableModel modelIndirizzi =  new DefaultTableModel() {
+		final DefaultTableModel modelIndirizzi =  new DefaultTableModel() {
 	        @Override
 	        public boolean isCellEditable(int row, int column) {
 	           //all cells false
@@ -215,14 +174,14 @@ public class AggiungiContatto extends JFrame {
 	        
 	    modelIndirizzi.addColumn("Tag");
 		modelIndirizzi.addColumn("Via"); 
-		modelIndirizzi.addColumn("Citt‡"); 
+		modelIndirizzi.addColumn("Citt√†"); 
 		modelIndirizzi.addColumn("Codice Postale");
 		modelIndirizzi.addColumn("Nazione");
 		
 		// Inserimento degli indirizzi del contatto
 	
 		//tableAccounts
-		DefaultTableModel modelAccounts =  new DefaultTableModel() {
+		final DefaultTableModel modelAccounts =  new DefaultTableModel() {
 	        @Override
 	        public boolean isCellEditable(int row, int column) {
 	           //all cells false
@@ -251,7 +210,7 @@ public class AggiungiContatto extends JFrame {
 		scrollPane.setBounds(375, 125, 464, 23);
 		contentPane.add(scrollPane);
 		
-		JComboBox comboBoxMail = new JComboBox();
+		final JComboBox<String> comboBoxMail = new JComboBox<String>();
 		scrollPane.setViewportView(comboBoxMail);
 		
 		panelNumeri = new JPanel();
@@ -274,7 +233,7 @@ public class AggiungiContatto extends JFrame {
 		panelNumeri.add(scrollPaneNumeri);
 		
 		//tableNumeri = new JTable(modelNumeri);
-		DefaultTableModel modelloNumeri = new DefaultTableModel() {
+		final DefaultTableModel modelloNumeri = new DefaultTableModel() {
 			@Override
 			 public boolean isCellEditable(int row, int column) {
 		           //all cells false
@@ -289,16 +248,8 @@ public class AggiungiContatto extends JFrame {
 		modelloNumeri.addColumn("numero");
 		modelloNumeri.addColumn("tipo");
 		
-		for (NumeriTelefonici num : listaNumeri) {
-			modelloNumeri.addRow(new Object[] {
-				num.getPrefisso(),
-				num.getNumero(),
-				num.getTipoNumero(),
-				num.getTag()
-			});
-		}
 		
-		ListSelectionModel listenerNumeri=tableNumeri.getSelectionModel();
+		final ListSelectionModel listenerNumeri=tableNumeri.getSelectionModel();
 		tableNumeri.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		
@@ -312,13 +263,15 @@ public class AggiungiContatto extends JFrame {
                 int result = JOptionPane.showConfirmDialog(null, panelAggiungiNumero, "Inserisci Numero", JOptionPane.OK_CANCEL_OPTION);
                 try {
                     if (result == JOptionPane.OK_OPTION) {
-                    	c.checkFormNumero(panelAggiungiNumero.getPrefisso(), panelAggiungiNumero.getNumero());
+//                    	c.checkFormNumero(panelAggiungiNumero.getPrefisso(), panelAggiungiNumero.getNumero());
+                    	c.checkFormNumero(panelAggiungiNumero.getPrefisso(), panelAggiungiNumero.getNumero(), listaNumeri);
                     	modelloNumeri.addRow(new Object[]{
                     			panelAggiungiNumero.getTag(),
                     			panelAggiungiNumero.getPrefisso(),
                     			panelAggiungiNumero.getNumero(),
                     			panelAggiungiNumero.getTipo()
                         });
+                    	listaNumeri.add(panelAggiungiNumero.getPrefisso()+panelAggiungiNumero.getNumero());
                     }
                 }
                 catch (Exception ex) {
@@ -340,6 +293,8 @@ public class AggiungiContatto extends JFrame {
 				int row;
 				if (!listenerNumeri.isSelectionEmpty()) {
 					row = tableNumeri.getSelectedRow();
+					String numeroDaEliminare = modelloNumeri.getValueAt(row, 1).toString()+modelloNumeri.getValueAt(row, 2).toString();
+					listaNumeri.remove(numeroDaEliminare);
 					modelloNumeri.removeRow(row);
 				}
 			}
@@ -363,11 +318,20 @@ public class AggiungiContatto extends JFrame {
 	                int result = JOptionPane.showConfirmDialog(null, panelModificaNumero, "Modifica Numero",  JOptionPane.OK_CANCEL_OPTION);
 
 	                if (result == JOptionPane.OK_OPTION) {
-	                    column=0;
-	                    modelloNumeri.setValueAt(panelModificaNumero.getTag(), row, column++);
-	                    modelloNumeri.setValueAt(panelModificaNumero.getPrefisso(), row, column++);
-	                    modelloNumeri.setValueAt(panelModificaNumero.getNumero(), row, column++);
-	                    modelloNumeri.setValueAt(panelModificaNumero.getTipo(), row, column++);
+	                	try {
+	                		c.checkFormNumero(panelModificaNumero.getPrefisso(), panelModificaNumero.getNumero(), listaNumeri);
+	                		String numeroDaAggiungere = panelModificaNumero.getPrefisso()+panelModificaNumero.getNumero();
+	                		String numeroDaSostituire = modelloNumeri.getValueAt(row, 1).toString()+modelloNumeri.getValueAt(row, 2).toString();
+	                		listaNumeri.set(listaNumeri.indexOf(numeroDaSostituire), numeroDaAggiungere);
+		                    column=0;
+		                    modelloNumeri.setValueAt(panelModificaNumero.getTag(), row, column++);
+		                    modelloNumeri.setValueAt(panelModificaNumero.getPrefisso(), row, column++);
+		                    modelloNumeri.setValueAt(panelModificaNumero.getNumero(), row, column++);
+		                    modelloNumeri.setValueAt(panelModificaNumero.getTipo(), row, column++);
+	                	}
+	                	catch (Exception ex) {
+	                		JOptionPane.showMessageDialog(null, ex.getMessage(),"ERRORE",JOptionPane.ERROR_MESSAGE);
+						}
 	                }
 				}
 			}
@@ -394,7 +358,7 @@ public class AggiungiContatto extends JFrame {
 				panelIndirizzi.add(scrollPaneIndirizzi);
 				
 				tableIndirizzi = new JTable(modelIndirizzi);
-				ListSelectionModel listenerIndirizzi=tableIndirizzi.getSelectionModel();
+				final ListSelectionModel listenerIndirizzi=tableIndirizzi.getSelectionModel();
 				tableIndirizzi.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				scrollPaneIndirizzi.setViewportView(tableIndirizzi);
 				
@@ -411,7 +375,7 @@ public class AggiungiContatto extends JFrame {
 								modelIndirizzi.addRow(new Object[] {
 										panelAggiungiIndirizzo.getTag(),
 										panelAggiungiIndirizzo.getVia(),
-										panelAggiungiIndirizzo.getCitt‡(),
+										panelAggiungiIndirizzo.getCitt√†(),
 										panelAggiungiIndirizzo.getCodicePostale(),
 										panelAggiungiIndirizzo.getNazione(),
 								});
@@ -457,7 +421,7 @@ public class AggiungiContatto extends JFrame {
 							if (result == JOptionPane.OK_OPTION) {
 								column = 0;
 								 modelIndirizzi.setValueAt(panelModificaIndirizzo.getVia(), row, column++);
-								 modelIndirizzi.setValueAt(panelModificaIndirizzo.getCitt‡(), row, column++);
+								 modelIndirizzi.setValueAt(panelModificaIndirizzo.getCitt√†(), row, column++);
 								 modelIndirizzi.setValueAt(panelModificaIndirizzo.getCodicePostale(), row, column++);
 								 modelIndirizzi.setValueAt(panelModificaIndirizzo.getNazione(), row, column++);
 								 modelIndirizzi.setValueAt(panelModificaIndirizzo.getTag(), row, column++);
@@ -493,7 +457,7 @@ public class AggiungiContatto extends JFrame {
 				panelAccount.add(scrollPaneAccounts);
 				
 				tableAccounts = new JTable(modelAccounts);
-				ListSelectionModel listenerAccount = tableAccounts.getSelectionModel();
+				final ListSelectionModel listenerAccount = tableAccounts.getSelectionModel();
 				tableAccounts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				
 						scrollPaneAccounts.setViewportView(tableAccounts);
@@ -543,7 +507,7 @@ public class AggiungiContatto extends JFrame {
 									int row = tableAccounts.getSelectedRow();
 									int column = 0;
 									AggiungiAccountPanel panelModificaAccount = new AggiungiAccountPanel(listaMail);
-									panelModificaAccount.setAll(modelAccounts.getValueAt(row, 0).toString(), modelAccounts.getValueAt(row, 1).toString(), modelAccounts.getValueAt(row, 3).toString());
+									panelModificaAccount.setAll(modelAccounts.getValueAt(row, column++).toString(), modelAccounts.getValueAt(row, column++).toString(),modelAccounts.getValueAt(row, column++).toString(), modelAccounts.getValueAt(row, column++).toString());
 									int results = JOptionPane.showConfirmDialog(null, panelModificaAccount,"Modifica Account",JOptionPane.OK_CANCEL_OPTION);
 									
 									if (results == JOptionPane.OK_OPTION) {
@@ -587,18 +551,43 @@ public class AggiungiContatto extends JFrame {
 									listaTipi.add(modelloNumeri.getValueAt(i, 3).toString());
 									listaNumeri.add(modelloNumeri.getValueAt(i,1).toString()+modelloNumeri.getValueAt(i,2).toString());
 								}
+								
 								try {
-									int idContatto = c.aggiungiContatto(textPanePrefisso.getText(), textPaneNome.getText(), textPaneCognome.getText(), pathFoto);
-									for (int i = 0;i<comboBoxMail.getItemCount();i++) {
-//										int c.aggiungiMail (idContatto, comboBoxMail.getItemAt(i));
+									c.checkAlmenoDueNumeriConTipoDiverso(listaTipi);
+									SetDeputatoPanel  pannelSettaDeputati = new SetDeputatoPanel(modelloNumeri);
+									int ris = JOptionPane.showConfirmDialog(null,pannelSettaDeputati, "Gestisci Deputato", JOptionPane.OK_CANCEL_OPTION);
+									if (ris == JOptionPane.OK_OPTION) {
+										if(JOptionPane.showConfirmDialog(null,null, "Seleziona Indirizzo principale", JOptionPane.OK_CANCEL_OPTION)==JOptionPane.OK_OPTION) {
+											
+											int idContatto = c.aggiungiContatto(textPanePrefisso.getText(), textPaneNome.getText(), textPaneCognome.getText(), pathFoto);
+											
+										
+										for (int i = 0; i<modelloNumeri.getRowCount();i++) {
+											c.aggiungiNumero (idContatto, modelloNumeri.getValueAt(i,1).toString(), modelloNumeri.getValueAt(i, 2).toString(), modelloNumeri.getValueAt(i, 0).toString(), modelloNumeri.getValueAt(i, 3).toString());
+										}
+										String tipoDelDeputato;
+										for (int i = 0; i<modelloNumeri.getRowCount();i++) {
+//											c.aggiungiNumero (idContatto, modelloNumeri.getValueAt(i,1).toString(), modelloNumeri.getValueAt(i, 2).toString(), modelloNumeri.getValueAt(i, 0).toString(), modelloNumeri.getValueAt(i, 3).toString());
+											if(modelloNumeri.getValueAt(i-1, 3).toString().compareToIgnoreCase("Fisso")==0) tipoDelDeputato="Mobile";
+											else tipoDelDeputato="Fisso";
+											c.setDeputato(idContatto, modelloNumeri.getValueAt(i, 1).toString(), modelloNumeri.getValueAt(i, 2).toString(), modelloNumeri.getValueAt(i, 3).toString(), modelloNumeri.getValueAt(i, 1).toString(), modelloNumeri.getValueAt(i, 2).toString(), tipoDelDeputato);
+										}
+										for (int i = 0;i<comboBoxMail.getItemCount();i++) {
+											// c.aggiungiMail (idContatto, comboBoxMail.getItemAt(i));
+										}
+										//TODO fare inserimento principale
+//										for (int i = 0; i<modelIndirizzi.getRowCount(); i++) {
+//											c.aggiungiIndirizzo (idContatto, modelIndirizzi.getValueAt(i, 1).toString(), modelIndirizzi.getValueAt(i, 2).toString(), modelIndirizzi.getValueAt(i, 3).toString(),modelIndirizzi.getValueAt(i, 4).toString(),modelIndirizzi.getValueAt(i, 0).toString() );
+//										}
+										}else {
+											//hai settato i deputato ma non la via principale //TODO
+										}
+									}else {
+										//non hai settato i deputati//TODO
 									}
-									for (int i = 0; i<modelloNumeri.getRowCount();i++) {
-//										c.aggiungiNumero (idContatto, modelloNumeri.getValueAt(i,1), modelloNumeri.getValueAt(i, 2), modelloNumeri.getValueAt(i, 0), modelloNumeri.getValueAt(i, 3));
-									}
-									for (int i = 0; i<modelIndirizzi.getRowCount(); i++) {
-//										c.aggiungiIndirizzo (idContatto, modelIndirizzi.getValueAt(i, 1), modelIndirizzi.getValueAt(i, 2), modelIndirizzi.getValueAt(i, 3),modelIndirizzi.getValueAt(i, 4),modelIndirizzi.getValueAt(i, 0));
-									}
-									c.checkAlmenoDueNumeriConTipoDIverso(listaTipi);
+									
+									
+									
 									
 								}
 								
@@ -631,7 +620,7 @@ public class AggiungiContatto extends JFrame {
 							public void mouseClicked(MouseEvent e) {
 								String email = JOptionPane.showInputDialog("Inserire l'email");
 								try {
-									c.checkFormMail(email);
+									c.checkFormMail(email,listaMail);
 									comboBoxMail.addItem(email);
 									listaMail.add(email);
 								}
@@ -658,7 +647,7 @@ public class AggiungiContatto extends JFrame {
 										String mailSelected = (String) comboBoxMail.getSelectedItem();
 										for (int i = 0;i <tableAccounts.getRowCount();i++) {
 											if (mailSelected.equals(tableAccounts.getValueAt(i,2))) {
-												result2 = JOptionPane.showConfirmDialog(null,"Questa Email Ë presente nell'account "+tableAccounts.getValueAt(i, 1)+ ", procedere ugualmente?","Warning",JOptionPane.OK_CANCEL_OPTION);
+												result2 = JOptionPane.showConfirmDialog(null,"Questa Email ÔøΩ presente nell'account "+tableAccounts.getValueAt(i, 1)+ ", procedere ugualmente?","Warning",JOptionPane.OK_CANCEL_OPTION);
 												if (result2 == JOptionPane.OK_OPTION) {
 													modelAccounts.setValueAt("Nessuna Mail", i, 2);
 													JOptionPane.showMessageDialog(null,"Eliminata mail dall'account "+tableAccounts.getValueAt(i,1));
