@@ -34,4 +34,14 @@ public interface ContattoDAO {
 	public void addEmailDB (int idContatto, String email);
 	
 	public  ArrayList<String> getListaEmail (int id);
+	
+	public ArrayList<Integer> SearchMail(String mail);
+
+	public ArrayList<Integer> SearchAnagrafica(String prefisso, String nome, String cognome);
+
+	public ArrayList<Integer> SearchAccount(String nickname, String fornitore);
+	
+	public void setDeputatoMobileSuFIsso(int idContatto,String mobilePrefisso,String mobileNumero,String fissoPrefisso,String fissoNumero);
+	
+	public void setDeputatoFissoSuMobile(int idContatto,String mobilePrefisso,String mobileNumero, String fissoPrefisso,String fissoNumero);
 }
