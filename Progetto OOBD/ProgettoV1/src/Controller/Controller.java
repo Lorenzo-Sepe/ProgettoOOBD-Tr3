@@ -121,6 +121,19 @@ public class Controller {
         }
     }
 	
+	public Contatto dumpContatto(int contattoID) {
+	ContattoDAO contattoDao = new ImplementazioneContattoDAO();
+	Contatto contatto = new Contatto(contattoID, rubrica.getContatto(contattoID).getPrefissoNome(),
+			rubrica.getContatto(contattoID).getNome(), rubrica.getContatto(contattoID).getCognome(),
+			rubrica.getContatto(contattoID).getPathFoto());
+	contatto.aggiungiNumero(contattoDao.getListaNumeri(contattoID));
+
+	contatto.aggiungiAccount(contattoDao.getListaAccount(contattoID));
+	contatto.aggiungiIndirizzo(contattoDao.getListaIndirizzi(contattoID));
+	contatto.aggiungiEmail(contattoDao.getListaEmail(contattoID));
+	return contatto;
+}
+	
 	/**
 	 * 
 	 * @return ArrayList di Contatti della rubrica
