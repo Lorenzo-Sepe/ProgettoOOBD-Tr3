@@ -234,7 +234,7 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 	public void addEmailDB (int idContatto, String email) {
 		PreparedStatement addEmailPS;
 		try {
-		addEmailPS = connection.prepareStatement("INSERT INTO email VALUES (?,?)");
+		addEmailPS = connection.prepareStatement("INSERT INTO mail VALUES (?,?)");
 		addEmailPS.setString(1, email);
 		addEmailPS.setInt(2, idContatto);
 		addEmailPS.execute();
@@ -250,7 +250,7 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 		PreparedStatement getListaEmailPS;
 		ArrayList<String> listaEmail = new ArrayList<>();
 		try {
-			getListaEmailPS = connection.prepareStatement("SELECT mail.* FROM \"Mail_Associata\", mail WHERE \"Mail_Associata\".\"Mail\" = mail.indirizzo_email AND \"Mail_Associata\".\"Contatto\" = ?");
+			getListaEmailPS = connection.prepareStatement("SELECT Indirizzo_email.* FROM \"Mail\" WHERE  \"Mail\".\"Contatto_Associato\" = ?");
 			getListaEmailPS.setInt(1, id);
 			ResultSet rs = getListaEmailPS.executeQuery();
 			while (rs.next()) {
