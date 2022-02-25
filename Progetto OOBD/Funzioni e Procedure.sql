@@ -65,7 +65,7 @@ CREATE OR REPLACE VIEW public."VisualizzaContatti"
 
 /*4*/
 
-CREATE OR REPLACE PROCEDURE public."VisualizzaCassaforte" (IN "Password" varchar)
+CREATE OR REPLACE PROCEDURE public."VisualizzaCassaforte" (IN "PasswordID" varchar)
 	LANGUAGE 'plpgsql'
 AS $BODY$
 DECLARE
@@ -78,11 +78,10 @@ Comando VARCHAR := 'SELECT contatto.prefisso_nome,
 PasswordTest VARCHAR;
 
 BEGIN
-	SELECT Password_Cassaforte INTO PasswordTest
-	FROM Contatto WHERE Password_Cassaforte IS NOT NULL
-	LIMIT 1;
+	SELECT Password INTO PasswordTest
+	FROM Cassaforte;
 
-	IF (PasswordTest=Password)
+	IF (PasswordTest=PasswordID)
 	THEN
 		Execute Comando Using Password;
 	ELSE
@@ -116,7 +115,7 @@ $BODY$;
 
 /*6*/
 
-CREATE OR REPLACE PROCEDURE public."VisualizzaAccount"(IN "ID_contatto_INPUT" integer, IN "Password" varchar)
+CREATE OR REPLACE PROCEDURE public."VisualizzaAccount"(IN "ID_contatto_INPUT" integer, IN "PasswordID" varchar)
     LANGUAGE 'plpgsql'
 
 AS $BODY$
@@ -125,11 +124,10 @@ PasswordTest VARCHAR;
 Comando varchar := 'SELECT A.fornitore, A.nickname, A.mail, A.frase_di_benvenuto from Account as A where A.contatto_associato=$1';
 begin
 
-	SELECT "Password_Cassaforte" INTO PasswordTest
-	FROM Contatto where "contatto"."Password_Cassaforte" is not null
-	LIMIT 1;
+	SELECT "Password" INTO PasswordTest
+	FROM Cassaforte;
 
-	IF (PasswordTest=Password)
+	IF (PasswordTest=PasswordID)
 	THEN
 		execute Comando Using ID_contatto_INPUT;
 	ELSE
@@ -140,7 +138,7 @@ $BODY$;
 
 /*7*/
 
-CREATE OR REPLACE PROCEDURE public."VisualizzaMail"(IN "ID_contatto_INPUT" integer, IN "Password" character varying)
+CREATE OR REPLACE PROCEDURE public."VisualizzaMail"(IN "ID_contatto_INPUT" integer, IN "PasswordID" character varying)
     LANGUAGE 'plpgsql'
 
 AS $BODY$
@@ -148,11 +146,10 @@ DECLARE
 PasswordTest VARCHAR;
 Comando varchar := 'SELECT mail from Mail_Associata where contatto_associato=$1';
 begin
-	SELECT "Password_Cassaforte" INTO PasswordTest
-	FROM Contatto where "contatto"."Password_Cassaforte" is not null
-	LIMIT 1;
+	SELECT "Password" INTO PasswordTest
+	FROM Cassaforte;
 
-	IF (PasswordTest=Password)
+	IF (PasswordTest=PasswordID)
 	THEN
 		execute Comando Using ID_contatto_INPUT;
 	ELSE
@@ -222,3 +219,218 @@ end
 $BODY$;
 
 /*11*/
+
+//DA FAR VEDERE A BARRA
+
+CREATE OR REPLACE FUNCTION public.trova_duplicati_trg()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+    VOLATILE
+    COST 100
+AS $BODY$
+DECLARE
+Curs_Mail_Duplicate CURSOR for SELECT "Mail", COUNT("Mail")
+                               FROM public."Mail_Associata"
+                               GROUP BY "Mail"
+                               HAVING COUNT("Mail")>1;
+
+/*Curs_CONTATTI_Duplicati CURSOR for SELECT "Contatto", COUNT("Contatto")
+                                    FROM public."Mail_Associata"
+                                    GROUP BY "Contatto"
+                                    HAVING COUNT("Contatto")>1;
+                         */
+RISM VARCHAR;
+--rec RECORD;
+temporaneo INTEGER;
+testo_output Varchar;
+
+BEGIN
+OPEN Curs_Mail_Duplicate;
+
+LOOP
+    EXIT WHEN NOT FOUND;
+    FETCH Curs_Mail_Duplicate INTO RISM,temporaneo;
+    testo_output:=testo_output||RISM;
+    FOR rec IN (SELECT "Contatto"
+                FROM public."Mail_Associata"
+                WHERE "MAIL"=RISM
+                GROUP BY "Mail")
+                LOOP
+                testo_output:=testo_output||' in '||rec||',';
+                END LOOP;
+     testo_output:=testo_output||';';
+END LOOP;
+
+close Curs_Mail_Duplicate;
+
+raise notice 'Email duplicate= %', testo_output;
+RETURN NULL;
+END
+
+RETURN NULL;
+END
+$BODY$;
+
+
+/**/
+
+create trigger check_duplicati
+after insert or update on public."Mail_Associata"
+FOR EACH ROW
+EXECUTE function trova_duplicati_trg();
+
+
+/**/
+
+CREATE FUNCTION public."UnicitàCassaforte_trg"()
+AS $BODY$
+DECLARE
+PSWD varchar;
+BEGIN
+SELECT "PASSWORD" INTO PSWD
+FROM CASSAFORTE;
+IF (NEW.PASSWORD=PSWD)THEN
+DELETE FROM CASSAFORTE WHERE "PASSWORD"=NEW."PASSWORD";
+ELSE
+DELETE FROM CASSAFORTE WHERE "PASSWORD"=PSWD;
+END IF;
+
+END
+$BODY$;
+
+ALTER FUNCTION public."UnicitàCassaforte_trg"()
+    OWNER TO "LAR";
+
+
+/**/
+
+CREATE TRIGGER UnicitàCassaforte
+AFTER INSERT ON CASSAFORTE
+FOR EACH ROW
+EXECUTE PROCEDURE UnicitàCassaforte_trg();
+
+/**/
+*/
+
+Create OR replace Function "Unicità_Cassaforte_trg"() returns Trigger LANGUAGE 'plpgsql'
+as $BODY$
+DECLARE
+  CountInteger integer;
+  BEGIN
+
+  Select COUNT(*) INTO countInteger
+  from Cassaforte;
+
+
+  if(countInteger >1 ) THEN
+  raise notice 'La cassafortecassaforte è stata già creata!';
+  raise exception 'cassaforte già';
+  END IF;
+      RETURN new;
+  EXCEPTION
+      WHEN raise_exception THEN
+          ROLLBACK;
+          RETURN null;
+  END;$BODY$
+
+  CREATE TRIGGER "Inserimento_IN_cassaforte" AFTER INSERT
+  ON Cassaforte FOR EACH ROW
+  EXECUTE PROCEDURE "Unicità_Cassaforte_trg"();
+
+  /**/
+
+
+  /**/
+
+  CREATE FUNCTION public."Account_Errati_TRG"()
+      RETURNS trigger
+      LANGUAGE 'plpgsql'
+       NOT LEAKPROOF
+  AS $BODY$
+  DECLARE
+  Curs CURSOR FOR SELECT "Contatto_Associato"
+                  FROM MAIL
+                  WHERE "Indirizzo_Email"=NEW.MAIL
+                  GROUP BY MAIL;
+                  --HAVING count(ACCOUNT."MAIL")>1;
+  rec RECORD
+  BEGIN
+  --OPEN curs;
+  FOR rec IN CURS
+  LOOP
+  IF rec."Contatto_Associato"=new."contatto_Associato" THEN
+  RAISE NOTICE 'Attenzione. In Acccount % vi è una Mail non associata al contatto', new.Account_ID;
+  END IF;
+  END LOOP
+  RETURN NEW;
+  END
+  $BODY$;
+
+  ALTER FUNCTION public."Account_Errati_TRG"()
+      OWNER TO "LAR";
+
+  		CREATE TRIGGER "Account_Errati"
+  		    AFTER INSERT OR UPDATE
+  		    ON public.account
+  		    FOR EACH ROW
+  		    EXECUTE FUNCTION public."Account_Errati_TRG"();
+
+/**/
+
+CREATE OR REPLACE FUNCTION public."Contatti_Duplicati_TRG"()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+    VOLATILE
+    COST 100
+AS $BODY$
+DECLARE
+Curs_Contatti CURSOR FOR SELECT "CONTATTO_ASSOCIATO",COUNT("CONTATTO_ASSOCIATO") FROM MAIL
+                         HAVING COUNT("CONTATTO_ASSOCIATO")>1;
+RIS INTEGER;
+temporaneo INTEGER;
+TESTO VARCHAR;
+BEGIN
+OPEN Curs_Contatti;
+LOOP
+EXIT WHEN NOT FOUND;
+FETCH Curs_Contatti INTO RIS,temporaneo;
+TESTO:=TESTO||RIS||',';
+END LOOP;
+
+CLOSE Curs_Contatti;
+RAISE NOTICE 'Errore. Contatti duplicati in ID: %', TESTO;
+RETURN NEW;
+END
+$BODY$;
+
+/**/
+
+          CREATE TRIGGER "Contatti_Duplicati"
+            AFTER INSERT OR UPDATE
+            ON public.mail
+            FOR EACH ROW
+            EXECUTE FUNCTION public."Contatti_Duplicati"();
+
+
+
+
+            /**/
+CREATE PROCEDURE public."Risoluzione_Contatti_Duplicati"(IN "Contatto_Input" integer, IN "Mail_Input" character varying, IN "Indice_Mail" integer)
+LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+CURS_MAIL CURSOR FOR SELECT "indirizzo_Email" FROM  MAIL WHERE "CONTATTO_Associato"=Contatto_Input;
+Mail_Target VARCHAR;
+
+BEGIN
+open CURS_MAIL;
+IF MAIL_INPUT='Elimina' THEN
+    DELETE FROM  CONTATTI WHERE "CONTATTO_ID"=Contatto_Input CASCADE;
+ELSE
+    Fetch ABSOLUTE Indice_Mail IN CURS_MAIL INTO Mail_Target;
+    UPDATE ON MAIL SET "indirizzo_Email"=Mail_Input where "indirizzo_Email"=Mail_Target AND "CONTATTO_Associato"=Contatto_Input;
+
+END IF;
+Close CURS_MAIL;
+END
+$BODY$;
