@@ -111,29 +111,43 @@ public class AggiungiContatto extends JFrame {
 		setContentPane(contentPane);
 		
 		panelFoto = new JPanel();
-		panelFoto.setBounds(35, 35, 150, 150);
 		panelFoto.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
 		labelCognome = new JLabel("Cognome");
-		labelCognome.setBounds(250, 97, 115, 14);
 		
 		labelNome = new JLabel("Nome");
-		labelNome.setBounds(250, 67, 115, 14);
-		contentPane.setLayout(null);
+		SpringLayout sl_contentPane = new SpringLayout();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, labelNome, 67, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, labelNome, 250, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, labelNome, 365, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, labelCognome, 97, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, labelCognome, 250, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, labelCognome, 365, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, panelFoto, 35, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, panelFoto, 35, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, panelFoto, 185, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, panelFoto, 185, SpringLayout.WEST, contentPane);
+		contentPane.setLayout(sl_contentPane);
 		
 		//TODO una volta che il controller è completo aggiungere getter per prendere nome cognome e prefisso
 		
 		textPanePrefisso = new JTextPane();
-		textPanePrefisso.setBounds(375, 35, 464, 20);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, textPanePrefisso, 35, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, textPanePrefisso, 375, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, textPanePrefisso, -200, SpringLayout.EAST, contentPane);
 		
 		contentPane.add(textPanePrefisso);
 		
 		textPaneNome = new JTextPane(/*Controller.getterNome()*/);
-		textPaneNome.setBounds(375, 65, 464, 20);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, textPaneNome, 65, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, textPaneNome, 375, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, textPaneNome, -200, SpringLayout.EAST, contentPane);
 		contentPane.add(textPaneNome);
 		
 		textPaneCognome = new JTextPane(/*Controller.getterCognome()*/);
-		textPaneCognome.setBounds(375, 95, 464, 20);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, textPaneCognome, 95, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, textPaneCognome, 375, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, textPaneCognome, -200, SpringLayout.EAST, contentPane);
 		contentPane.add(textPaneCognome);
 		
 
@@ -146,7 +160,9 @@ public class AggiungiContatto extends JFrame {
 		
 		
 		modFotoButton = new JButton("Modifica Foto");
-		modFotoButton.setBounds(35, 195, 150, 23);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, modFotoButton, 195, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, modFotoButton, 35, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, modFotoButton, 185, SpringLayout.WEST, contentPane);
 		
 		contentPane.add(modFotoButton);
 		contentPane.add(panelFoto);
@@ -198,23 +214,27 @@ public class AggiungiContatto extends JFrame {
 		
 		
 		labelPrefisso = new JLabel("Prefisso Nome");
-		labelPrefisso.setBounds(250, 37, 115, 14);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, labelPrefisso, 37, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, labelPrefisso, 250, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, labelPrefisso, 365, SpringLayout.WEST, contentPane);
 		labelPrefisso.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		contentPane.add(labelPrefisso);
 		
 		labelMail = new JLabel("E-Mails");
-		labelMail.setBounds(250, 127, 115, 14);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, labelMail, 127, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, labelMail, 250, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, labelMail, 365, SpringLayout.WEST, contentPane);
 		contentPane.add(labelMail);
 		
-		scrollPane = new JScrollPane();
-		scrollPane.setBounds(375, 125, 464, 23);
-		contentPane.add(scrollPane);
-		
 		final JComboBox<String> comboBoxMail = new JComboBox<String>();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, comboBoxMail, -4, SpringLayout.NORTH, labelMail);
+		sl_contentPane.putConstraint(SpringLayout.WEST, comboBoxMail, 0, SpringLayout.WEST, textPanePrefisso);
+		sl_contentPane.putConstraint(SpringLayout.EAST, comboBoxMail, 0, SpringLayout.EAST, textPanePrefisso);
 		scrollPane.setViewportView(comboBoxMail);
-		
+		contentPane.add(comboBoxMail);
+				
 		panelNumeri = new JPanel();
-		panelNumeri.setBounds(235, 240, 839, 115);
+		sl_contentPane.putConstraint(SpringLayout.WEST, panelNumeri, 235, SpringLayout.WEST, contentPane);
 		contentPane.add(panelNumeri);
 		SpringLayout sl_panelNumeri = new SpringLayout();
 		panelNumeri.setLayout(sl_panelNumeri);
@@ -340,7 +360,10 @@ public class AggiungiContatto extends JFrame {
 		panelNumeri.add(btnModificaNumero);
 				
 				panelIndirizzi = new JPanel();
-				panelIndirizzi.setBounds(235, 366, 839, 105);
+				sl_contentPane.putConstraint(SpringLayout.NORTH, panelNumeri, -135, SpringLayout.NORTH, panelIndirizzi);
+				sl_contentPane.putConstraint(SpringLayout.SOUTH, panelNumeri, -5, SpringLayout.NORTH, panelIndirizzi);
+				sl_contentPane.putConstraint(SpringLayout.EAST, panelNumeri, 0, SpringLayout.EAST, panelIndirizzi);
+				sl_contentPane.putConstraint(SpringLayout.WEST, panelIndirizzi, 235, SpringLayout.WEST, contentPane);
 				contentPane.add(panelIndirizzi);
 				SpringLayout sl_panelIndirizzi = new SpringLayout();
 				panelIndirizzi.setLayout(sl_panelIndirizzi);
@@ -435,7 +458,13 @@ public class AggiungiContatto extends JFrame {
 				panelIndirizzi.add(btnModificaIndirizzo);
 				
 				panelAccount = new JPanel();
-				panelAccount.setBounds(235, 482, 839, 125);
+				sl_contentPane.putConstraint(SpringLayout.NORTH, panelIndirizzi, -135, SpringLayout.NORTH, panelAccount);
+				sl_contentPane.putConstraint(SpringLayout.SOUTH, panelIndirizzi, -5, SpringLayout.NORTH, panelAccount);
+				sl_contentPane.putConstraint(SpringLayout.EAST, panelIndirizzi, 0, SpringLayout.EAST, panelAccount);
+				sl_contentPane.putConstraint(SpringLayout.NORTH, panelAccount, -160, SpringLayout.SOUTH, contentPane);
+				sl_contentPane.putConstraint(SpringLayout.WEST, panelAccount, 235, SpringLayout.WEST, contentPane);
+				sl_contentPane.putConstraint(SpringLayout.SOUTH, panelAccount, -30, SpringLayout.SOUTH, contentPane);
+				sl_contentPane.putConstraint(SpringLayout.EAST, panelAccount, -10, SpringLayout.EAST, contentPane);
 				contentPane.add(panelAccount);
 				SpringLayout sl_panelAccount = new SpringLayout();
 				panelAccount.setLayout(sl_panelAccount);
@@ -526,7 +555,8 @@ public class AggiungiContatto extends JFrame {
 						panelAccount.add(btnModificaAccount);
 						
 						buttonIndietro = new JButton("Indietro");
-						buttonIndietro.setBounds(689, 627, 150, 23);
+						sl_contentPane.putConstraint(SpringLayout.NORTH, buttonIndietro, -25, SpringLayout.SOUTH, contentPane);
+						sl_contentPane.putConstraint(SpringLayout.SOUTH, buttonIndietro, 0, SpringLayout.SOUTH, contentPane);
 						buttonIndietro.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
 								//TODO serve per cambiare da un frame ad un'altro
@@ -538,11 +568,18 @@ public class AggiungiContatto extends JFrame {
 						contentPane.add(buttonIndietro);
 						
 						panel = new JPanel();
-						panel.setBounds(5, 344, 10, 10);
+						sl_contentPane.putConstraint(SpringLayout.NORTH, panel, 344, SpringLayout.NORTH, contentPane);
+						sl_contentPane.putConstraint(SpringLayout.WEST, panel, 5, SpringLayout.WEST, contentPane);
 						contentPane.add(panel);
 						
-						JButton btnNewButton = new JButton("Conferma");
-						btnNewButton.addMouseListener(new MouseAdapter() {
+						JButton btnConfirm = new JButton("Conferma");
+						sl_contentPane.putConstraint(SpringLayout.NORTH, btnConfirm, -25, SpringLayout.SOUTH, contentPane);
+						sl_contentPane.putConstraint(SpringLayout.SOUTH, btnConfirm, 0, SpringLayout.SOUTH, contentPane);
+						sl_contentPane.putConstraint(SpringLayout.WEST, buttonIndietro, -160, SpringLayout.WEST, btnConfirm);
+						sl_contentPane.putConstraint(SpringLayout.EAST, buttonIndietro, -10, SpringLayout.WEST, btnConfirm);
+						sl_contentPane.putConstraint(SpringLayout.WEST, btnConfirm, -150, SpringLayout.EAST, panelAccount);
+						sl_contentPane.putConstraint(SpringLayout.EAST, btnConfirm, 0, SpringLayout.EAST, panelNumeri);
+						btnConfirm.addMouseListener(new MouseAdapter() {
 							@Override
 							public void mouseClicked(MouseEvent e) {
 								ArrayList<String> listaTipi = new ArrayList<String>();
@@ -597,24 +634,12 @@ public class AggiungiContatto extends JFrame {
 								
 							}
 						});
-//						btnNewButton.addMouseListener(new MouseAdapter() {
-//							@Override
-//							public void mouseClicked(MouseEvent e) {
-//								String prefisso = new String(textPanePrefisso.getText());
-//								String nome = new String(textPaneNome.getText());
-//								String cognome = new String(textPaneCognome.getText());
-//								int id = c.aggiungiContatto(prefisso, nome, cognome, "null");
-//								c.setFotoContatto(fileFoto, id);
-//								frameChiamante.setVisible(true);
-//								frame.setVisible(false);
-//								frame.dispose();
-//								
-//							}
-//						});
-						btnNewButton.setBounds(909, 627, 150, 23);
-						contentPane.add(btnNewButton);
+						contentPane.add(btnConfirm);
 						
 						JButton btnAggiungiEmail = new JButton("Aggiungi Email");
+						sl_contentPane.putConstraint(SpringLayout.NORTH, btnAggiungiEmail, 6, SpringLayout.SOUTH, comboBoxMail);
+						sl_contentPane.putConstraint(SpringLayout.WEST, btnAggiungiEmail, 0, SpringLayout.WEST, textPanePrefisso);
+						sl_contentPane.putConstraint(SpringLayout.EAST, btnAggiungiEmail, 150, SpringLayout.WEST, textPanePrefisso);
 						btnAggiungiEmail.addMouseListener(new MouseAdapter() {
 							@Override
 							public void mouseClicked(MouseEvent e) {
@@ -630,10 +655,12 @@ public class AggiungiContatto extends JFrame {
 								}
 							}
 						});
-						btnAggiungiEmail.setBounds(366, 183, 135, 23);
 						contentPane.add(btnAggiungiEmail);
 						
 						JButton btnEliminaEmail = new JButton("Elimina Email");
+						sl_contentPane.putConstraint(SpringLayout.NORTH, btnEliminaEmail, 6, SpringLayout.SOUTH, comboBoxMail);
+						sl_contentPane.putConstraint(SpringLayout.WEST, btnEliminaEmail, 5, SpringLayout.EAST, btnAggiungiEmail);
+						sl_contentPane.putConstraint(SpringLayout.EAST, btnEliminaEmail, 155, SpringLayout.EAST, btnAggiungiEmail);
 						btnEliminaEmail.addMouseListener(new MouseAdapter() {
 							@Override
 							public void mouseClicked(MouseEvent e) {
@@ -663,11 +690,12 @@ public class AggiungiContatto extends JFrame {
 								}
 							}
 						});
-						btnEliminaEmail.setBounds(551, 183, 135, 23);
 						contentPane.add(btnEliminaEmail);
 						
 						JButton btnModificaEmail = new JButton("Modifica Email");
-						btnModificaEmail.setBounds(721, 183, 135, 23);
+						sl_contentPane.putConstraint(SpringLayout.NORTH, btnModificaEmail, 6, SpringLayout.SOUTH, comboBoxMail);
+						sl_contentPane.putConstraint(SpringLayout.WEST, btnModificaEmail, 5, SpringLayout.EAST, btnEliminaEmail);
+						sl_contentPane.putConstraint(SpringLayout.EAST, btnModificaEmail, 155, SpringLayout.EAST, btnEliminaEmail);
 						contentPane.add(btnModificaEmail);
 						
 						
