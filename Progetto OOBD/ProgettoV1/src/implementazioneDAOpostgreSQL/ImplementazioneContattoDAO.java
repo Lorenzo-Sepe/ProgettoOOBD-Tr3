@@ -353,7 +353,7 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 		PreparedStatement searchMailPS;
 		ArrayList<Integer> listaRisultato = new ArrayList<>();
 		try {
-			searchMailPS = connection.prepareStatement("SELECT Contatto FROM Mail_Associata JOIN Contatto ON Mail_Associata.Contatto =Contatto.Contatto_ID WHERE Mail = ?");
+			searchMailPS = connection.prepareStatement("SELECT Contatto_Associato FROM Mail WHERE \"Indirizzo_Email\" = ?");
 			searchMailPS.setString(1,mail);
 			ResultSet rs = searchMailPS.executeQuery();
 			while (rs.next()) {
