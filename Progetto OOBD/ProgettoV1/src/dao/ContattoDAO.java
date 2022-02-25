@@ -23,7 +23,7 @@ public interface ContattoDAO {
 	
 	public ArrayList<NumeriTelefonici> getListaNumeri (int id);
 	
-	public int addIndirizziDB (int idContatto, String via, String citt‡, String codicePostale, String nazione, String tag, boolean principale );
+	public int addIndirizziDB (int idContatto, String via, String citt√†, String codicePostale, String nazione, String tag, boolean principale );
 	
 	public ArrayList<Indirizzi> getListaIndirizzi (int id);
 	
@@ -34,14 +34,19 @@ public interface ContattoDAO {
 	public void addEmailDB (int idContatto, String email);
 	
 	public  ArrayList<String> getListaEmail (int id);
-	
-	public ArrayList<Integer> SearchMail(String mail);
 
-	public ArrayList<Integer> SearchAnagrafica(String prefisso, String nome, String cognome);
+	public ArrayList<Integer> SearchAnagrafica(String prefisso, String nome, String cognome) ;
+	
+	public  ArrayList<Integer> SearchMail(String mail);
+	
+	public  ArrayList<Integer> SearchAccount(String nickname, String fornitore);
 
-	public ArrayList<Integer> SearchAccount(String nickname, String fornitore);
+	public void setFoto(int id, String pathDestiCompleto);
+
+	public void setDeputatoFissoSuMobile(int contattoId, String prefisso1, String numero1, String prefisso2,
+			String numero2);
+
+	public void setDeputatoMobileSuFIsso(int contattoId, String prefisso1, String numero1, String prefisso2,
+			String numero2);
 	
-	public void setDeputatoMobileSuFIsso(int idContatto,String mobilePrefisso,String mobileNumero,String fissoPrefisso,String fissoNumero);
-	
-	public void setDeputatoFissoSuMobile(int idContatto,String mobilePrefisso,String mobileNumero, String fissoPrefisso,String fissoNumero);
 }
