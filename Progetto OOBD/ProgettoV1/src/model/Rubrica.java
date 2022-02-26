@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Rubrica {
 	private String nome;
 	private ArrayList<Contatto> contatti= new ArrayList<>();
+	private ArrayList<Gruppo> gruppi = new ArrayList<>();
 	
 	private Cassaforte cassaforte =null;
 	
@@ -64,11 +65,22 @@ public class Rubrica {
 		}
 		return null;
 	}
-	public void creaGruppo() {
-		//TODO
+	public void creaGruppo(String nomeGruppo) {
+		Gruppo gruppo = new Gruppo(nomeGruppo);
+		gruppi.add(gruppo);
 	}
-	public void eliminaGruppo() {
-		//TODO
+	
+	public void eliminaGruppo(String nomeGruppo) {
+		for (Gruppo gruppo : gruppi) {
+			if (nomeGruppo.compareTo(gruppo.getNomeGruppo())==0) {
+				gruppi.remove(gruppo);
+				break;
+			}
+		}
+	}
+	
+	public ArrayList<Gruppo> getListaGruppi (){
+		return gruppi;
 	}
 	
 	public void creaCassaforte(String password) {
