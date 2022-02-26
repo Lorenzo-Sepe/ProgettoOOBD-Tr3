@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import DAO.RubricaDAO;
 import Database.Connessione;
 import Model.Contatto;
+import Model.Gruppo;
 
 public class ImplementazioneRubricaDAO implements RubricaDAO {
 
@@ -51,6 +52,18 @@ public class ImplementazioneRubricaDAO implements RubricaDAO {
 		return listaContatti;
 	}
 	
+    public ArrayList<Gruppo> selectListaGruppiDB () throws SQLException {
+    	PreparedStatement selectListaGruppiDB;
+    	ArrayList<Gruppo> listaGruppi = new ArrayList<>();
+    	selectListaGruppiDB = connection.prepareStatement("SELECT * FROM gruppi ORDER BY nome");
+    	ResultSet rs = selectListaGruppiDB.executeQuery();
+    	while (rs.next()) {
+    		Gruppo gruppo = new Gruppo(rs.getString("nome"));
+    		listaGruppi.add(gruppo);
+    	}
+    	return listaGruppi;
+    }
+	
 	@Override
 	public int addContattoDB(String prefisso, String nome, String cognome, String path) throws SQLException {
 		 PreparedStatement addContattoPS;
@@ -79,6 +92,16 @@ public class ImplementazioneRubricaDAO implements RubricaDAO {
 			addGruppoDB.setInt(2, membro);
 			addGruppoDB.execute();
 		}
+	}
+	
+	public void deleteGruppoDB (String nomeGruppo) throws SQLException {
+		PreparedStatement delteteGruppoPS;
+		delteteGruppoPS = connection.prepareStatement("DELETE FROM appartenenza WHERE gruppo_nome = ?");
+		delteteGruppoPS.setString(1, nomeGruppo);
+		delteteGruppoPS.execute();
+		delteteGruppoPS = connection.prepareStatement("DELETE FROM gruppi WHERE nome = ?");
+		delteteGruppoPS.setString(1, nomeGruppo);
+		delteteGruppoPS.execute();
 	}
 
 }
