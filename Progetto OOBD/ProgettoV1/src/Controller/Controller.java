@@ -27,7 +27,6 @@ public class Controller {
 	
 	//metodi 
 	
-	
 	public void  dumpDati() {
 		int id=0;
 		rubrica=new Rubrica("mio");
@@ -145,92 +144,198 @@ public Contatto getContatto(int id) {
 	return rubrica.getContatto(id);
 }
 
+	/**
+	 * 
+	 * @param id
+	 * @return prefisso del contatto
+	 */
 	public String getInfoContattoPrefisso (int id){
 		Contatto contattoChiamato = rubrica.getContatto(id);
 		String Prefisso = contattoChiamato.getPrefissoNome();
 		return Prefisso;
 	}
 	
+	/**
+	 * 
+	 * @param id
+	 * @return nome del contatto
+	 */
 public String getInfoContattoNome (int id){
 	Contatto contattoChiamato = rubrica.getContatto(id);
 	String nome = contattoChiamato.getNome();
 	return nome;
 }	
 
+/**
+ * 
+ * @param id
+ * @return cognome del contatto
+ */
 public String getInfoContattoCognome (int id){
 	Contatto contattoChiamato = rubrica.getContatto(id);
 	String cognome = contattoChiamato.getCognome();
 	return cognome;
 }	
 
+/**
+ * 
+ * @param id
+ * @return quantità di numeri associati al contatto
+ */
 public Integer getNumeroQuantità (int id) {
 	Integer ris = rubrica.getContatto(id).getListaNumeri().size();
 	return ris;
 }
 
+/**
+ * 
+ * @param i
+ * @param id
+ * @return tag del numero di telefono
+ */
 public String getInfoContattoTagNumero(int i, int id) {
 	String ris = rubrica.getContatto(id).getNumero(i).getTag();
 	return ris;
 }
 
+/**
+ * 
+ * @param i
+ * @param id
+ * @return prefisso nazionale del numero 
+ */
 public String getInfoContattoPrefissoNumero(int i ,int id) {
 	String ris = rubrica.getContatto(id).getNumero(i).getPrefisso();
 	return ris;
 }
 
+/**
+ * 
+ * @param i
+ * @param id
+ * @return numero di telefono
+ */
 public String getInfoContattoNumeroNumero(int i, int id) {
 	String ris = rubrica.getContatto(id).getNumero(i).getNumero();
 	return ris;
 }
 
+/**
+ * 
+ * @param i
+ * @param id
+ * @return tipo del numero
+ */
 public String getInfoContattoNumeroTipo(int i, int id) {
 	String ris = rubrica.getContatto(id).getNumero(i).getTipoNumero();
 	return ris;
 }
 
+/**
+ * 
+ * @param id
+ * @return numero degli indirizzi associati al Contatto
+ */
 public Integer getInfoContattoIndirizzoQuantità (int id) {
 	Integer ris = rubrica.getContatto(id).getListaIndirizzi().size();
 	return ris;
 }
 
+/**
+ * 
+ * @param i
+ * @param id
+ * @return via dell'indirizzo 
+ */
 public String getInfoContattoIndirizzoVia(int i, int id) {
 	String ris = rubrica.getContatto(id).getIndirizzo(i).getVia();
 	return ris;
 }
 
+/**
+ * 
+ * @param i
+ * @param id
+ * @return città dell'indirizzo
+ */
 public String getInfoContattoIndirizzoCittà(int i, int id) {
 	String ris = rubrica.getContatto(id).getIndirizzo(i).getCittà();
 	return ris;
 }
+
+/**
+ * 
+ * @param i
+ * @param id
+ * @return codice postale dell'indrizzo
+ */
 public String getInfoContattoIndirizzoCodicePostale(int i, int id) {
 	String ris = rubrica.getContatto(id).getIndirizzo(i).getCodicePostale();
 	return ris;
 }
+
+/**
+ * 
+ * @param i
+ * @param id
+ * @return nazione dell'indirizzo
+ */
 public String getInfoContattoIndirizzoNazione(int i, int id) {
 	String ris = rubrica.getContatto(id).getIndirizzo(i).getNazione();
 	return ris;
 }
 
+/**
+ * 
+ * @param id
+ * @return numero di account associati al contatto
+ */
 public Integer getInfoContattoAccountQuantità(int id) {
 	Integer ris = rubrica.getContatto(id).getListaAccount().size();
 	return ris;
 }
 
+/**
+ * 
+ * @param i
+ * @param id
+ * @return fornitore dell'account
+ */
 public String getInfoContattoAccountFornitore(int i, int id) {
-	String ris =  ris = rubrica.getContatto(id).getAccount(i).getFornitore();
+	String ris  = rubrica.getContatto(id).getAccount(i).getFornitore();
 	return ris;
 }
 
+/**
+ * 
+ * @param i
+ * @param id
+ * @return nickname associata all'account
+ */
 public String getInfoContattoAccountNickname(int i, int id) {
-	String ris =  ris = rubrica.getContatto(id).getAccount(i).getNickname();
+	String ris = rubrica.getContatto(id).getAccount(i).getNickname();
 	return ris;
 }
+
+/**
+ * 
+ * @param i
+ * @param id
+ * @return mail associata all'account
+ */
 public String getInfoContattoAccountMail(int i, int id) {
-	String ris =  ris = rubrica.getContatto(id).getAccount(i).getMail();
+	String ris  = rubrica.getContatto(id).getAccount(i).getMail();
 	return ris;
 }
+
+/**
+ * 
+ * @param i
+ * @param id
+ * @return frase di benvenuto dell'Account
+ */
 public String getInfoContattoAccountBenvenuto(int i, int id) {
-	String ris =  ris = rubrica.getContatto(id).getAccount(i).getBenvenuto();
+	String ris = rubrica.getContatto(id).getAccount(i).getBenvenuto();
 	return ris;
 }
 
@@ -594,7 +699,9 @@ public ArrayList<Contatto> searchMail(String mail) {
     ContattoDAO contattoDao = new ImplementazioneContattoDAO();
     ArrayList <Contatto> ListRisultati = new ArrayList <>();
     ArrayList<Integer> ListID = contattoDao.SearchMail(mail);
-    // TODO Auto-generated method stub
+    for (Integer id : ListID) {
+        ListRisultati.add(rubrica.getContatto(id));
+    }
     return ListRisultati;
 }
 
@@ -604,7 +711,7 @@ public ArrayList<Contatto> searchMail(String mail) {
  * @param prefisso
  * @param nome
  * @param cognome
- * @return
+ * @return arraylist dei contatti risultati
  */
 public ArrayList<Contatto> SearchAnagrafica(String prefisso, String nome, String cognome) {
     ContattoDAO contattoDao = new ImplementazioneContattoDAO();
@@ -614,12 +721,9 @@ public ArrayList<Contatto> SearchAnagrafica(String prefisso, String nome, String
     ArrayList<Integer> ListID =  contattoDao.SearchAnagrafica(prefisso,nome,cognome);
     ArrayList <Contatto> ListRisultati = new ArrayList <>();
     // TODO algoritmo di aggiunta dei numeri
-    //    ArrayList <Contatto> List = new ArrayList <>();
-    //    List = getListaContatti();
-    //
-    //    for (Integer id : ListID) {
-    //        ListRisultati.add(Rubrica.getContatto(id));
-    //    }
+        for (Integer id : ListID) {
+            ListRisultati.add(rubrica.getContatto(id));
+        }
     return ListRisultati;
 }
 
@@ -627,16 +731,18 @@ public ArrayList<Contatto> SearchAnagrafica(String prefisso, String nome, String
  * 
  * @param nickname
  * @param fornitore
- * @return
+ * @return lista dei risultati della search
  */
 public ArrayList<Contatto> searchAccount(String nickname, String fornitore) {
     ContattoDAO contattoDao = new ImplementazioneContattoDAO();
     if (nickname == null) {nickname="true";}; 
     if (fornitore == null) {fornitore="true";}; 
     ArrayList<Integer> ListID =  contattoDao.SearchAccount(nickname, fornitore);
+    //TODO Controllare la correttezza
     ArrayList <Contatto> ListRisultati = new ArrayList <>();
-
-    // TODO Auto-generated method stub
+    for (Integer contatto : ListID) {
+    	 ListRisultati.add(rubrica.getContatto(contatto));
+	}
     return ListRisultati;
 }
 
@@ -714,7 +820,11 @@ public void checkAlmenoDueNumeriConTipoDiverso(ArrayList<String> arraylisyTipi) 
 		throw new Exception("Non ci sono almeno due numeri con tip diverso ");
 }
 
-
+/**
+ * 
+ * @param contattoID
+ * @return contatto appena recuperato dal DB
+ */
 public Contatto dumpContatto(int contattoID) {
 	ContattoDAO contattoDao = new ImplementazioneContattoDAO();
 	Contatto contatto = new Contatto(contattoID, rubrica.getContatto(contattoID).getPrefissoNome(),
@@ -728,10 +838,5 @@ public Contatto dumpContatto(int contattoID) {
 	return contatto;
 }
 
-
-
-
-
-
-
+	
 }
