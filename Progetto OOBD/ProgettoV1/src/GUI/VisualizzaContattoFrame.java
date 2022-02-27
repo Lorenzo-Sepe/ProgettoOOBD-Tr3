@@ -52,6 +52,7 @@ import javax.swing.AbstractListModel;
 import java.awt.Font;
 import java.awt.Frame;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JMenu;
 import javax.swing.border.TitledBorder;
 import java.awt.Component;
@@ -122,6 +123,9 @@ public class VisualizzaContattoFrame extends JFrame {
 	 */
 	
 	public VisualizzaContattoFrame(Controller controller, JFrame Chiamante,int id) {
+		//controller.dumpContatto(id); 
+		
+		
 		frame = this;
 		c=controller;
 		contattoID=id;
@@ -176,7 +180,8 @@ public class VisualizzaContattoFrame extends JFrame {
 		sl_contentPane.putConstraint(SpringLayout.WEST, textPanePrefisso, 370, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, textPanePrefisso, -250, SpringLayout.EAST, contentPane);
 		textPanePrefisso.setEditable(false);
-		textPanePrefisso.setText(c.getContatto(id).getPrefissoNome());
+		textPaneNome.setText(c.getInfoContattoPrefisso(id));
+		//textPanePrefisso.setText(c.getContatto(id).getPrefissoNome());
 		
 		contentPane.add(textPanePrefisso);
 		
@@ -188,14 +193,15 @@ public class VisualizzaContattoFrame extends JFrame {
 		
 		contentPane.add(bottonModificaContatto);
 		
-		textPaneNome = new JTextPane(/*Controller.getterNome()*/);
+		textPaneNome = new JTextPane();
 		sl_contentPane.putConstraint(SpringLayout.NORTH, textPaneNome, 60, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, textPaneNome, 370, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, textPaneNome, -250, SpringLayout.EAST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, bottonModificaContatto, -165, SpringLayout.EAST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, bottonModificaContatto, -15, SpringLayout.EAST, contentPane);
 		textPaneNome.setEditable(false);
-		textPaneNome.setText(c.getContatto(id).getNome());
+		textPaneNome.setText(c.getInfoContattoNome(id));
+		//textPaneNome.setText(c.getContatto(id).getNome());
 		contentPane.add(textPaneNome);
 		
 		bottonModificaNumeri = new JButton(" Modifica Numeri  ");
@@ -206,12 +212,13 @@ public class VisualizzaContattoFrame extends JFrame {
 		
 		contentPane.add(bottonModificaNumeri);
 		
-		textPaneCognome = new JTextPane(/*Controller.getterCognome()*/);
+		textPaneCognome = new JTextPane();
 		sl_contentPane.putConstraint(SpringLayout.NORTH, textPaneCognome, 90, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, textPaneCognome, 370, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, textPaneCognome, -250, SpringLayout.EAST, contentPane);
 		textPaneCognome.setEditable(false);
-		textPaneCognome.setText(c.getContatto(id).getCognome());
+		textPaneNome.setText(c.getInfoContattoCognome(id));
+		//textPaneCognome.setText(c.getContatto(id).getCognome());
 		contentPane.add(textPaneCognome);
 		
 		bottonModificaIndirizzi = new JButton(" Modifica Indirizzi ");
@@ -249,12 +256,15 @@ public class VisualizzaContattoFrame extends JFrame {
 		
 		// Inserimento nella tabella dei numeri del contatto
 		
-		for(int i=0;i<c.getContatto(id).getListaNumeri().size();i++) {
+		for(int i=0;i<c.getNumeroQuantità(id);i++) {
 			modelNumeri.addRow(new Object[]{
-					c.getContatto(id).getNumero(i).getTag(),
-					c.getContatto(id).getNumero(i).getPrefisso(),
-					c.getContatto(id).getNumero(i).getNumero(),
-					
+					c.getInfoContattoTagNumero(i,id),
+					c.getInfoContattoPrefissoNumero(i,id),
+					c.getInfoContattoNumeroNumero(i,id),
+					c.getInfoContattoNumeroTipo(i,id)
+//					c.getContatto(id).getNumero(i).getTag(),
+//					c.getContatto(id).getNumero(i).getPrefisso(),
+//					c.getContatto(id).getNumero(i).getNumero(),	
 			});	
 		}
 		
@@ -270,9 +280,8 @@ public class VisualizzaContattoFrame extends JFrame {
 	
 		panelFoto.setLayout(null);
 		
-		//TODO aggiungi funzionalità dinamica
+		
 		labelFoto = new JLabel("");
-		//ImageIcon PROVA = new ImageIcon(c.getImageModificata(id, id, new File("path")));
 		labelFoto.setIcon(new ImageIcon(c.getImageModificata(150, 150, new File (c.getPathContatto(id)))));
 		labelFoto.setBounds(0, 0, 150, 150);
 		panelFoto.add(labelFoto);
@@ -297,12 +306,16 @@ public class VisualizzaContattoFrame extends JFrame {
 		
 		// Inserimento degli indirizzi del contatto
 		
-		for(int i=0;i<c.getContatto(id).getListaIndirizzi().size();i++) {
+		for(int i=0;i<c.getInfoContattoIndirizzoQuantità(id);i++) {
 			modelIndirizzi.addRow(new Object[]{
-					c.getContatto(id).getIndirizzo(i).getVia(),
-					c.getContatto(id).getIndirizzo(i).getCittà(),
-					c.getContatto(id).getIndirizzo(i).getCodicePostale(),
-					c.getContatto(id).getIndirizzo(i).getNazione()
+					c.getInfoContattoIndirizzoVia(i,id),
+					c.getInfoContattoIndirizzoCittà(i, id),
+					c.getInfoContattoIndirizzoCodicePostale(i, id),
+					c.getInfoContattoIndirizzoNazione(i, id)
+//					c.getContatto(id).getIndirizzo(i).getVia(),
+//					c.getContatto(id).getIndirizzo(i).getCittà(),
+//					c.getContatto(id).getIndirizzo(i).getCodicePostale(),
+//					c.getContatto(id).getIndirizzo(i).getNazione()
 			});	
 		}
 		//tableAccounts
@@ -321,12 +334,16 @@ public class VisualizzaContattoFrame extends JFrame {
 		
 		// Inserimento account del contatto
 		
-		for(int i=0;i<c.getContatto(id).getListaAccount().size();i++) {
-			modelAccounts.addRow(new Object[]{
-					c.getContatto(id).getAccount(i).getFornitore(),
-					c.getContatto(id).getAccount(i).getNickname(),
-					c.getContatto(id).getAccount(i).getMail(),
-					c.getContatto(id).getAccount(i).getBenvenuto()
+		for(int i=0;i<c.getInfoContattoAccountQuantità(id);i++) {
+				modelAccounts.addRow(new Object[]{
+					c.getInfoContattoAccountFornitore(i, id),
+					c.getInfoContattoAccountNickname(i, id),
+					c.getInfoContattoAccountMail(i, id),
+					c.getInfoContattoAccountBenvenuto(i, id)
+//					c.getContatto(id).getAccount(i).getFornitore(),
+//					c.getContatto(id).getAccount(i).getNickname(),
+//					c.getContatto(id).getAccount(i).getMail(),
+//					c.getContatto(id).getAccount(i).getBenvenuto()
 			});	
 		}
 		
@@ -425,7 +442,6 @@ public class VisualizzaContattoFrame extends JFrame {
 				
 				panelAccount = new JPanel();
 				sl_contentPane.putConstraint(SpringLayout.NORTH, panelAccount, -170, SpringLayout.SOUTH, contentPane);
-				
 				sl_contentPane.putConstraint(SpringLayout.SOUTH, panelAccount, -45, SpringLayout.SOUTH, contentPane);
 				sl_contentPane.putConstraint(SpringLayout.SOUTH, panelIndirizzi, -5, SpringLayout.NORTH, panelAccount);
 				sl_contentPane.putConstraint(SpringLayout.WEST, panelAccount, 230, SpringLayout.WEST, contentPane);
@@ -540,15 +556,23 @@ public class VisualizzaContattoFrame extends JFrame {
 			}
 		});
 	
-		bottonModificaAccount.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(e.getClickCount()==2) {
-					 //TODO modifica dei Account
-					 //Controller.modificaAccount();
-				 }
-			}
-		});
+
+		bottonModificaContatto.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						if(e.getClickCount()==2) {
+							ModificaContattoPanel ModificaContattoPanel = new ModificaContattoPanel();
+							ModificaContattoPanel.setAll(textPanePrefisso.getText(),textPaneNome.getText(),textPaneCognome.getText());
+							int result = JOptionPane.showConfirmDialog(null, ModificaContattoPanel, "Modifica Indirizzo", JOptionPane.OK_CANCEL_OPTION);
+							if (result == JOptionPane.OK_OPTION) {
+								textPanePrefisso.setText(ModificaContattoPanel.getPrefisso());
+								textPaneNome.setText(ModificaContattoPanel.getNome());
+								textPaneCognome.setText(ModificaContattoPanel.getCognome());
+							}
+						 }
+					}
+				});
+		
 	}
 	
 	class ImageFilter extends FileFilter {
