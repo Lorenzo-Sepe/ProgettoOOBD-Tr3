@@ -1,6 +1,5 @@
 package ImplementazioneDAOpostgreSQL;
 
-import java.net.IDN;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -203,6 +202,7 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 			addAccountPS.setString(3, nickname);
 			addAccountPS.setString(4, email);
 			addAccountPS.setString(5, benvenuto);
+			
 			ResultSet rs = addAccountPS.executeQuery();
 			rs.next();
 			idAccount = rs.getInt("account_id");
@@ -234,7 +234,7 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 	public void addEmailDB (int idContatto, String email) {
 		PreparedStatement addEmailPS;
 		try {
-		addEmailPS = connection.prepareStatement("INSERT INTO mail VALUES (?,?)");
+		addEmailPS = connection.prepareStatement("INSERT INTO mail VALUES (?,?);");
 		addEmailPS.setString(1, email);
 		addEmailPS.setInt(2, idContatto);
 		addEmailPS.execute();
@@ -250,7 +250,7 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 		PreparedStatement getListaEmailPS;
 		ArrayList<String> listaEmail = new ArrayList<>();
 		try {
-			getListaEmailPS = connection.prepareStatement("SELECT Indirizzo_email.* FROM \"Mail\" WHERE  \"Mail\".\"Contatto_Associato\" = ?");
+			getListaEmailPS = connection.prepareStatement("SELECT Indirizzo_email  FROM Mail WHERE  Contatto_Associato= ?");
 			getListaEmailPS.setInt(1, id);
 			ResultSet rs = getListaEmailPS.executeQuery();
 			while (rs.next()) {
@@ -266,12 +266,24 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 	
 	public void setDeputatoMobileSuFIsso(int idContatto,String mobilePrefisso,String mobileNumero,String fissoPrefisso,String fissoNumero) {
         PreparedStatement getDeputato ;
-        String nomeProcedura=" SetDeputato_Mobile-Su-Fisso  ";
+        String nomeProcedura="\"SetDeputato_Mobile\"";
         try {
             getDeputato=connection.prepareStatement("CALL "+nomeProcedura+"( ?, ?)");
+            //TODO CANCELLARE DOPO IL DEBUG
+            System.out.print("Sono nella setDEP mobile\nIL mobile è "+mobilePrefisso +" "+mobileNumero );
+            System.out.print(" ID: ");
+            System.out.println(getIDNumeroMobile(mobilePrefisso, mobileNumero,idContatto));
             getDeputato.setInt(1, getIDNumeroMobile(mobilePrefisso, mobileNumero,idContatto));
+            
+            System.out.print("Il fisso è "+fissoPrefisso +" "+fissoNumero );
+            System.out.print(" ID: ");
+            System.out.println(getIDNumeroFisso(fissoPrefisso, fissoNumero,idContatto));
+            
             getDeputato.setInt(2, getIDNumeroFisso(fissoPrefisso, fissoNumero,idContatto));
-            ResultSet rs= getDeputato.executeQuery();
+           
+            System.out.print("Sono nella setDEP mobile su FIsso dopo i set int query:-"+getDeputato.toString());
+
+            getDeputato.execute();
             
         } catch (Exception e) {
 			e.printStackTrace();
@@ -281,12 +293,26 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 
     public void setDeputatoFissoSuMobile(int idContatto,String mobilePrefisso,String mobileNumero, String fissoPrefisso,String fissoNumero) {
         PreparedStatement getDeputato ;
-        String nomeProcedura=" SetDeputato_Fisso-Su-Mobile ";
+        String nomeProcedura="\"SetDeputato_Fisso\"";
         try {
-            getDeputato=connection.prepareStatement("CALL "+nomeProcedura+"( ?, ?)");
-            getDeputato.setInt(1, getIDNumeroMobile(mobilePrefisso, mobileNumero,idContatto));
-            getDeputato.setInt(2, getIDNumeroFisso(fissoPrefisso, fissoNumero,idContatto));
-            ResultSet rs= getDeputato.executeQuery();
+            getDeputato=connection.prepareStatement("CALL "+nomeProcedura+" ( ?, ?)");
+            
+            //TODO ELIMNIARE DOPO IL DEUBUG
+            System.out.print("Sono nella setDEP FIsso\nIL fisso è "+fissoPrefisso +" "+fissoNumero );
+            System.out.print(" ID:+");
+            System.out.println(getIDNumeroFisso(fissoPrefisso, fissoNumero,idContatto));
+            
+            getDeputato.setInt(1, getIDNumeroFisso(fissoPrefisso, fissoNumero,idContatto));
+            
+            System.out.print("IL mobile è "+mobilePrefisso +" "+mobileNumero );
+            System.out.print(" ID:+");
+            System.out.println(getIDNumeroMobile(mobilePrefisso, mobileNumero,idContatto));
+            
+            
+            getDeputato.setInt(2, getIDNumeroMobile(mobilePrefisso, mobileNumero,idContatto));
+            System.out.print("Sono nella setDEP FIsso su mobile  dopo i set int query:-"+getDeputato.toString());
+
+           getDeputato.execute();
 
         } catch (Exception e) {
 			e.printStackTrace();
@@ -298,13 +324,13 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
         PreparedStatement getIDNumero;
         int id = 0;
         try {
-            getIDNumero=connection.prepareStatement("Select ID Numero_ID from NUMERI_TELEFONICI_MOBILI Where PREFISSO_NAZIONALE = ? AND NUMERO = ? AND contatto_associato=?");
+            getIDNumero=connection.prepareStatement("Select *  from NUMERI_TELEFONICI_MOBILI Where PREFISSO_NAZIONALE = ? AND NUMERO = ? AND contatto_associato=?");
             getIDNumero.setString(1, prefissoMobile);
             getIDNumero.setString(2, numeroMobile);
             getIDNumero.setInt(3,idContatto);
             ResultSet rs= getIDNumero.executeQuery();
             rs.next();
-            id =rs.getInt("Numero_ID");
+            id =rs.getInt(1);
         } catch (Exception e) {
         	e.printStackTrace();
         }
@@ -316,13 +342,13 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
         PreparedStatement getIDNumero;
         int id = 0;
         try {
-            getIDNumero=connection.prepareStatement("Select ID Numero_ID from NUMERI_TELEFONICI_FISSI Where PREFISSO_NAZIONALE = ? AND NUMERO = ? AND contatto_associato=?");
+            getIDNumero=connection.prepareStatement("Select *  from NUMERI_TELEFONICI_FISSI Where PREFISSO_NAZIONALE = ? AND NUMERO = ? AND contatto_associato=?");
             getIDNumero.setString(1, prefissoFisso);
             getIDNumero.setString(2, numeroFisso);
             getIDNumero.setInt(3,idContatto);
             ResultSet rs= getIDNumero.executeQuery();
-            rs.next();
-            id =rs.getInt("Numero_ID");
+            if(rs.next()==false ) throw new Exception("RSEULSETT VUOTOOO Id Numero Fisso non trovato ");
+            id =rs.getInt(1);
         } catch (Exception e) {
         	e.printStackTrace();
         }
@@ -393,10 +419,40 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 			setFotoPS = connection.prepareStatement("UPDATE Contatto SET  Path_Foto = ? WHERE Contatto_ID = ?");
 			setFotoPS.setString(1,pathDestiCompleto);
 			setFotoPS.setInt(2,id);
+			setFotoPS.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	
+	public void transactionsBegin() {
+		PreparedStatement inizioTransactions;
+	try {
+		inizioTransactions = connection.prepareStatement("BEGIN;");
+		inizioTransactions.execute();
+
+	} catch (SQLException e) {
+		e.printStackTrace();
+	}
+}
+	public void transactionsCommit() {
+		PreparedStatement fineTransactions;
+		try {
+			fineTransactions = connection.prepareStatement("COMMIT;");
+			fineTransactions.execute();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	public void transactionsRollBack() {
+		PreparedStatement fineTransactions;
+		try {
+			fineTransactions = connection.prepareStatement("ROLLBACK ;");
+			fineTransactions.execute();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }
