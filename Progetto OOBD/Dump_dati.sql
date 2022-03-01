@@ -4,6 +4,8 @@
 INSERT INTO INDIRIZZI (Via, città, codice_postale, nazione)
 VALUES
 ('Rotonda Damiana 797','Bianchi a mare','92654','Italia'),
+('Via Conte 40','Bianchi a mare','92654','Italia'),
+('Vicolo corto 77','Bianchi a mare','92654','Italia'),
 ('Incrocio Cristyn 742 Piano 8','De luca salentino','95185','Italia'),
 ('2909 Jude Motorway Apt. 955','South Rhodaside','90400','Kansas, USA'),
 ('880 Sid Road','South Dayton','16111-5097','Montana, USA'),
@@ -30,7 +32,9 @@ VALUES
 ('Krogshaven 81, 1.','Gredstedbro','4073','Danimarca'),
 ('Bendixenshaven 5, st. tv.','Skals','2978','Danimarca'),
 ('Lorenzen Allé 7, st.','Borre','5309','Danimarca')
+
 RETURNING *;
+
 INSERT INTO CONTATTO (prefisso_nome,nome,cognome,path_foto,visibilità)
 VALUES
 --Italiani
@@ -87,4 +91,5 @@ VALUES
 (null,'Beaulah','Dare',null,false),
 (null,'Astrid','Cassin','C:\Users\Pc\eclipse-workspace\ProgettoV1\src\Immagini',true),
 (null,'Monica','Ferry',null,true)
+
 RETURNING *;
