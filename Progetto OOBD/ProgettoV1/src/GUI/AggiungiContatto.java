@@ -230,7 +230,6 @@ public class AggiungiContatto extends JFrame {
 		sl_contentPane.putConstraint(SpringLayout.NORTH, comboBoxMail, -4, SpringLayout.NORTH, labelMail);
 		sl_contentPane.putConstraint(SpringLayout.WEST, comboBoxMail, 0, SpringLayout.WEST, textPanePrefisso);
 		sl_contentPane.putConstraint(SpringLayout.EAST, comboBoxMail, 0, SpringLayout.EAST, textPanePrefisso);
-		scrollPane.setViewportView(comboBoxMail);
 		contentPane.add(comboBoxMail);
 				
 		panelNumeri = new JPanel();
@@ -593,47 +592,103 @@ public class AggiungiContatto extends JFrame {
 						btnConfirm.addMouseListener(new MouseAdapter() {
 							@Override
 							public void mouseClicked(MouseEvent e) {
+								
+								SetIndirizzoPrincipale pannelSettaIndizzoPrincipale;
 								ArrayList<String> listaTipi = new ArrayList<String>();
-								ArrayList<String> listaNumeri = new ArrayList<>();
-								for (int i=0;i<modelloNumeri.getRowCount();i++) {
-									listaTipi.add(modelloNumeri.getValueAt(i, 3).toString());
-									listaNumeri.add(modelloNumeri.getValueAt(i,1).toString()+modelloNumeri.getValueAt(i,2).toString());
+								int row=0;//variabile contattore per gestire tutti i vari for
+								int tastoCliccatoNeiDialog=0; // tasto cllicato nei JDialo
+								int indexDelIndirizzoPrincipale=-1;
+								//check Almeno Due Numeri Con Tipo Diverso
+								for ( row= 0; row < modelloNumeri.getRowCount(); row++) {
+									listaTipi.add(modelloNumeri.getValueAt(row, 3).toString());
 								}
 								
 								try {
 									c.checkAlmenoDueNumeriConTipoDiverso(listaTipi);
-									SetDeputatoPanel  pannelSettaDeputati = new SetDeputatoPanel(modelloNumeri);
-									int ris = JOptionPane.showConfirmDialog(null,pannelSettaDeputati, "Gestisci Deputato", JOptionPane.OK_CANCEL_OPTION);
-									if (ris == JOptionPane.OK_OPTION) {
-										if(JOptionPane.showConfirmDialog(null,null, "Seleziona Indirizzo principale", JOptionPane.OK_CANCEL_OPTION)==JOptionPane.OK_OPTION) {
-											
-											int idContatto = c.aggiungiContatto(textPanePrefisso.getText(), textPaneNome.getText(), textPaneCognome.getText(), pathFoto);
-											
-										
-										for (int i = 0; i<modelloNumeri.getRowCount();i++) {
-											c.aggiungiNumero (idContatto, modelloNumeri.getValueAt(i,1).toString(), modelloNumeri.getValueAt(i, 2).toString(), modelloNumeri.getValueAt(i, 0).toString(), modelloNumeri.getValueAt(i, 3).toString());
-										}
-										String tipoDelDeputato;
-										for (int i = 0; i<modelloNumeri.getRowCount();i++) {
-//											c.aggiungiNumero (idContatto, modelloNumeri.getValueAt(i,1).toString(), modelloNumeri.getValueAt(i, 2).toString(), modelloNumeri.getValueAt(i, 0).toString(), modelloNumeri.getValueAt(i, 3).toString());
-											if(modelloNumeri.getValueAt(i-1, 3).toString().compareToIgnoreCase("Fisso")==0) tipoDelDeputato="Mobile";
-											else tipoDelDeputato="Fisso";
-											c.setDeputato(idContatto, modelloNumeri.getValueAt(i, 1).toString(), modelloNumeri.getValueAt(i, 2).toString(), modelloNumeri.getValueAt(i, 3).toString(), modelloNumeri.getValueAt(i, 1).toString(), modelloNumeri.getValueAt(i, 2).toString(), tipoDelDeputato);
-										}
-										for (int i = 0;i<comboBoxMail.getItemCount();i++) {
-											// c.aggiungiMail (idContatto, comboBoxMail.getItemAt(i));
-										}
-										//TODO fare inserimento principale
-//										for (int i = 0; i<modelIndirizzi.getRowCount(); i++) {
-//											c.aggiungiIndirizzo (idContatto, modelIndirizzi.getValueAt(i, 1).toString(), modelIndirizzi.getValueAt(i, 2).toString(), modelIndirizzi.getValueAt(i, 3).toString(),modelIndirizzi.getValueAt(i, 4).toString(),modelIndirizzi.getValueAt(i, 0).toString() );
-//										}
-										}else {
-											//hai settato i deputato ma non la via principale //TODO
-										}
-									}else {
-										//non hai settato i deputati//TODO
-									}
 									
+									SetDeputatoPanel pannelSettaDeputati = new SetDeputatoPanel(modelloNumeri);
+									
+									//Controllo se ci sono righe nella tabella indirizzi
+									if(modelIndirizzi.getRowCount() >1) {
+										//Richiesta di selezione indirizzo principale
+										 pannelSettaIndizzoPrincipale = new SetIndirizzoPrincipale(modelIndirizzi);
+										tastoCliccatoNeiDialog= JOptionPane.showConfirmDialog(null,
+												pannelSettaIndizzoPrincipale, "Seleziona Indirizzo principale",
+												JOptionPane.OK_CANCEL_OPTION);
+										if(tastoCliccatoNeiDialog!=JOptionPane.OK_OPTION) {
+											throw new Exception( "Per aggiungere un contatto serve che scegliate un indirizzo principale");
+										}
+											indexDelIndirizzoPrincipale=pannelSettaIndizzoPrincipale.getIndexIndirizzoPrincipale();
+										
+									}
+										//richiesta di selezionamento deputati
+									
+									tastoCliccatoNeiDialog= JOptionPane.showConfirmDialog(null,
+											pannelSettaDeputati, "Seleziona Indirizzo principale",
+											JOptionPane.OK_OPTION);
+										
+									if(tastoCliccatoNeiDialog!=JOptionPane.OK_OPTION) {
+										throw new Exception("Per aggiungere un contatto serve che scegliate un indirizzo principale ");
+									}
+									// Load anagrafie di contatto
+									int idContatto = c.aggiungiContatto(textPanePrefisso.getText(), textPaneNome.getText(),
+											textPaneCognome.getText(), pathFoto);
+
+									// Load Numeri nel Database
+									for (int i = 0; i < modelloNumeri.getRowCount(); i++) {
+										c.aggiungiNumero(idContatto, modelloNumeri.getValueAt(i, 0).toString(),
+												modelloNumeri.getValueAt(i, 1).toString(),
+												modelloNumeri.getValueAt(i, 2).toString(),
+												modelloNumeri.getValueAt(i, 3).toString());
+									}
+									// Load Dei deputati per ogni Numero
+									String tipoDelDeputato ;
+									
+									for (int i = 0; i < modelloNumeri.getRowCount(); i++) {
+										System.out.println("ceck if  "+modelloNumeri.getValueAt(i , 3).toString().compareToIgnoreCase("Fisso") );
+										if (modelloNumeri.getValueAt(i , 3).toString().compareToIgnoreCase("Fisso") == 0)
+											tipoDelDeputato = "Mobile";
+										else tipoDelDeputato = "Fisso";
+										
+										System.out.println("pref 1:-"+modelloNumeri.getValueAt(i, 1).toString()
+												+"\nnum 1:-"+modelloNumeri.getValueAt(i, 2).toString()
+												+"\ntipo 1:-"+modelloNumeri.getValueAt(i, 3).toString()
+												+"\npref 2:-"+pannelSettaDeputati.getPrefissoDeputato(i)
+												+"\nnum 2:-"+pannelSettaDeputati.getNumeroDeputato(i)
+												+"\ntipo2:-"+tipoDelDeputato);
+										c.setDeputato(idContatto, modelloNumeri.getValueAt(i, 1).toString(),
+												modelloNumeri.getValueAt(i, 2).toString(),
+												modelloNumeri.getValueAt(i, 3).toString(),
+												pannelSettaDeputati.getPrefissoDeputato(i),
+												pannelSettaDeputati.getNumeroDeputato(i), tipoDelDeputato);
+									}
+									// Load delle e-mail nel Database
+									for (int i = 0; i < comboBoxMail.getItemCount(); i++) {
+										c.aggiungiMail(idContatto, comboBoxMail.getItemAt(i));
+									}
+									// Load degli indirizzi e setta indirizzo principale
+									for (int i = 0; i < modelIndirizzi.getRowCount(); i++) {
+										if (indexDelIndirizzoPrincipale == i)
+											c.aggiungiIndirizzo(idContatto, modelIndirizzi.getValueAt(i, 1).toString(),
+													modelIndirizzi.getValueAt(i, 2).toString(),
+													modelIndirizzi.getValueAt(i, 3).toString(),
+													modelIndirizzi.getValueAt(i, 4).toString(),
+													modelIndirizzi.getValueAt(i, 0).toString(), true);
+										else
+											c.aggiungiIndirizzo(idContatto, modelIndirizzi.getValueAt(i, 1).toString(),
+													modelIndirizzi.getValueAt(i, 2).toString(),
+													modelIndirizzi.getValueAt(i, 3).toString(),
+													modelIndirizzi.getValueAt(i, 4).toString(),
+													modelIndirizzi.getValueAt(i, 0).toString(), false);
+									}
+									// Load degli account
+									for (int i = 0; i < modelAccounts.getRowCount(); i++) {
+										c.aggiungiAccount(idContatto, modelAccounts.getValueAt(i, 0).toString(),
+												modelAccounts.getValueAt(i, 1).toString(),
+												modelAccounts.getValueAt(i, 2).toString(),
+												modelAccounts.getValueAt(i, 3).toString());
+
+									}	
 									
 									
 									
@@ -654,14 +709,18 @@ public class AggiungiContatto extends JFrame {
 						btnAggiungiEmail.addMouseListener(new MouseAdapter() {
 							@Override
 							public void mouseClicked(MouseEvent e) {
-								String email = JOptionPane.showInputDialog("Inserire l'email");
-								try {
+								String email= JOptionPane.showInputDialog("Inserire l'email");
+								if(email!=null)
+									try {
 									c.checkFormMail(email,listaMail);
+									
 									comboBoxMail.addItem(email);
+									comboBoxMail.setSelectedIndex(comboBoxMail.getItemCount()-1);
 									listaMail.add(email);
 								}
 								catch (Exception ex) {
 									JOptionPane.showMessageDialog(null, ex.getMessage(),"ERRORE",JOptionPane.ERROR_MESSAGE);
+									ex.printStackTrace();
 									
 								}
 							}
@@ -704,6 +763,39 @@ public class AggiungiContatto extends JFrame {
 						contentPane.add(btnEliminaEmail);
 						
 						JButton btnModificaEmail = new JButton("Modifica Email");
+						btnModificaEmail.addMouseListener(new MouseAdapter() {
+							@Override
+							public void mouseClicked(MouseEvent e) {
+								
+								if(comboBoxMail.getSelectedItem()!=null) {
+									try {
+								String mailSElezionata = comboBoxMail.getSelectedItem().toString() ;
+								String mailModificata = mailSElezionata;
+								 Object mailObj =JOptionPane.showInputDialog(null,
+						                "Modifica l'email", "Modifica Email",
+						                JOptionPane.QUESTION_MESSAGE,null,null,mailSElezionata) ;
+								 if(mailObj!=null)
+									  mailModificata=mailObj.toString();
+								 
+								if(mailModificata.compareToIgnoreCase(mailSElezionata)!=0) {
+									
+										c.checkFormMail(mailModificata, listaMail);
+										
+										comboBoxMail.insertItemAt(mailModificata, comboBoxMail.getSelectedIndex());
+										comboBoxMail.removeItem(mailSElezionata);
+										listaMail.remove(mailSElezionata);
+										listaMail.add(mailModificata);
+										
+									}
+								} catch (Exception e1) {
+										e1.printStackTrace();
+					                	JOptionPane.showMessageDialog(null, e1.getMessage(),"ERRORE",JOptionPane.ERROR_MESSAGE);
+									}
+									
+								}
+							}
+							
+						});
 						sl_contentPane.putConstraint(SpringLayout.NORTH, btnModificaEmail, 6, SpringLayout.SOUTH, comboBoxMail);
 						sl_contentPane.putConstraint(SpringLayout.WEST, btnModificaEmail, 5, SpringLayout.EAST, btnEliminaEmail);
 						sl_contentPane.putConstraint(SpringLayout.EAST, btnModificaEmail, 155, SpringLayout.EAST, btnEliminaEmail);
