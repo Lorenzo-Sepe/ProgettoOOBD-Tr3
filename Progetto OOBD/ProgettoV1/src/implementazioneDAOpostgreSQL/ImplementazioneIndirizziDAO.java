@@ -1,19 +1,12 @@
 /**
  * 
  */
-package implementazioneDAOpostgreSQL;
+package ImplementazioneDAOpostgreSQL;
 
 import java.sql.Connection;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import DAO.IndirizziDAO;
 import Database.Connessione;
@@ -39,15 +32,6 @@ public class ImplementazioneIndirizziDAO implements IndirizziDAO {
 		}
 	}
 
-	public void  chiudiConnessione() {
-		 try {
-			connection.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	 }
-	
 	@Override
 	public void addIndirizzoDB(Indirizzi i, Contatto c) {
 		PreparedStatement addIndirizzoPS;
@@ -57,7 +41,7 @@ public class ImplementazioneIndirizziDAO implements IndirizziDAO {
 					"INSERT INTO INDIRIZZI (via , città, codice_postale, nazione) VALUES (?, ?, ?, ?)");
 					addIndirizzoPS.setString(1, i.getVia());
 					addIndirizzoPS.setString(2, i.getCittà());
-					addIndirizzoPS.setInt(3, i.getCodicePostale());
+					addIndirizzoPS.setString(3, i.getCodicePostale());
 					addIndirizzoPS.setString(4, i.getNazione());
 					ResultSet rs = addIndirizzoPS.executeQuery();
 					//- Release delle risorse
@@ -73,8 +57,7 @@ public class ImplementazioneIndirizziDAO implements IndirizziDAO {
 	public void addAbitaDB(Indirizzi i, Contatto c, String identificatore) {
 		PreparedStatement addAbitaPS;
 		try {
-			addAbitaPS = connection.prepareStatement("INSER INTO ABITA(indirizzo_ID, Contatto_ID, abitazione_principale, identificatore) (? , ? , ?, ?)");
-			addAbitaPS.setInt(1, i.getID());
+			addAbitaPS = connection.prepareStatement("INSERT INTO ABITA(Contatto_ID, abitazione_principale, identificatore) (? , ? , ?, ?)");
 			addAbitaPS.setInt(2, c.getID());
 			addAbitaPS.setString(3, "FALSE");
 			addAbitaPS.setString(4, identificatore);
@@ -99,9 +82,8 @@ public class ImplementazioneIndirizziDAO implements IndirizziDAO {
 					
 		ResultSet rs = leggiIndirizziPS.executeQuery();
 		while (rs.next()) {
-			Indirizzi i = new Indirizzi (rs.getInt("Indirizzo_ID"), rs.getBoolean("Abitazione_Principale"),  rs.getString("Via"), rs.getString("Città"), rs.getInt("Codice_Postale"), rs.getString("Nazione"), rs.getString("Identificatore") );
+			Indirizzi i = new Indirizzi (rs.getInt("Indirizzo_ID"), rs.getBoolean("Abitazione_Principale"),  rs.getString("Via"), rs.getString("Città"), rs.getString("Codice_Postale"), rs.getString("Nazione"), rs.getString("Identificatore") );
 			listaIndirizzi.add(i);
-			
 		}
 		rs.close();
 		} catch (SQLException e) {
