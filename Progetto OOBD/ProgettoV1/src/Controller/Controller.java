@@ -694,8 +694,14 @@ public void aggiungiContattoCassaforte(String pass,int id) {
 
 
 
+
+/**
+ * 
+ * @param mail
+ * @return lista di contatti risultanti dalla ricerca
+ */
 public ArrayList<Contatto> searchMail(String mail) {
-    if (mail == null) {mail = "true";};
+    mail = "%"+mail+"%";
     ContattoDAO contattoDao = new ImplementazioneContattoDAO();
     ArrayList <Contatto> ListRisultati = new ArrayList <>();
     ArrayList<Integer> ListID = contattoDao.SearchMail(mail);
@@ -715,15 +721,18 @@ public ArrayList<Contatto> searchMail(String mail) {
  */
 public ArrayList<Contatto> SearchAnagrafica(String prefisso, String nome, String cognome) {
     ContattoDAO contattoDao = new ImplementazioneContattoDAO();
-    if (prefisso == null) {prefisso="true";}; 
-    if (nome == null) {nome="true";}; 
-    if (cognome == null) {cognome="true";};
+    prefisso="%"+prefisso+"%"; 
+   	nome="%"+nome+"%"; 
+    	cognome="%"+cognome+"%";
     ArrayList<Integer> ListID =  contattoDao.SearchAnagrafica(prefisso,nome,cognome);
     ArrayList <Contatto> ListRisultati = new ArrayList <>();
     // TODO algoritmo di aggiunta dei numeri
-        for (Integer id : ListID) {
-            ListRisultati.add(rubrica.getContatto(id));
-        }
+    for (int i = 0; i < ListID.size(); i++) {
+    	 Integer id = ListID.get(i);
+    	 System.out.println(ListID.get(i));
+    	 ListRisultati.add(rubrica.getContatto(id));
+	}
+        
     return ListRisultati;
 }
 
@@ -735,8 +744,8 @@ public ArrayList<Contatto> SearchAnagrafica(String prefisso, String nome, String
  */
 public ArrayList<Contatto> searchAccount(String nickname, String fornitore) {
     ContattoDAO contattoDao = new ImplementazioneContattoDAO();
-    if (nickname == null) {nickname="true";}; 
-    if (fornitore == null) {fornitore="true";}; 
+    nickname="%"+nickname+"%";  
+    fornitore="%"+fornitore+"%";
     ArrayList<Integer> ListID =  contattoDao.SearchAccount(nickname, fornitore);
     //TODO Controllare la correttezza
     ArrayList <Contatto> ListRisultati = new ArrayList <>();
@@ -746,6 +755,25 @@ public ArrayList<Contatto> searchAccount(String nickname, String fornitore) {
     return ListRisultati;
 }
 
+/**
+ * 
+ * @param prefissoNumero
+ * @param numero
+ * @param tipoNumero
+ * @return array list risultati della ricerca
+ */
+public ArrayList<Contatto> searchNumeri(String prefissoNumero, String numero, String tipoNumero) {
+	ContattoDAO contattoDao = new ImplementazioneContattoDAO();
+	prefissoNumero="%"+prefissoNumero+"%";  
+    numero="%"+numero+"%";  
+    ArrayList<Integer> ListID =  contattoDao.SearchNumeri(prefissoNumero, numero, tipoNumero);
+    //TODO Controllare la correttezza
+    ArrayList <Contatto> ListRisultati = new ArrayList <>();
+    for (Integer contatto : ListID) {
+    	 ListRisultati.add(rubrica.getContatto(contatto));
+	}
+    return ListRisultati;
+}
 
 /**
  * 
