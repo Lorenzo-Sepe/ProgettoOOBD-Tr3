@@ -25,7 +25,7 @@ import java.sql.SQLException;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class CreaGruppoFrame extends JFrame {
+public class ModificaGruppoFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JTable ContattiTable;
@@ -40,14 +40,44 @@ public class CreaGruppoFrame extends JFrame {
 	private ArrayList<Contatto> listaContattiArrayList = new ArrayList<Contatto>(); 
 
 
+	
+	public static void main(String[] args) {
+		Controller controller = new Controller();
+		try {
+			controller.dumpDati();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		JFrame frame1 = new JFrame();
+		String gruppo = "prova";
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ModificaGruppoFrame frame = new ModificaGruppoFrame(controller, frame1, gruppo);
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
+	
 	/**
 	 * Create the frame.
 	 */
-	public CreaGruppoFrame(Controller controller,  JFrame chiamante) {
+	public ModificaGruppoFrame(Controller controller,  JFrame chiamante, String nomeGruppo) {
 		c =controller;
 		frameChiamante = chiamante;
 		frame = this;
-		setTitle("Crea Gruppo");
+		try {
+			membriGruppo = c.getListaContattiGruppoId(nomeGruppo);
+		} catch (SQLException ex) {
+			JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+			ex.printStackTrace();
+		}
+		setTitle("Modifica Gruppo");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 955, 385);
 		contentPane = new JPanel();
@@ -56,7 +86,7 @@ public class CreaGruppoFrame extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel labelNomeGruppo = new JLabel("Nome Gruppo");
-		labelNomeGruppo.setBounds(50, 20, 65, 25);
+		labelNomeGruppo.setBounds(50, 20, 173, 25);
 		contentPane.add(labelNomeGruppo);
 		
 		JScrollPane scrollPaneRubrica = new JScrollPane();
@@ -85,14 +115,19 @@ public class CreaGruppoFrame extends JFrame {
 			System.out.println("La lista dei contatti per la crea gruppo è vuota");
 		}
 		
-		for (Contatto contatto : listaContattiArrayList) {
+		ArrayList<Integer> contattiFuoriDalGruppo = c.getListaIdContatti();
+		contattiFuoriDalGruppo.removeAll(membriGruppo);
+		
+		for (int id : contattiFuoriDalGruppo) {
 			modelloContatti.addRow(new Object[] {
-				contatto.getID(),
-				contatto.getPrefissoNome(),
-				contatto.getNome(),
-				contatto.getCognome()
+					id,
+					c.getInfoContattoPrefisso(id),
+					c.getInfoContattoNome(id),
+					c.getInfoContattoCognome(id)
 			});
 		}
+		
+		
 		ContattiTable.removeColumn(ContattiTable.getColumnModel().getColumn(0));
 		scrollPaneRubrica.setViewportView(ContattiTable);
 		
@@ -116,6 +151,15 @@ public class CreaGruppoFrame extends JFrame {
 		modelloGruppo.addColumn("prefisso");
 		modelloGruppo.addColumn("nome"); 
 		modelloGruppo.addColumn("cognome"); 
+		
+		for (int id : membriGruppo) {
+			modelloGruppo.addRow(new Object[] {
+					id,
+					c.getInfoContattoPrefisso(id),
+					c.getInfoContattoNome(id),
+					c.getInfoContattoCognome(id)
+				});
+		}
 		
 		GruppoTable.removeColumn(GruppoTable.getColumnModel().getColumn(0));
 		scrollPaneGruppo.setViewportView(GruppoTable);
@@ -178,28 +222,35 @@ public class CreaGruppoFrame extends JFrame {
 		btnSalva.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				for (int i=0; i<modelloGruppo.getRowCount(); i++) {
-					membriGruppo.add((Integer) modelloGruppo.getValueAt(i, 0));
+				membriGruppo.removeAll(membriGruppo);
+				for (int i = 0; i < modelloGruppo.getRowCount(); i++) {
+					membriGruppo.add(Integer.parseInt(modelloGruppo.getValueAt(i, 0).toString()));
 				}
 				try {
 					c.checkGruppo(textFieldGruppo.getText(),membriGruppo);
-					c.aggiungiGruppo(textFieldGruppo.getText(), membriGruppo);
-					JOptionPane.showMessageDialog(null, "Gruppo creato con successo");
+					c.modificaGruppo(nomeGruppo, textFieldGruppo.getText(), membriGruppo);
+					JOptionPane.showMessageDialog(null, "Gruppo modificato con successo");
 					frameChiamante.setVisible(true);
 					frame.setVisible(false);
 					frame.dispose();
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null, ex.getMessage(),"ERRORE",JOptionPane.ERROR_MESSAGE);
+					ex.printStackTrace();
 				}
+				
 			}
 		});
 		btnSalva.setBounds(835, 305, 90, 23);
 		contentPane.add(btnSalva);
 		
 		textFieldGruppo = new JTextField();
-		textFieldGruppo.setText("");
-		textFieldGruppo.setBounds(175, 25, 230, 20);
+		textFieldGruppo.setText(nomeGruppo);
+		textFieldGruppo.setBounds(316, 22, 230, 20);
 		contentPane.add(textFieldGruppo);
 		textFieldGruppo.setColumns(10);
+	}
+	
+	public String getNomeNuovo () {
+		return textFieldGruppo.getText();
 	}
 }

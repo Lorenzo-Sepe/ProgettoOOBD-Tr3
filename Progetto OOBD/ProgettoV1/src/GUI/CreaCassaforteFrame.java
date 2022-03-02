@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
@@ -21,6 +22,7 @@ import javax.swing.SpringLayout;
 import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 /**
@@ -33,22 +35,17 @@ public class CreaCassaforteFrame extends JFrame {
 	private JPanel contentPane;
 	private JTable ContattiTable;
 	private JTable CassaforteTable;
-	private JTextField textFieldPassword;
-	private JTextField textFieldCassaforte;
 	private JButton buttonAnnulla;
 	private JButton btnSalva;
 	private JButton buttonAggiungi;
 	private JButton buttonElimina;
 	
-	/** The controller. */
-	private static Controller controller;
+	private static Controller c;
+	private static  JFrame frameChiamante;
+	private static JFrame frame;
 	
-	/**Il FrameChiamante 	 */
-	static JFrame frameChiamante;
+	private ArrayList<Contatto> listaContatti = new ArrayList<>();
 	
-	/** The frame. */
-	private JFrame frame;
-
 	/**
 	 * Launch the application.
 	 */
@@ -56,7 +53,7 @@ public class CreaCassaforteFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					CreaCassaforteFrame frame = new CreaCassaforteFrame(controller, frameChiamante);
+					CreaCassaforteFrame frame = new CreaCassaforteFrame(c, frameChiamante,"pass");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -68,8 +65,10 @@ public class CreaCassaforteFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public CreaCassaforteFrame(Controller controller, JFrame frameChiamante) {
-		frame=this;
+	public CreaCassaforteFrame(Controller controller, JFrame chiamante, String password) {
+		frame = this;
+		frameChiamante = chiamante;
+		c = controller;
 		setResizable(false);
 		setTitle("Crea Cassaforte");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -79,12 +78,8 @@ public class CreaCassaforteFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel labelNomeGruppo = new JLabel("Nome Gruppo");
-		labelNomeGruppo.setBounds(50, 20, 65, 25);
-		contentPane.add(labelNomeGruppo);
-		
 		JScrollPane scrollPaneRubrica = new JScrollPane();
-		scrollPaneRubrica.setBounds(15, 85, 390, 190);
+		scrollPaneRubrica.setBounds(15, 43, 390, 232);
 		contentPane.add(scrollPaneRubrica);
 		
 		//Contatti = new JTable();
@@ -99,23 +94,29 @@ public class CreaCassaforteFrame extends JFrame {
 		ListSelectionModel listenerContattoSelezionato=ContattiTable.getSelectionModel();
 		ContattiTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
+		modelloContatti.addColumn("Id");
 		modelloContatti.addColumn("prefisso");
 		modelloContatti.addColumn("nome"); 
 		modelloContatti.addColumn("cognome"); 
 		
-		ArrayList<String> arrayListContattiNome = new ArrayList<>(Arrays.asList("Rai", "Lore", "Ale","Jesico"));
-		ArrayList<String> arrayListContattiCognome = new ArrayList<>(Arrays.asList("Mor", "Sep", "Tri","Cal"));
-		ArrayList<String> arrayListContattiPrefisso = new ArrayList<>(Arrays.asList("Isabel","Cavaliere","Trincalex","Amante"));
+		listaContatti = c.getListaContatti();
 		
 		// Append a row 
-		for(int i=0;i<arrayListContattiNome.size();i++) {
-			modelloContatti.addRow(new Object[]{arrayListContattiPrefisso.get(i), arrayListContattiNome.get(i), arrayListContattiCognome.get(i)});
-			
+		
+		for (Contatto contatto : listaContatti) {
+			modelloContatti.addRow(new Object[] {
+					contatto.getID(),
+					contatto.getPrefissoNome(),
+					contatto.getNome(),
+					contatto.getCognome()
+			});
 		}
+		
+		ContattiTable.removeColumn(ContattiTable.getColumnModel().getColumn(0));
 		scrollPaneRubrica.setViewportView(ContattiTable);
 		
 		JScrollPane scrollPaneCassaforte = new JScrollPane();
-		scrollPaneCassaforte.setBounds(530, 85, 390, 190);
+		scrollPaneCassaforte.setBounds(530, 43, 390, 232);
 		contentPane.add(scrollPaneCassaforte);
 		
 		//Gruppo = new JTable();
@@ -130,14 +131,15 @@ public class CreaCassaforteFrame extends JFrame {
 		ListSelectionModel listenerGruppoSelezionato=CassaforteTable.getSelectionModel();
 		CassaforteTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
+		modelloCassaforte.addColumn("Id");
 		modelloCassaforte.addColumn("prefisso");
 		modelloCassaforte.addColumn("nome"); 
 		modelloCassaforte.addColumn("cognome"); 
 		
-
+		CassaforteTable.removeColumn(CassaforteTable.getColumnModel().getColumn(0));
 		scrollPaneCassaforte.setViewportView(CassaforteTable);
 		
-		ArrayList <Contatto> MembriCassaforte = new ArrayList<>();
+		ArrayList <Contatto> contattiInCassaforte = new ArrayList<>();
 		
 		buttonAggiungi = new JButton("Aggiungi ->");
 		buttonAggiungi.setBounds(410, 125, 115, 25);
@@ -147,12 +149,14 @@ public class CreaCassaforteFrame extends JFrame {
 				int row;
 				if (!listenerContattoSelezionato.isSelectionEmpty()) {
 					row = ContattiTable.getSelectedRow();
-					String prefisso = (String) ContattiTable.getValueAt(row, 0);
-					String nome = (String) ContattiTable.getValueAt(row, 1);
-					String cognome = (String) ContattiTable.getValueAt(row, 2);
+					System.out.println(modelloContatti.getValueAt(row, 0));
+					int id = Integer.parseInt(modelloContatti.getValueAt(row, 0).toString());
+					String prefisso = (String) modelloContatti.getValueAt(row, 1);
+					String nome = (String) modelloContatti.getValueAt(row, 2);
+					String cognome = (String) modelloContatti.getValueAt(row, 3);
 					DefaultTableModel contattiModel = (DefaultTableModel) ContattiTable.getModel();
 					contattiModel.removeRow(row);
-					modelloCassaforte.addRow(new Object[]{prefisso, nome, cognome});
+					modelloCassaforte.addRow(new Object[]{id, prefisso, nome, cognome});
 					//TODO MembriCassaforte.add();
 					}
 			}
@@ -171,9 +175,10 @@ public class CreaCassaforteFrame extends JFrame {
 				int row;
 				if (!listenerGruppoSelezionato.isSelectionEmpty()) {
 					row = CassaforteTable.getSelectedRow();
-					String prefisso = (String) CassaforteTable.getValueAt(row, 0);
-					String nome = (String) CassaforteTable.getValueAt(row, 1);
-					String cognome = (String) CassaforteTable.getValueAt(row, 2);
+					int id = (int) modelloCassaforte.getValueAt(row, 0);
+					String prefisso = (String) modelloCassaforte.getValueAt(row, 1);
+					String nome = (String) modelloCassaforte.getValueAt(row, 2);
+					String cognome = (String) modelloCassaforte.getValueAt(row, 3);
 					DefaultTableModel gruppoModel = (DefaultTableModel) CassaforteTable.getModel();
 					gruppoModel.removeRow(row);
 					modelloContatti.addRow(new Object[]{prefisso, nome, cognome});
@@ -182,17 +187,6 @@ public class CreaCassaforteFrame extends JFrame {
 			}
 		});
 		contentPane.add(buttonElimina);
-		
-		JButton buttonSalva = new JButton("Salva");
-		buttonSalva.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//TODO salvataggio della password
-				String password = textFieldPassword.getText();
-				
-			}
-		});
-		buttonSalva.setBounds(690, 325, 90, -45);
-		contentPane.add(buttonSalva);
 		
 		buttonAnnulla = new JButton("Annulla");
 		buttonAnnulla.addActionListener(new ActionListener() {
@@ -205,23 +199,52 @@ public class CreaCassaforteFrame extends JFrame {
 		buttonAnnulla.setBounds(735, 305, 90, 23);
 		contentPane.add(buttonAnnulla);
 		
-		JLabel labelPassword = new JLabel("Inserisci Password");
-		labelPassword.setBounds(50, 50, 90, 15);
-		contentPane.add(labelPassword);
-		
-		textFieldPassword = new JTextField();
-		textFieldPassword.setBounds(175, 50, 230, 20);
-		contentPane.add(textFieldPassword);
-		textFieldPassword.setColumns(10);
-		
 		btnSalva = new JButton("Salva");
+		btnSalva.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					c.creaCassaforte(password);
+					ArrayList<Integer> listaContattiId = new ArrayList<>();
+					for (int i = 0; i < modelloCassaforte.getRowCount(); i++) {
+						String prefisso;
+						String nome;
+						String cognome;
+						if (modelloCassaforte.getValueAt(i, 0)!= null) {
+							prefisso = modelloCassaforte.getValueAt(i, 0).toString();
+						}
+						else {
+							prefisso = "";
+						}
+						if (modelloCassaforte.getValueAt(i, 1)!= null) {
+							nome = modelloCassaforte.getValueAt(i, 1).toString();
+						}
+						else {
+							nome = "";
+						}
+						if (modelloCassaforte.getValueAt(i, 2)!= null) {
+							cognome = modelloCassaforte.getValueAt(i, 2).toString();
+						}
+						else {
+							cognome = "";
+						}
+						Contatto contatto = new Contatto((int)modelloCassaforte.getValueAt(i, 0), prefisso, nome, cognome, "null");
+						listaContattiId.add((int)modelloCassaforte.getValueAt(i, 0));
+						contattiInCassaforte.add(contatto);
+					}
+					c.aggiungiListaContattiCassaforte(contattiInCassaforte);
+					c.aggiungiListaContattiCassaforteDB(password, listaContattiId);
+					JOptionPane.showMessageDialog(null, "Cassaforte creata con successo");
+					frameChiamante.setVisible(true);
+					frame.setVisible(false);
+					frame.dispose();
+				} catch (SQLException ex) {
+					JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+					ex.printStackTrace();	//TODO toglierlo
+				}
+			}
+		});
 		btnSalva.setBounds(835, 305, 90, 23);
 		contentPane.add(btnSalva);
-		
-		textFieldCassaforte = new JTextField();
-		textFieldCassaforte.setText("");
-		textFieldCassaforte.setBounds(175, 25, 230, 20);
-		contentPane.add(textFieldCassaforte);
-		textFieldCassaforte.setColumns(10);
 	}
 }
