@@ -49,4 +49,10 @@ public interface ContattoDAO {
 	public void setDeputatoMobileSuFIsso(int contattoId, String prefisso1, String numero1, String prefisso2,
 			String numero2);
 	
+	public void transactionsBegin() ;
+	public void transactionsCommit() ;
+	
+	public void transactionsRollBack() ;
+	
+	
 }
