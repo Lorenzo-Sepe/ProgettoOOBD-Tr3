@@ -484,7 +484,36 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 	}
 
 
+	public void transactionsBegin() {
+		PreparedStatement inizioTransactions;
+	try {
+		inizioTransactions = connection.prepareStatement("BEGIN;");
+		inizioTransactions.execute();
 
+	} catch (SQLException e) {
+		e.printStackTrace();
+	}
+}
+	public void transactionsCommit() {
+		PreparedStatement fineTransactions;
+		try {
+			fineTransactions = connection.prepareStatement("COMMIT;");
+			fineTransactions.execute();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	public void transactionsRollBack() {
+		PreparedStatement fineTransactions;
+		try {
+			fineTransactions = connection.prepareStatement("ROLLBACK ;");
+			fineTransactions.execute();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 
 
