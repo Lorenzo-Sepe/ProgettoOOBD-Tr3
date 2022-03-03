@@ -109,6 +109,24 @@ public class Controller {
 		return false;
 	}
 
+	public void checkFormNumeroModifica(String prefisso, String numero, ArrayList<String> numeriParametro) throws Exception {
+        // TODO Da decidere come dare
+        // verifica se i dati inseriti sono formattati bene
+        ArrayList<String> numeri = new ArrayList<String>(numeriParametro);
+        if (numero.matches("[0-9]+") == false)
+            if (numero.isEmpty()) {
+                throw new Exception("Non hai inserito un numero ");
+            } else
+                throw new Exception("Il numero:" + numero + "contiene dei caratteri ");
+        else if (!isPrefissoNumero(prefisso))
+            throw new Exception("il prefisso inserito non compare tra i prefissi selezionabili");
+
+        // Verifica unicità numero
+        numeri.remove(prefisso + numero);
+        if (numeri.contains(prefisso + numero))
+            throw new Exception("Il numero inserito è già presente nel contatto");
+
+    }
 	
 	public void checkFormNumero(String prefisso, String numero, ArrayList<String> numeri) throws Exception {
 		// TODO Da decidere come dare
@@ -257,10 +275,32 @@ public class Controller {
 		ContattoDAO contattoDao = new ImplementazioneContattoDAO();
 		contattoDao.addIndirizziDB(id, via, citta, codicePostale, nazione, tag, principale);
 	}
+	
+	public void eliminaIndirizzo (int indirizzoId) throws SQLException {
+		IndirizziDAO indirizziDao = new ImplementazioneIndirizziDAO();
+		indirizziDao.deleteIndirizzoDB(indirizzoId);
+	}
+	
+	public void modificaIndirizzo (int indirizzoId, String via, String città, String codicePostale, String nazione, String tag) throws SQLException {
+		IndirizziDAO indirizziDao = new ImplementazioneIndirizziDAO();
+		indirizziDao.updateIndirizzoDB(indirizzoId, via, città, codicePostale, nazione, tag);
+	}
+	
 	public void aggiungiMail(int id,String mail) {
 		ContattoDAO contattoDao = new ImplementazioneContattoDAO();
 		contattoDao.addEmailDB(id, mail);
 	}
+	
+	public void eliminaMail (String mail) throws SQLException {
+		ContattoDAO contattoDao = new ImplementazioneContattoDAO();
+		contattoDao.deleteEmailDB(mail);
+	}
+	
+	public void modificaMail (String mailPrima, String mailDopo) throws SQLException {
+		ContattoDAO contattoDAO = new ImplementazioneContattoDAO();
+		contattoDAO.updateEmailDB(mailPrima, mailDopo);
+	}
+	
 	public void aggiungiAccount(int id,String nickname,String fornitore,String benvenuto, String email) {
 		ContattoDAO contattoDao = new ImplementazioneContattoDAO();
 		contattoDao.addAccountDB(id, nickname, fornitore, benvenuto, email);
