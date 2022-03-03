@@ -722,22 +722,36 @@ public class Controller {
 		getListaContatti().remove(rubrica.getContatto(id));
 	}
 
-	public ArrayList<Contatto> SearchAnagrafica(String prefisso, String nome, String cognome) {
-	    ContattoDAO contattoDao = new ImplementazioneContattoDAO();
-	    if (prefisso == null) {prefisso="true";}; 
-	    if (nome == null) {nome="true";}; 
-	    if (cognome == null) {cognome="true";};
-	    ArrayList<Integer> ListID =  contattoDao.SearchAnagrafica(prefisso,nome,cognome);
-	    ArrayList <Contatto> ListRisultati = new ArrayList <>();
-	    // TODO algoritmo di aggiunta dei numeri
-	    //    ArrayList <Contatto> List = new ArrayList <>();
-	    //    List = getListaContatti();
-	    //
-	    //    for (Integer id : ListID) {
-	    //        ListRisultati.add(Rubrica.getContatto(id));
-	    //    }
-	    return ListRisultati;
+	
+public ArrayList<Contatto> verificaDuplicatiContatto(String mail) {
+	ArrayList<Contatto> listaRisultato = new ArrayList();
+	ArrayList<Integer> listaID = new ArrayList();
+	ContattoDAO contattoDao = new ImplementazioneContattoDAO();
+	listaID=contattoDao.verificaDuplicatiContattoDao(mail);
+		for (int j = 0; j < listaID.size(); j++) {
+			listaRisultato.add(rubrica.getContatto(listaID.get(j) ) );	
 	}
+	return listaRisultato;
+}
+
+public ArrayList<String> verificaMailDuplicate() {
+	ArrayList<String> listaMail = new ArrayList<String>();
+	ContattoDAO contattoDao = new ImplementazioneContattoDAO();
+	listaMail = contattoDao.verificaMailDuplicatiDao();
+	return listaMail;
+}
+
+
+public ArrayList<Contatto> verificaDuplicatiAccount() {
+	ArrayList<Contatto> listaRisultato = new ArrayList();
+	ArrayList<Integer> listaID = new ArrayList();
+	ContattoDAO contattoDao = new ImplementazioneContattoDAO();
+	listaID=contattoDao.verificaDuplicatiAccountDao();
+		for (int j = 0; j < listaID.size(); j++) {
+			listaRisultato.add(rubrica.getContatto(listaID.get(j) ) );	
+	}
+	return listaRisultato;
+}
 
 
 	public ArrayList<Contatto> searchAccount(String nickname, String fornitore) {
@@ -751,28 +765,36 @@ public class Controller {
 	    return ListRisultati;
 	}
 	
-	public ArrayList<Contatto> verificaDuplicatiContatto() {
-	    ArrayList<Contatto> listaRisultato = new ArrayList();
-	    ArrayList<Integer> listaID = new ArrayList();
-	    ContattoDAO contattoDao = new ImplementazioneContattoDAO();
-	    listaID = contattoDao.verificaDuplicatiContattoDao();
-	     for (int i = 0; i < listaID.size(); i++) {
-	         listaRisultato.add(rubrica.getContatto( listaID.get(i) ) );
-	    }
-	    return listaRisultato;
+	
+public ArrayList<Contatto> verificaDuplicatiContatto(String mail) {
+	ArrayList<Contatto> listaRisultato = new ArrayList();
+	ArrayList<Integer> listaID = new ArrayList();
+	ContattoDAO contattoDao = new ImplementazioneContattoDAO();
+	listaID=contattoDao.verificaDuplicatiContattoDao(mail);
+		for (int j = 0; j < listaID.size(); j++) {
+			listaRisultato.add(rubrica.getContatto(listaID.get(j) ) );	
 	}
+	return listaRisultato;
+}
+
+public ArrayList<String> verificaMailDuplicate() {
+	ArrayList<String> listaMail = new ArrayList<String>();
+	ContattoDAO contattoDao = new ImplementazioneContattoDAO();
+	listaMail = contattoDao.verificaMailDuplicatiDao();
+	return listaMail;
+}
 
 
-	public ArrayList<Contatto> verificaDuplicatiAccount() {
-	    ArrayList<Contatto> listaRisultato = new ArrayList();
-	    ArrayList<Integer> listaID = new ArrayList();
-	    ContattoDAO contattoDao = new ImplementazioneContattoDAO();
-	    listaID = contattoDao.verificaDuplicatiAccountDao();
-	     for (int i = 0; i < listaID.size(); i++) {
-	         listaRisultato.add(rubrica.getContatto( listaID.get(i) ) );
-	    }
-	    return listaRisultato;
+public ArrayList<Contatto> verificaDuplicatiAccount() {
+	ArrayList<Contatto> listaRisultato = new ArrayList();
+	ArrayList<Integer> listaID = new ArrayList();
+	ContattoDAO contattoDao = new ImplementazioneContattoDAO();
+	listaID=contattoDao.verificaDuplicatiAccountDao();
+		for (int j = 0; j < listaID.size(); j++) {
+			listaRisultato.add(rubrica.getContatto(listaID.get(j) ) );	
 	}
+	return listaRisultato;
+}
 	
 	public ArrayList<Integer> getListaIdContatti() {
 		ArrayList<Integer> listaId = rubrica.getListaIdContatti();
