@@ -1,7 +1,7 @@
 /**
  * 
  */
-package dao;
+package DAO;
 
 /**
  * @author LorenzoSepe
@@ -10,17 +10,16 @@ package dao;
 
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
-import model.Indirizzi;
-import model.Contatto;
+import Model.Indirizzi;
+import Model.Contatto;
 
 public interface IndirizziDAO {
 
-	public void addIndirizzoDB(Indirizzi i, Contatto c);
-
-	public void addAbitaDB(Indirizzi i, Contatto c, String identificatore);
+	public void updateIndirizzoDB (int indirizzoID, String via, String città, String codicePostale, String nazione, String tag) throws SQLException;
 	
-	public ArrayList<Indirizzi> leggiIndirizziDB(Contatto c);
+	public void deleteIndirizzoDB (int indirizzoID) throws SQLException;
 
 }
