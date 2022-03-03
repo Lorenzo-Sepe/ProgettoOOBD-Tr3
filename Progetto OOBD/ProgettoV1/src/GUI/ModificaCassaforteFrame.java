@@ -30,7 +30,7 @@ import java.awt.event.ActionEvent;
  * @author AlessandroTrincone
  *
  */
-public class CreaCassaforteFrame extends JFrame {
+public class ModificaCassaforteFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JTable ContattiTable;
@@ -45,15 +45,17 @@ public class CreaCassaforteFrame extends JFrame {
 	private static JFrame frame;
 	
 	private ArrayList<Contatto> listaContatti = new ArrayList<>();
-	private ArrayList<Contatto> contattiInCassaforte = new ArrayList<>();
+	private ArrayList<Contatto> RAIlistaContatti = new ArrayList<>();
+	private ArrayList<Contatto> RAIlistaContattiCassaforte = new ArrayList<>();
 	
 	
-	public CreaCassaforteFrame(Controller controller, JFrame chiamante, String password) {
+	public  ModificaCassaforteFrame (Controller controller, JFrame chiamante, String password) {
 		frame = this;
 		frameChiamante = chiamante;
 		c = controller;
+		c.transactionBegin();
 		setResizable(false);
-		setTitle("Crea Cassaforte");
+		setTitle("Modifica Cassaforte");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 950, 375);
 		contentPane = new JPanel();
@@ -82,16 +84,39 @@ public class CreaCassaforteFrame extends JFrame {
 		modelloContatti.addColumn("nome"); 
 		modelloContatti.addColumn("cognome"); 
 		
-		listaContatti = c.getListaContatti();
+//		listaContatti = c.getListaContatti();
+//		ArrayList<Integer> listaContattiNonInCassaforte = new ArrayList<>();
+//		ArrayList<Contatto> contattiInCassaforte = c.rubrica.getCassaforte().getListaGruppo();
+//		ArrayList<Integer> contattiInCassaforteId = new ArrayList<>();
+//		for (Contatto contatto : listaContatti) {
+//			listaContattiNonInCassaforte.add(contatto.getID());
+//		}
+//		for (Contatto contatto : contattiInCassaforte) {
+//			contattiInCassaforteId.add(contatto.getID());
+//		}
+//		listaContattiNonInCassaforte.removeAll(contattiInCassaforteId);
+//		// Append a row 
+//		
+//		
+//		for (int id : listaContattiNonInCassaforte) {
+//			modelloContatti.addRow(new Object[] {
+//					id,
+//					c.getInfoContattoPrefisso(id),
+//					c.getInfoContattoNome(id),
+//					c.getInfoContattoCognome(id)
+//			});
+//		}
 		
-		// Append a row 
+		RAIlistaContattiCassaforte = c.getContattiCassaforte();
+		RAIlistaContatti = c.getListaContatti();
 		
-		for (Contatto contatto : listaContatti) {
+		for (Contatto raiContatto : RAIlistaContatti) {
 			modelloContatti.addRow(new Object[] {
-					contatto.getID(),
-					contatto.getPrefissoNome(),
-					contatto.getNome(),
-					contatto.getCognome()
+					raiContatto.getID(),
+					raiContatto.getPrefissoNome(),
+					raiContatto.getNome(),
+					raiContatto.getCognome()
+
 			});
 		}
 		
@@ -119,6 +144,15 @@ public class CreaCassaforteFrame extends JFrame {
 		modelloCassaforte.addColumn("nome"); 
 		modelloCassaforte.addColumn("cognome"); 
 		
+		for (Contatto contatto : RAIlistaContattiCassaforte) {
+			modelloCassaforte.addRow(new Object[] {
+					contatto.getID(),
+					contatto.getPrefissoNome(),
+					contatto.getNome(),
+					contatto.getCognome()
+			});
+		}
+		
 		CassaforteTable.removeColumn(CassaforteTable.getColumnModel().getColumn(0));
 		scrollPaneCassaforte.setViewportView(CassaforteTable);
 		
@@ -135,12 +169,17 @@ public class CreaCassaforteFrame extends JFrame {
 					String prefisso = (String) modelloContatti.getValueAt(row, 1);
 					String nome = (String) modelloContatti.getValueAt(row, 2);
 					String cognome = (String) modelloContatti.getValueAt(row, 3);
-					contattiInCassaforte.add(listaContatti.get(row));
-					listaContatti.remove(row);
 					modelloContatti.removeRow(row);
+					RAIlistaContattiCassaforte.add(RAIlistaContatti.get(row));
+					RAIlistaContatti.remove(row);
 					modelloCassaforte.addRow(new Object[]{id, prefisso, nome, cognome});
-					//TODO MembriCassaforte.add();
+					try {
+						c.aggiungiContattoInCassaforteDB(id);
+					} catch (SQLException ex) {
+						JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+						ex.printStackTrace();	//TODO toglierlo
 					}
+				}
 			}
 		});
 		contentPane.add(buttonAggiungi);
@@ -161,11 +200,16 @@ public class CreaCassaforteFrame extends JFrame {
 					String prefisso = (String) modelloCassaforte.getValueAt(row, 1);
 					String nome = (String) modelloCassaforte.getValueAt(row, 2);
 					String cognome = (String) modelloCassaforte.getValueAt(row, 3);
-					listaContatti.add(contattiInCassaforte.get(row));
-					contattiInCassaforte.remove(row);
 					modelloCassaforte.removeRow(row);
-					modelloContatti.addRow(new Object[]{id, prefisso, nome, cognome});
-					//TODO MembriCassaforte.remove(object);
+					RAIlistaContatti.add(RAIlistaContattiCassaforte.get(row));
+					RAIlistaContattiCassaforte.remove(row);
+					modelloContatti.addRow(new Object[]{prefisso, nome, cognome});
+					try {
+						c.eliminaContattoDaCassaforteDB(id);
+					} catch (SQLException ex) {
+						JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+						ex.printStackTrace();	//TODO toglierlo
+					}
 				}
 			}
 		});
@@ -174,6 +218,7 @@ public class CreaCassaforteFrame extends JFrame {
 		buttonAnnulla = new JButton("Annulla");
 		buttonAnnulla.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				c.transactionRollBack();
 				frame.setVisible(false);
 				frameChiamante.setVisible(true);
 				frame.dispose();
@@ -186,23 +231,39 @@ public class CreaCassaforteFrame extends JFrame {
 		btnSalva.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				boolean check;
-				try {
-					for (Contatto contatto : contattiInCassaforte) {
-						check = c.checkContattoInGruppo(contatto.getID());
-						System.out.println("il controllo da esito "+check);
-					}
-					c.creaCassaforte(password);
-					c.aggiungiListaContattiCassaforte(password, contattiInCassaforte);
-					
-					JOptionPane.showMessageDialog(null, "Cassaforte creata con successo");
-					frameChiamante.setVisible(true);
-					frame.setVisible(false);
-					frame.dispose();
-				} catch (SQLException ex) {
-					JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
-					ex.printStackTrace();	//TODO toglierlo
-				}
+//				ArrayList<Integer> listaContattiId = new ArrayList<>();
+//				for (int i = 0; i < modelloCassaforte.getRowCount(); i++) {
+//					String prefisso;
+//					String nome;
+//					String cognome;
+//					if (modelloCassaforte.getValueAt(i, 0)!= null) {
+//						prefisso = modelloCassaforte.getValueAt(i, 0).toString();
+//					}
+//					else {
+//						prefisso = "";
+//					}
+//					if (modelloCassaforte.getValueAt(i, 1)!= null) {
+//						nome = modelloCassaforte.getValueAt(i, 1).toString();
+//					}
+//					else {
+//						nome = "";
+//					}
+//					if (modelloCassaforte.getValueAt(i, 2)!= null) {
+//						cognome = modelloCassaforte.getValueAt(i, 2).toString();
+//					}
+//					else {
+//						cognome = "";
+//					}
+//					Contatto contatto = new Contatto((int)modelloCassaforte.getValueAt(i, 0), prefisso, nome, cognome, "null");
+//					listaContattiId.add((int)modelloCassaforte.getValueAt(i, 0));
+//					contattiInCassaforte.add(contatto);
+//				}
+				
+				c.setListaContattiCassaforte(RAIlistaContattiCassaforte);
+				c.transactionCommit();
+				frameChiamante.setVisible(true);
+				frame.setVisible(false);
+				frame.dispose();
 			}
 		});
 		btnSalva.setBounds(835, 305, 90, 23);

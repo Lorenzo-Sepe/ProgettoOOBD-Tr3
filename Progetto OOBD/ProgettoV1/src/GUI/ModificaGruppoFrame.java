@@ -36,45 +36,23 @@ public class ModificaGruppoFrame extends JFrame {
 	private static  JFrame frameChiamante;
 	private static JFrame frame;
 	
-	private ArrayList <Integer> membriGruppo = new ArrayList<>();
+	private ArrayList <Contatto> membriGruppo = new ArrayList<>();
 	private ArrayList<Contatto> listaContattiArrayList = new ArrayList<Contatto>(); 
 
 
 	
-	public static void main(String[] args) {
-		Controller controller = new Controller();
-		try {
-			controller.dumpDati();
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		JFrame frame1 = new JFrame();
-		String gruppo = "prova";
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ModificaGruppoFrame frame = new ModificaGruppoFrame(controller, frame1, gruppo);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 	
 	
-	/**
-	 * Create the frame.
-	 */
+
+	
 	public ModificaGruppoFrame(Controller controller,  JFrame chiamante, String nomeGruppo) {
 		c =controller;
 		frameChiamante = chiamante;
 		frame = this;
 		try {
-			membriGruppo = c.getListaContattiGruppoId(nomeGruppo);
+			c.dumpListaMembriGruppo(nomeGruppo);
 		} catch (SQLException ex) {
-			JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+			// TODO Auto-generated catch block
 			ex.printStackTrace();
 		}
 		setTitle("Modifica Gruppo");
@@ -110,20 +88,19 @@ public class ModificaGruppoFrame extends JFrame {
 		modelloContatti.addColumn("nome"); 
 		modelloContatti.addColumn("cognome"); 
 		
-		listaContattiArrayList = c.rubrica.getListaContatti();
+		listaContattiArrayList = c.getListaContattiMenoGruppo(nomeGruppo);
 		if (listaContattiArrayList.isEmpty()) {
 			System.out.println("La lista dei contatti per la crea gruppo è vuota");
 		}
 		
-		ArrayList<Integer> contattiFuoriDalGruppo = c.getListaIdContatti();
-		contattiFuoriDalGruppo.removeAll(membriGruppo);
 		
-		for (int id : contattiFuoriDalGruppo) {
+		
+		for (Contatto contatto : listaContattiArrayList) {
 			modelloContatti.addRow(new Object[] {
-					id,
-					c.getInfoContattoPrefisso(id),
-					c.getInfoContattoNome(id),
-					c.getInfoContattoCognome(id)
+					contatto.getID(),
+					contatto.getPrefissoNome(),
+					contatto.getNome(),
+					contatto.getCognome()
 			});
 		}
 		
@@ -150,14 +127,16 @@ public class ModificaGruppoFrame extends JFrame {
 		modelloGruppo.addColumn("Id");
 		modelloGruppo.addColumn("prefisso");
 		modelloGruppo.addColumn("nome"); 
-		modelloGruppo.addColumn("cognome"); 
+		modelloGruppo.addColumn("cognome");
+
+		membriGruppo = c.getListaMembriGruppo(nomeGruppo);
 		
-		for (int id : membriGruppo) {
+		for (Contatto contatto : membriGruppo) {
 			modelloGruppo.addRow(new Object[] {
-					id,
-					c.getInfoContattoPrefisso(id),
-					c.getInfoContattoNome(id),
-					c.getInfoContattoCognome(id)
+					contatto.getID(),
+					contatto.getPrefissoNome(),
+					contatto.getNome(),
+					contatto.getCognome()
 				});
 		}
 		
@@ -176,6 +155,8 @@ public class ModificaGruppoFrame extends JFrame {
 					Object prefisso = modelloContatti.getValueAt(row, 1);
 					Object nome = modelloContatti.getValueAt(row, 2);
 					Object cognome = modelloContatti.getValueAt(row, 3); 
+					membriGruppo.add(listaContattiArrayList.get(row));
+					listaContattiArrayList.remove(row);
 					modelloContatti.removeRow(row);
 					modelloGruppo.addRow(new Object[]{idContatto,prefisso, nome, cognome});
 					}
@@ -195,6 +176,8 @@ public class ModificaGruppoFrame extends JFrame {
 					Object prefisso = modelloGruppo.getValueAt(row, 1);
 					Object nome = modelloGruppo.getValueAt(row, 2);
 					Object cognome = modelloGruppo.getValueAt(row, 3);
+					listaContattiArrayList.add(membriGruppo.get(row));
+					membriGruppo.remove(row);
 					modelloGruppo.removeRow(row);
 					modelloContatti.addRow(new Object[]{idContatto, prefisso, nome, cognome});
 				}
@@ -202,9 +185,6 @@ public class ModificaGruppoFrame extends JFrame {
 		});
 		contentPane.add(buttonElimina);
 		
-		JButton buttonSalva = new JButton("Salva");
-		buttonSalva.setBounds(690, 325, 90, -45);
-		contentPane.add(buttonSalva);
 		
 		JButton buttonAnnulla = new JButton("Annulla");
 		buttonAnnulla.addMouseListener(new MouseAdapter() {
@@ -222,12 +202,8 @@ public class ModificaGruppoFrame extends JFrame {
 		btnSalva.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				membriGruppo.removeAll(membriGruppo);
-				for (int i = 0; i < modelloGruppo.getRowCount(); i++) {
-					membriGruppo.add(Integer.parseInt(modelloGruppo.getValueAt(i, 0).toString()));
-				}
 				try {
-					c.checkGruppo(textFieldGruppo.getText(),membriGruppo);
+					c.checkGruppo(textFieldGruppo.getText(), nomeGruppo, membriGruppo);
 					c.modificaGruppo(nomeGruppo, textFieldGruppo.getText(), membriGruppo);
 					JOptionPane.showMessageDialog(null, "Gruppo modificato con successo");
 					frameChiamante.setVisible(true);

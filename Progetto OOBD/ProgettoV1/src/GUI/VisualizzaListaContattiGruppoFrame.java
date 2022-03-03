@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import Controller.Controller;
+import Model.Contatto;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -34,39 +35,20 @@ public class VisualizzaListaContattiGruppoFrame extends JDialog {
 	private static JDialog frame;
 	private static String nomeGruppo;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		Controller controller = new Controller();
-		try {
-			controller.dumpDati();
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		JFrame frame1 = new JFrame();
-		String nome = "prova";
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VisualizzaListaContattiGruppoFrame frame = new VisualizzaListaContattiGruppoFrame(controller,frame1,nome);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
+	
+	
+	
 	public VisualizzaListaContattiGruppoFrame(Controller controller, JFrame chiamante, String nGruppo) {
 		c = controller;
 		frameChiamante = chiamante;
 		frame = this;
 		nomeGruppo = nGruppo;
+		try {
+			c.dumpListaMembriGruppo(nomeGruppo);
+		} catch (SQLException ex) {
+			JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+			ex.printStackTrace();	//TODO toglierlo
+		}
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setModal(true);
 		setTitle(nomeGruppo);
@@ -102,20 +84,15 @@ public class VisualizzaListaContattiGruppoFrame extends JDialog {
 		modelloContatti.addColumn("Nome");
 		modelloContatti.addColumn("Cognome");
 		
-		ArrayList<Integer> listaContattiId = new ArrayList<>();
-		try {
-			listaContattiId = c.getListaContattiGruppoId(nomeGruppo);
-		} catch (SQLException ex) {
-			JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
-			ex.printStackTrace();
-		}
+		ArrayList<Contatto> listaContatti = new ArrayList<>();
+		listaContatti = new ArrayList<>(c.getListaMembriGruppo(nomeGruppo));
 		
-		for (int id : listaContattiId) {
+		for (Contatto contatto : listaContatti) {
 			modelloContatti.addRow(new Object[] {
-					id,
-					c.getInfoContattoPrefisso(id),
-					c.getInfoContattoNome(id),
-					c.getInfoContattoCognome(id)
+					contatto.getID(),
+					contatto.getPrefissoNome(),
+					contatto.getNome(),
+					contatto.getCognome()
 			});
 		}
 		

@@ -36,8 +36,8 @@ public class CreaGruppoFrame extends JFrame {
 	private static  JFrame frameChiamante;
 	private static JFrame frame;
 	
-	private ArrayList <Integer> membriGruppo = new ArrayList<>();
-	private ArrayList<Contatto> listaContattiArrayList = new ArrayList<Contatto>(); 
+	private ArrayList <Contatto> membriGruppo = new ArrayList<>();
+	private ArrayList<Contatto> listaContattiArrayList; 
 
 
 	/**
@@ -47,6 +47,7 @@ public class CreaGruppoFrame extends JFrame {
 		c =controller;
 		frameChiamante = chiamante;
 		frame = this;
+		listaContattiArrayList = new ArrayList<>(c.getListaContatti());
 		setTitle("Crea Gruppo");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 955, 385);
@@ -80,7 +81,6 @@ public class CreaGruppoFrame extends JFrame {
 		modelloContatti.addColumn("nome"); 
 		modelloContatti.addColumn("cognome"); 
 		
-		listaContattiArrayList = c.rubrica.getListaContatti();
 		if (listaContattiArrayList.isEmpty()) {
 			System.out.println("La lista dei contatti per la crea gruppo è vuota");
 		}
@@ -132,6 +132,8 @@ public class CreaGruppoFrame extends JFrame {
 					Object prefisso = modelloContatti.getValueAt(row, 1);
 					Object nome = modelloContatti.getValueAt(row, 2);
 					Object cognome = modelloContatti.getValueAt(row, 3); 
+					membriGruppo.add(listaContattiArrayList.get(row));
+					listaContattiArrayList.remove(row);
 					modelloContatti.removeRow(row);
 					modelloGruppo.addRow(new Object[]{idContatto,prefisso, nome, cognome});
 					}
@@ -151,6 +153,8 @@ public class CreaGruppoFrame extends JFrame {
 					Object prefisso = modelloGruppo.getValueAt(row, 1);
 					Object nome = modelloGruppo.getValueAt(row, 2);
 					Object cognome = modelloGruppo.getValueAt(row, 3);
+					listaContattiArrayList.add(membriGruppo.get(row));
+					membriGruppo.remove(row);
 					modelloGruppo.removeRow(row);
 					modelloContatti.addRow(new Object[]{idContatto, prefisso, nome, cognome});
 				}
@@ -158,9 +162,9 @@ public class CreaGruppoFrame extends JFrame {
 		});
 		contentPane.add(buttonElimina);
 		
-		JButton buttonSalva = new JButton("Salva");
-		buttonSalva.setBounds(690, 325, 90, -45);
-		contentPane.add(buttonSalva);
+//		JButton buttonSalva = new JButton("Salva");
+//		buttonSalva.setBounds(690, 325, 90, -45);
+//		contentPane.add(buttonSalva);
 		
 		JButton buttonAnnulla = new JButton("Annulla");
 		buttonAnnulla.addMouseListener(new MouseAdapter() {
@@ -178,13 +182,13 @@ public class CreaGruppoFrame extends JFrame {
 		btnSalva.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				for (int i=0; i<modelloGruppo.getRowCount(); i++) {
-					membriGruppo.add((Integer) modelloGruppo.getValueAt(i, 0));
-				}
 				try {
-					c.checkGruppo(textFieldGruppo.getText(),membriGruppo);
+					c.checkGruppo(textFieldGruppo.getText(), membriGruppo);
 					c.aggiungiGruppo(textFieldGruppo.getText(), membriGruppo);
 					JOptionPane.showMessageDialog(null, "Gruppo creato con successo");
+					for (Contatto contatto : membriGruppo) {
+						System.out.println("Salvataggio gruppo Contatto: "+contatto.StampaContatto());
+					}
 					frameChiamante.setVisible(true);
 					frame.setVisible(false);
 					frame.dispose();
