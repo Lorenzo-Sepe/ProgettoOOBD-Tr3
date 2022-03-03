@@ -111,7 +111,7 @@ public class Home extends JFrame {
 		mntmContattiDuplicati.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 					ArrayList<String>listaRisultati = c.verificaMailDuplicate();				
-					JFrame GestioneDuplicatiFrame = new gestioneDuplicatiContattiFrame(c,frame,listaRisultati);
+					JFrame GestioneDuplicatiFrame = new GestioneDuplicatiContattiFrame(c,frame,listaRisultati);
 					frame.setVisible(false);
 					GestioneDuplicatiFrame.setVisible(true);
 			}
@@ -122,11 +122,12 @@ public class Home extends JFrame {
 		mntmAccountDuplicati = new JMenuItem("Cerca Account Duplicati");
 		mntmAccountDuplicati.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//TODO
-//				ArrayList<Contatto>listaRisultati = c.verificaDuplicatiAccount();
-//				JFrame GestioneDuplicatiFrame = new GestioneDuplicatiFrame(c,frame,listaRisultati);
-//				frame.setVisible(false);
-//				GestioneDuplicatiFrame.setVisible(true);
+
+				ArrayList<Contatto>listaRisultati = c.verificaDuplicatiAccount();		
+				
+				JFrame GestioneDuplicatiFrame = new GestioneDuplicatiAccountFrame(c,frame,listaRisultati);
+				frame.setVisible(false);
+				GestioneDuplicatiFrame.setVisible(true);
 			}
 		});
 		mnGestioneDuplicati.add(mntmAccountDuplicati);
