@@ -5,8 +5,15 @@ package ImplementazioneDAOpostgreSQL;
 
 import java.sql.Connection;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import DAO.IndirizziDAO;
 import Database.Connessione;
@@ -32,66 +39,36 @@ public class ImplementazioneIndirizziDAO implements IndirizziDAO {
 		}
 	}
 
-	@Override
-	public void addIndirizzoDB(Indirizzi i, Contatto c) {
-		PreparedStatement addIndirizzoPS;
-		try {
-			addIndirizzoPS = connection.prepareStatement(
-					//da aggiunstare una volta finito il DB
-					"INSERT INTO INDIRIZZI (via , citt√†, codice_postale, nazione) VALUES (?, ?, ?, ?)");
-					addIndirizzoPS.setString(1, i.getVia());
-					addIndirizzoPS.setString(2, i.getCitt√†());
-					addIndirizzoPS.setString(3, i.getCodicePostale());
-					addIndirizzoPS.setString(4, i.getNazione());
-					ResultSet rs = addIndirizzoPS.executeQuery();
-					//- Release delle risorse
-					rs.close();
-					addIndirizzoPS.close();
+	public void  chiudiConnessione() {
+		 try {
+			connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	 }
+
+	@Override
+	public void updateIndirizzoDB(int indirizzoID, String via, String citt‡, String codicePostale, String nazione, String tag) throws SQLException {
+		PreparedStatement updateIndirizzoPS;
+		updateIndirizzoPS = connection.prepareStatement("UPDATE Indirizzi SET via = ?, citt‡ = ?, codicePostale = ?, nazione = ? WHERE indirizzi_id = ?");
+		updateIndirizzoPS.setString(1, via);
+		updateIndirizzoPS.setString(2, citt‡);
+		updateIndirizzoPS.setString(3, codicePostale);
+		updateIndirizzoPS.setString(4, nazione);
+		updateIndirizzoPS.setInt(5, indirizzoID);
+		updateIndirizzoPS.execute();
+		updateIndirizzoPS = connection.prepareStatement("UPDATE abita, SET identificatore = ? WHERE indirizzo_associato = ?");
+		updateIndirizzoPS.setString(1, tag);
+		updateIndirizzoPS.setInt(2, indirizzoID);
+		updateIndirizzoPS.execute();	
 	}
 
 	@Override
-	public void addAbitaDB(Indirizzi i, Contatto c, String identificatore) {
-		PreparedStatement addAbitaPS;
-		try {
-			addAbitaPS = connection.prepareStatement("INSERT INTO ABITA(Contatto_ID, abitazione_principale, identificatore) (? , ? , ?, ?)");
-			addAbitaPS.setInt(2, c.getID());
-			addAbitaPS.setString(3, "FALSE");
-			addAbitaPS.setString(4, identificatore);
-			ResultSet rs = addAbitaPS.executeQuery();
-			//- Release delle risorse
-			rs.close();
-			addAbitaPS.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void deleteIndirizzoDB(int indirizzoID) throws SQLException {
+		PreparedStatement deleteIndirizzoPS;
+		deleteIndirizzoPS = connection.prepareStatement("DELETE FROM indirizzi WHERE indirizzi_id = ?");
+		deleteIndirizzoPS.setInt(1, indirizzoID);
+		deleteIndirizzoPS.execute();
 	}
-	
-	@Override
-	public ArrayList<Indirizzi> leggiIndirizziDB(Contatto c) {
-		PreparedStatement leggiIndirizziPS;
-		ArrayList<Indirizzi> listaIndirizzi = new ArrayList<>();		
-		try {
-			leggiIndirizziPS = connection.prepareStatement(
-					//da cambare una volta finito il database
-					"SELECT * FROM \"Indirizzi\".\"Abita\" WHERE \"Contatto_ID\"='"+c.getID()+"'");
-					
-		ResultSet rs = leggiIndirizziPS.executeQuery();
-		while (rs.next()) {
-			Indirizzi i = new Indirizzi (rs.getInt("Indirizzo_ID"), rs.getBoolean("Abitazione_Principale"),  rs.getString("Via"), rs.getString("Citt√†"), rs.getString("Codice_Postale"), rs.getString("Nazione"), rs.getString("Identificatore") );
-			listaIndirizzi.add(i);
-		}
-		rs.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return listaIndirizzi;		
-	}
-
 }

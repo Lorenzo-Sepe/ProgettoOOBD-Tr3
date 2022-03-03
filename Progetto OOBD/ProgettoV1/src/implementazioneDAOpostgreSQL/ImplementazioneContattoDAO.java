@@ -21,9 +21,9 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 		try {
 			connection = Connessione.getInstance().getConnection();
 		} catch (SQLException e) {
-	 		// TODO Auto-generated catch block
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-		 }
+		}
 	}
 	
 	
@@ -40,7 +40,7 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 			addContattoPS.setString(4, c.getPathFoto());
 			addContattoPS.execute();
 		}
-		catch (SQLException e) {
+		catch (SQLException e) { 
 			e.printStackTrace();
 		}
 	}
@@ -145,14 +145,14 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 	}
 	
 	
-	public int addIndirizziDB (int idContatto, String via, String citt√†, String codicePostale, String nazione, String tag, boolean principale ) {
+	public int addIndirizziDB (int idContatto, String via, String citt‡, String codicePostale, String nazione, String tag, boolean principale ) {
 		PreparedStatement addIndirizziDB;
 		PreparedStatement addAbitaDB;
 		int idIndirizzo = 0;
 		try {
-			addIndirizziDB = connection.prepareStatement("INSERT INTO indirizzi (via,citt√†,codice_postale,nazione) VALUES (?,?,?,?) RETURNING indirizzi_id AS id ;");
+			addIndirizziDB = connection.prepareStatement("INSERT INTO indirizzi (via,citt‡,codice_postale,nazione) VALUES (?,?,?,?) RETURNING indirizzi_id AS id ;");
 			addIndirizziDB.setString(1, via);
-			addIndirizziDB.setString(2, citt√†);
+			addIndirizziDB.setString(2, citt‡);
 			addIndirizziDB.setString(3, codicePostale);
 			addIndirizziDB.setString(4, nazione);
 			ResultSet rs = addIndirizziDB.executeQuery();
@@ -176,12 +176,12 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 		PreparedStatement getListaIndirizziPS;
 		ArrayList<Indirizzi> listaIndirizzi = new ArrayList<>();
 		try {
-			getListaIndirizziPS = connection.prepareStatement("SELECT ab.abitazione_principale, i.*,ab.abitazione_principale, ab.identificatore FROM indirizzi i,abita ab WHERE ab.contatto_associato = ? AND ab.indirizzo_associato = i.indirizzi_id ORDER BY ab.abitazione_principale;\r\n"
+			getListaIndirizziPS = connection.prepareStatement("SELECT i.*,ab.abitazione_principale, ab.identificatore FROM indirizzi i,abita ab WHERE ab.contatto_associato = ? AND ab.indirizzo_associato = i.indirizzi_id ORDER BY abitazione_principale desc;\r\n"
 					+ "");
 			getListaIndirizziPS.setInt(1, contattoID);
 			ResultSet rs = getListaIndirizziPS.executeQuery();
 			while (rs.next()) {
-				Indirizzi i = new Indirizzi(rs.getInt("indirizzi_id"), rs.getBoolean("abitazione_principale"), rs.getString("via"),rs.getString("citt√†"),rs.getString("codice_postale"),rs.getString("nazione"),rs.getString("identificatore"));
+				Indirizzi i = new Indirizzi(rs.getInt("indirizzi_id"), rs.getBoolean("abitazione_principale"), rs.getString("via"),rs.getString("citt‡"),rs.getString("codice_postale"),rs.getString("nazione"),rs.getString("identificatore"));
 			
 				listaIndirizzi.add(i);
 			}
@@ -244,7 +244,20 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 		}
 	}
 	
+	public void updateEmailDB (String emailPrima, String emailDopo) throws SQLException {
+		PreparedStatement deleteEmailPS;
+		deleteEmailPS = connection.prepareStatement("UPDATE mail SET indirizzo_email = ? WHERE indirizzo_email = ? ");
+		deleteEmailPS.setString(1, emailDopo);
+		deleteEmailPS.setString(2, emailPrima);
+		deleteEmailPS.execute();
+	}
 	
+	public void deleteEmailDB (String email) throws SQLException {
+		PreparedStatement updateEmailPS;
+		updateEmailPS = connection.prepareStatement("DELETE FROM mail WHERE indirizzo_email = ?");
+		updateEmailPS.setString(1, email);
+		updateEmailPS.execute();
+	}
 	
 	public ArrayList<String> getListaEmail (int id) {
 		PreparedStatement getListaEmailPS;
@@ -268,55 +281,58 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
         PreparedStatement getDeputato ;
         String nomeProcedura="\"SetDeputato_Mobile\"";
         try {
-            getDeputato=connection.prepareStatement("CALL "+nomeProcedura+"( ?, ?);");
+            getDeputato=connection.prepareStatement("update Numeri_telefonici_mobili set \"reindirizzamento\" = ? where \"numero_id\" =  ?  ;");
+         //   getDeputato=connection.prepareStatement("CALL "+nomeProcedura+"( ?, ?);");
             //TODO CANCELLARE DOPO IL DEBUG
-            System.out.print("Sono nella setDEP mobile\nIL mobile √® "+mobilePrefisso +" "+mobileNumero );
+            System.out.print("Sono nella setDEP mobile\nIL mobile Ë "+mobilePrefisso +" "+mobileNumero );
             System.out.print(" ID: ");
             System.out.println(getIDNumeroMobile(mobilePrefisso, mobileNumero,idContatto));
-            getDeputato.setInt(1, getIDNumeroMobile(mobilePrefisso, mobileNumero,idContatto));
+            getDeputato.setInt(2, getIDNumeroMobile(mobilePrefisso, mobileNumero,idContatto));
             
-            System.out.print("Il fisso √® "+fissoPrefisso +" "+fissoNumero );
+            System.out.print("Il fisso Ë "+fissoPrefisso +" "+fissoNumero );
             System.out.print(" ID: ");
             System.out.println(getIDNumeroFisso(fissoPrefisso, fissoNumero,idContatto));
             
-            getDeputato.setInt(2, getIDNumeroFisso(fissoPrefisso, fissoNumero,idContatto));
+            getDeputato.setInt(1, getIDNumeroFisso(fissoPrefisso, fissoNumero,idContatto));
            
             System.out.print("Sono nella setDEP mobile su FIsso dopo i set int query:-"+getDeputato.toString());
 
             getDeputato.execute();
             
         } catch (Exception e) {
-			e.printStackTrace();
-		}
+            e.printStackTrace();
+        }
 
         } 
 
     public void setDeputatoFissoSuMobile(int idContatto,String mobilePrefisso,String mobileNumero, String fissoPrefisso,String fissoNumero) {
         PreparedStatement getDeputato ;
         String nomeProcedura="\"SetDeputato_Fisso\"";
+        
+
         try {
-            getDeputato=connection.prepareStatement("CALL "+nomeProcedura+" ( ?, ?);");
+            getDeputato=connection.prepareStatement("update Numeri_telefonici_fissi set reindirizzamento = ? where numero_id =  ?  ;");
             
             //TODO ELIMNIARE DOPO IL DEUBUG
-            System.out.print("Sono nella setDEP FIsso\nIL fisso √® "+fissoPrefisso +" "+fissoNumero );
+            System.out.print("Sono nella setDEP FIsso\nIL fisso Ë "+fissoPrefisso +" "+fissoNumero );
             System.out.print(" ID:+");
             System.out.println(getIDNumeroFisso(fissoPrefisso, fissoNumero,idContatto));
             
-            getDeputato.setInt(1, getIDNumeroFisso(fissoPrefisso, fissoNumero,idContatto));
+            getDeputato.setInt(2, getIDNumeroFisso(fissoPrefisso, fissoNumero,idContatto));
             
-            System.out.print("IL mobile √® "+mobilePrefisso +" "+mobileNumero );
+            System.out.print("IL mobile Ë "+mobilePrefisso +" "+mobileNumero );
             System.out.print(" ID:+");
             System.out.println(getIDNumeroMobile(mobilePrefisso, mobileNumero,idContatto));
             
             
-            getDeputato.setInt(2, getIDNumeroMobile(mobilePrefisso, mobileNumero,idContatto));
+            getDeputato.setInt(1, getIDNumeroMobile(mobilePrefisso, mobileNumero,idContatto));
             System.out.print("Sono nella setDEP FIsso su mobile  dopo i set int query:-"+getDeputato.toString());
 
            getDeputato.execute();
 
         } catch (Exception e) {
-			e.printStackTrace();
-		}
+            e.printStackTrace();
+        }
 
         } 
 	
@@ -360,12 +376,10 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 		PreparedStatement searchAnagraficaPS;
 		ArrayList<Integer> listaRisultato = new ArrayList<>();
 		try {
-		
-			searchAnagraficaPS = connection.prepareStatement("SELECT Contatto_ID FROM Contatto WHERE Prefisso_Nome LIKE ? AND Nome LIKE ? AND Cognome LIKE ?;");
+			searchAnagraficaPS = connection.prepareStatement("SELECT Contatto_ID FROM Contatti WHERE Prefisso_Nome = ? AND Nome = ? AND Cognome = ?;");
 			searchAnagraficaPS.setString(1,prefisso);
 			searchAnagraficaPS.setString(2,nome);
 			searchAnagraficaPS.setString(3,cognome);
-			
 			ResultSet rs = searchAnagraficaPS.executeQuery();
 			while (rs.next()) {
 				listaRisultato.add(rs.getInt("Contatto_ID"));
@@ -381,7 +395,7 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 		PreparedStatement searchMailPS;
 		ArrayList<Integer> listaRisultato = new ArrayList<>();
 		try {
-			searchMailPS = connection.prepareStatement("SELECT Contatto_Associato FROM Mail WHERE \"Indirizzo_Email\" LIKE ?;");
+			searchMailPS = connection.prepareStatement("SELECT Contatto_Associato FROM Mail WHERE \"Indirizzo_Email\" = ?;");
 			searchMailPS.setString(1,mail);
 			ResultSet rs = searchMailPS.executeQuery();
 			while (rs.next()) {
@@ -398,7 +412,7 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 		PreparedStatement searchAccountPS;
 		ArrayList<Integer> listaRisultato = new ArrayList<>();
 		try {
-			searchAccountPS = connection.prepareStatement("SELECT Contatto_Associato FROM Account WHERE fornitore LIKE ? AND nickname LIKE ?;");
+			searchAccountPS = connection.prepareStatement("SELECT Contatto_Associato FROM Account WHERE fornitore = ? AND nickname = ?;");
 			searchAccountPS.setString(1,fornitore);
 			searchAccountPS.setString(2, nickname);
 			ResultSet rs = searchAccountPS.executeQuery();
@@ -412,32 +426,7 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 		return listaRisultato;
 	}
 
-	public ArrayList<Integer> SearchNumeri(String prefissoNumero, String numero, String tipoNumero) {
-		PreparedStatement searchNumeriPS;
-		ArrayList<Integer> listaRisultato = new ArrayList<>();
-		try {
-			if (tipoNumero=="Fisso") {
-				searchNumeriPS = connection.prepareStatement("SELECT \"Contatto_Associato\" FROM \"Numeri_Telefonici_Fissi\" WHERE prefissoNumero LIKE ? AND numero LIKE ?;");
-				searchNumeriPS.setString(1,prefissoNumero);
-				searchNumeriPS.setString(2, numero);
-			}
-			else
-			{
-			searchNumeriPS = connection.prepareStatement("SELECT \"Contatto_Associato\" FROM \"Numeri_Telefonici_Mobili\" WHERE prefissoNumero LIKE ? AND numero LIKE ?;");
-			searchNumeriPS.setString(1,prefissoNumero);
-			searchNumeriPS.setString(2, numero);
-			}
-			
-			ResultSet rs = searchNumeriPS.executeQuery();
-			while (rs.next()) {
-				listaRisultato.add(rs.getInt("Contatto_Associato"));
-				}
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return listaRisultato;
-	}
+
 
 
 	public void setFoto(int id, String pathDestiCompleto) {
@@ -452,69 +441,35 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 		}
 	}
 	
-	public void transactionsBegin() {
-		PreparedStatement inizioTransactions;
-	try {
-		inizioTransactions = connection.prepareStatement("BEGIN;");
-		inizioTransactions.execute();
+	public ArrayList<Integer> verificaDuplicatiContattoDao() {
+        PreparedStatement verificaDuplicatiContattoDaoPS;
+        ArrayList<Integer> listaRisultato = new ArrayList<>();
+        try {
+            verificaDuplicatiContattoDaoPS = connection.prepareStatement("SELECT \"contatto_associato\",COUNT(\"contatto_associato\") FROM mail GROUP By \"contatto_associato\" HAVING COUNT(\"contatto_associato\")>1 ;");
+            ResultSet rs = verificaDuplicatiContattoDaoPS.executeQuery();
+            while (rs.next()) {
+                listaRisultato.add(rs.getInt("contatto_associato"));
+                }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listaRisultato;
+    }
 
-	} catch (SQLException e) {
-		e.printStackTrace();
-	}
-}
-	public void transactionsCommit() {
-		PreparedStatement fineTransactions;
-		try {
-			fineTransactions = connection.prepareStatement("COMMIT;");
-			fineTransactions.execute();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	public void transactionsRollBack() {
-		PreparedStatement fineTransactions;
-		try {
-			fineTransactions = connection.prepareStatement("ROLLBACK ;");
-			fineTransactions.execute();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-
-	public void transactionsBegin() {
-		PreparedStatement inizioTransactions;
-	try {
-		inizioTransactions = connection.prepareStatement("BEGIN;");
-		inizioTransactions.execute();
-
-	} catch (SQLException e) {
-		e.printStackTrace();
-	}
-}
-	public void transactionsCommit() {
-		PreparedStatement fineTransactions;
-		try {
-			fineTransactions = connection.prepareStatement("COMMIT;");
-			fineTransactions.execute();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	public void transactionsRollBack() {
-		PreparedStatement fineTransactions;
-		try {
-			fineTransactions = connection.prepareStatement("ROLLBACK ;");
-			fineTransactions.execute();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-
-
+    public ArrayList<Integer> verificaDuplicatiAccountDao() {
+        PreparedStatement verificaDuplicatiAccountDaoPS;
+        ArrayList<Integer> listaRisultato = new ArrayList<>();
+        try {
+            verificaDuplicatiAccountDaoPS = connection.prepareStatement("SELECT \"contatto_associato\",COUNT(\"contatto_associato\") FROM account GROUP By \"contatto_associato\" HAVING COUNT(\"contatto_associato\")>1 ;");
+            ResultSet rs = verificaDuplicatiAccountDaoPS.executeQuery();
+            while (rs.next()) {
+                listaRisultato.add(rs.getInt("contatto_associato"));
+                }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listaRisultato;
+    }
+	
+	
 }
