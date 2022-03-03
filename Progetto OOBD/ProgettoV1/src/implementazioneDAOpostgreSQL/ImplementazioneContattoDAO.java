@@ -145,14 +145,14 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 	}
 	
 	
-	public int addIndirizziDB (int idContatto, String via, String citt‡, String codicePostale, String nazione, String tag, boolean principale ) {
+	public int addIndirizziDB (int idContatto, String via, String citt√†, String codicePostale, String nazione, String tag, boolean principale ) {
 		PreparedStatement addIndirizziDB;
 		PreparedStatement addAbitaDB;
 		int idIndirizzo = 0;
 		try {
-			addIndirizziDB = connection.prepareStatement("INSERT INTO indirizzi (via,citt‡,codice_postale,nazione) VALUES (?,?,?,?) RETURNING indirizzi_id AS id ;");
+			addIndirizziDB = connection.prepareStatement("INSERT INTO indirizzi (via,citt√†,codice_postale,nazione) VALUES (?,?,?,?) RETURNING indirizzi_id AS id ;");
 			addIndirizziDB.setString(1, via);
-			addIndirizziDB.setString(2, citt‡);
+			addIndirizziDB.setString(2, citt√†);
 			addIndirizziDB.setString(3, codicePostale);
 			addIndirizziDB.setString(4, nazione);
 			ResultSet rs = addIndirizziDB.executeQuery();
@@ -181,7 +181,7 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 			getListaIndirizziPS.setInt(1, contattoID);
 			ResultSet rs = getListaIndirizziPS.executeQuery();
 			while (rs.next()) {
-				Indirizzi i = new Indirizzi(rs.getInt("indirizzi_id"), rs.getBoolean("abitazione_principale"), rs.getString("via"),rs.getString("citt‡"),rs.getString("codice_postale"),rs.getString("nazione"),rs.getString("identificatore"));
+				Indirizzi i = new Indirizzi(rs.getInt("indirizzi_id"), rs.getBoolean("abitazione_principale"), rs.getString("via"),rs.getString("citt√†"),rs.getString("codice_postale"),rs.getString("nazione"),rs.getString("identificatore"));
 			
 				listaIndirizzi.add(i);
 			}
@@ -284,12 +284,12 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
             getDeputato=connection.prepareStatement("update Numeri_telefonici_mobili set \"reindirizzamento\" = ? where \"numero_id\" =  ?  ;");
          //   getDeputato=connection.prepareStatement("CALL "+nomeProcedura+"( ?, ?);");
             //TODO CANCELLARE DOPO IL DEBUG
-            System.out.print("Sono nella setDEP mobile\nIL mobile Ë "+mobilePrefisso +" "+mobileNumero );
+            System.out.print("Sono nella setDEP mobile\nIL mobile √® "+mobilePrefisso +" "+mobileNumero );
             System.out.print(" ID: ");
             System.out.println(getIDNumeroMobile(mobilePrefisso, mobileNumero,idContatto));
             getDeputato.setInt(2, getIDNumeroMobile(mobilePrefisso, mobileNumero,idContatto));
             
-            System.out.print("Il fisso Ë "+fissoPrefisso +" "+fissoNumero );
+            System.out.print("Il fisso √® "+fissoPrefisso +" "+fissoNumero );
             System.out.print(" ID: ");
             System.out.println(getIDNumeroFisso(fissoPrefisso, fissoNumero,idContatto));
             
@@ -314,13 +314,13 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
             getDeputato=connection.prepareStatement("update Numeri_telefonici_fissi set reindirizzamento = ? where numero_id =  ?  ;");
             
             //TODO ELIMNIARE DOPO IL DEUBUG
-            System.out.print("Sono nella setDEP FIsso\nIL fisso Ë "+fissoPrefisso +" "+fissoNumero );
+            System.out.print("Sono nella setDEP FIsso\nIL fisso √® "+fissoPrefisso +" "+fissoNumero );
             System.out.print(" ID:+");
             System.out.println(getIDNumeroFisso(fissoPrefisso, fissoNumero,idContatto));
             
             getDeputato.setInt(2, getIDNumeroFisso(fissoPrefisso, fissoNumero,idContatto));
             
-            System.out.print("IL mobile Ë "+mobilePrefisso +" "+mobileNumero );
+            System.out.print("IL mobile √® "+mobilePrefisso +" "+mobileNumero );
             System.out.print(" ID:+");
             System.out.println(getIDNumeroMobile(mobilePrefisso, mobileNumero,idContatto));
             
@@ -426,7 +426,55 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 		return listaRisultato;
 	}
 
+	
+	public ArrayList<String> verificaMailDuplicatiDao() {
+		PreparedStatement verificaDuplicatiContattoDaoPS;
+		ArrayList<String> listaRisultato = new ArrayList<>();
+		try {
+			verificaDuplicatiContattoDaoPS = connection.prepareStatement("select mailD.Indirizzo_email from mail as mailD group by mailD.Indirizzo_email having Count(*)>1 ;");
+			ResultSet rs = verificaDuplicatiContattoDaoPS.executeQuery();
+			while (rs.next()) {
+				listaRisultato.add(rs.getString("Indirizzo_email"));
+				}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return listaRisultato;
+	}
+	
+	@Override
+	public ArrayList<Integer> verificaDuplicatiContattoDao(String mail) {
+		PreparedStatement verificaDuplicatiContattoDaoPS;
+		ArrayList<Integer> listaRisultato = new ArrayList<>();
+		try {
+			verificaDuplicatiContattoDaoPS = connection.prepareStatement("SELECT contatto_id from mail as mailES JOIN contatto on contatto_id=mailES.contatto_associato where mailES.indirizzo_email in  (?) ;");
+			verificaDuplicatiContattoDaoPS.setString(1, mail);
+			ResultSet rs = verificaDuplicatiContattoDaoPS.executeQuery();
+			while (rs.next()) {
+				listaRisultato.add(rs.getInt("contatto_id"));
+				}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return listaRisultato;
+	} 
 
+	
+	public ArrayList<Integer> verificaDuplicatiAccountDao() {
+		PreparedStatement verificaDuplicatiAccountDaoPS;
+		ArrayList<Integer> listaRisultato = new ArrayList<>();
+		try {
+			verificaDuplicatiAccountDaoPS = connection.prepareStatement("select * from account where mail in (select mail from account group by mail having Count(*)>1);");
+			ResultSet rs = verificaDuplicatiAccountDaoPS.executeQuery();
+			while (rs.next()) {
+				listaRisultato.add(rs.getInt("contatto_associato"));
+				}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return listaRisultato;
+	}
+	
 
 
 	public void setFoto(int id, String pathDestiCompleto) {
