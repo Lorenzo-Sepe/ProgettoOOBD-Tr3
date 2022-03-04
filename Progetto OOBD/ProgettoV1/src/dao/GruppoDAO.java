@@ -7,5 +7,7 @@ import Model.Contatto;
 
 public interface GruppoDAO {
 
-	public ArrayList<Integer> selectListaIdContattiGruppoDB (String nomeGruppo) throws SQLException;
+	public ArrayList<Contatto> selectListaContattiGruppoDB (String nomeGruppo) throws SQLException;
+	
+	public boolean checkContattoInGruppo (int idContatto);
 }

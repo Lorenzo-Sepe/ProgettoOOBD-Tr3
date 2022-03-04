@@ -56,10 +56,14 @@ public interface ContattoDAO {
 
     public ArrayList<Integer> SearchMail(String mail);
 
-    public ArrayList<Integer> verificaDuplicatiContattoDao();
+    public ArrayList<String> verificaMailDuplicatiDao() ;
     
-    public ArrayList<Integer> verificaDuplicatiAccountDao();
+    public ArrayList<Integer> verificaDuplicatiContattoDao(String mail);
 
+    public int getIDNumeroFisso(String prefissoFisso,String numeroFisso,int idContatto) throws Exception ;
 
+    public int getIDNumeroMobile(String prefissoMobile,String numeroMobile, int idContatto) throws Exception ;
+
+	
 
 }

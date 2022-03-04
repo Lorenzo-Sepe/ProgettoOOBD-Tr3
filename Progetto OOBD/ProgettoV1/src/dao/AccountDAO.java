@@ -1,4 +1,4 @@
-package dao;
+package DAO;
 
 /**
  * @author LorenzoSepe
@@ -8,13 +8,15 @@ package dao;
 
 import java.sql.Connection;
 import java.util.ArrayList;
-import model.Account;
-import model.Contatto;
+import Model.Account;
+import Model.Contatto;
 
 public interface AccountDAO {
 
 	public void addAccountDB(Account a, Contatto c);
 
 	public ArrayList<Account> leggiAccountDB(Contatto c );
+	
+	 public ArrayList<Integer> verificaDuplicatiAccountDao();
 
 }

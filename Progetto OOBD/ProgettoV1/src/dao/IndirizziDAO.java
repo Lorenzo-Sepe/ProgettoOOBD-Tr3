@@ -18,7 +18,7 @@ import Model.Contatto;
 
 public interface IndirizziDAO {
 
-	public void updateIndirizzoDB (int indirizzoID, String via, String citt‡, String codicePostale, String nazione, String tag) throws SQLException;
+	public void updateIndirizzoDB (int indirizzoID, String via, String citt√†, String codicePostale, String nazione, String tag) throws SQLException;
 	
 	public void deleteIndirizzoDB (int indirizzoID) throws SQLException;
 

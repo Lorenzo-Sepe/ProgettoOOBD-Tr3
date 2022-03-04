@@ -2,15 +2,14 @@ package DAO;
 
 import Model.Contatto;
 import Model.NumeriTelefonici;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public interface NumeriTelefoniciDAO {
-	
-	public void addNumeroDB (NumeriTelefonici num, Contatto c);
-	
-	public void removeNumeroDB (NumeriTelefonici num);
-	
-	public void updateNumeroDB (NumeriTelefonici num, String prefisso, String numero, String tipoNumero, String tag);
-	
-	public ArrayList<NumeriTelefonici> readNumeroDB (NumeriTelefonici num);
+
+
+    public void updateNumeroDB (int idContatto,int idNumero,String tag, String prefisso,String numero,String TipoNew,String TipoOLD) throws SQLException ;
+    
+    public NumeriTelefonici readNumeroDB (int idNumero,String tipo) throws Exception;
 }
