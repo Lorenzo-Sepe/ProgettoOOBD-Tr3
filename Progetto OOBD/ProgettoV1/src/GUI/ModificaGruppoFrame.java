@@ -90,7 +90,7 @@ public class ModificaGruppoFrame extends JFrame {
 		
 		listaContattiArrayList = c.getListaContattiMenoGruppo(nomeGruppo);
 		if (listaContattiArrayList.isEmpty()) {
-			System.out.println("La lista dei contatti per la crea gruppo è vuota");
+			System.out.println("La lista dei contatti per la crea gruppo Ã¨ vuota");
 		}
 		
 		

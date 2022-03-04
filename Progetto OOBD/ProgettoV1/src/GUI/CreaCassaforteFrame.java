@@ -48,7 +48,7 @@ public class CreaCassaforteFrame extends JFrame {
 	private ArrayList<Contatto> contattiInCassaforte = new ArrayList<>();
 	
 	
-	public CreaCassaforteFrame(Controller controller, JFrame chiamante, String password) {
+	public CreaCassaforteFrame(Controller controller, JFrame chiamante, String password, DefaultTableModel modelloContatti) {
 		frame = this;
 		frameChiamante = chiamante;
 		c = controller;
@@ -66,34 +66,34 @@ public class CreaCassaforteFrame extends JFrame {
 		contentPane.add(scrollPaneRubrica);
 		
 		//Contatti = new JTable();
-		DefaultTableModel modelloContatti =  new DefaultTableModel() {
-	        @Override
-	        public boolean isCellEditable(int row, int column) {
-	           //all cells false
-	           return false;
-	        }};
+//		DefaultTableModel modelloContatti =  new DefaultTableModel() {
+//	        @Override
+//	        public boolean isCellEditable(int row, int column) {
+//	           //all cells false
+//	           return false;
+//	        }};
 		
 		ContattiTable = new JTable(modelloContatti);
 		ListSelectionModel listenerContattoSelezionato=ContattiTable.getSelectionModel();
 		ContattiTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		modelloContatti.addColumn("Id");
-		modelloContatti.addColumn("prefisso");
-		modelloContatti.addColumn("nome"); 
-		modelloContatti.addColumn("cognome"); 
-		
+//		modelloContatti.addColumn("Id");
+//		modelloContatti.addColumn("prefisso");
+//		modelloContatti.addColumn("nome"); 
+//		modelloContatti.addColumn("cognome"); 
+//		
 		listaContatti = c.getListaContatti();
-		
-		// Append a row 
-		
-		for (Contatto contatto : listaContatti) {
-			modelloContatti.addRow(new Object[] {
-					contatto.getID(),
-					contatto.getPrefissoNome(),
-					contatto.getNome(),
-					contatto.getCognome()
-			});
-		}
+//		
+//		// Append a row 
+//		
+//		for (Contatto contatto : listaContatti) {
+//			modelloContatti.addRow(new Object[] {
+//					contatto.getID(),
+//					contatto.getPrefissoNome(),
+//					contatto.getNome(),
+//					contatto.getCognome()
+//			});
+//		}
 		
 		ContattiTable.removeColumn(ContattiTable.getColumnModel().getColumn(0));
 		scrollPaneRubrica.setViewportView(ContattiTable);
@@ -164,7 +164,8 @@ public class CreaCassaforteFrame extends JFrame {
 					listaContatti.add(contattiInCassaforte.get(row));
 					contattiInCassaforte.remove(row);
 					modelloCassaforte.removeRow(row);
-					modelloContatti.addRow(new Object[]{id, prefisso, nome, cognome});
+					int posizioneContatto = 0; //TODO implementare c.posizioneContatto(modelRubrica,nome,cognome)
+					modelloContatti.insertRow(posizioneContatto, new Object[]{id,prefisso, nome, cognome});
 					//TODO MembriCassaforte.remove(object);
 				}
 			}

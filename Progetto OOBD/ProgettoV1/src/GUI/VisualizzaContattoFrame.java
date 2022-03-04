@@ -38,6 +38,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.JTextPane;
 
 import Model.Contatto;
+import Model.Indirizzi;
+import Model.NumeriTelefonici;
 import Controller.Controller;
 
 import javax.swing.JTable;
@@ -52,7 +54,6 @@ import javax.swing.AbstractListModel;
 import java.awt.Font;
 import java.awt.Frame;
 import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
 import javax.swing.JMenu;
 import javax.swing.border.TitledBorder;
 import java.awt.Component;
@@ -83,24 +84,16 @@ public class VisualizzaContattoFrame extends JFrame {
 	private JPanel panelNumeri;
 	private JPanel panelIndirizzi;
 	private JPanel panelAccount;
-	private JButton buttonModificaMail;
-	private JScrollPane scrollPane;
 	private JLabel labelMail;
-	private JList listMail;
 	private JLabel labelPrefisso;
 	private JLabel labelNome;
 	private JLabel labelCognome;
-	private JButton modFotoButton;
-	private JButton bottonModificaAccount;
-	private JButton bottonModificaIndirizzi;
 	private JTextPane textPaneCognome;
-	private JButton bottonModificaNumeri;
 	private JTextPane textPaneNome;
-	private JButton bottonModificaContatto;
 	private JTextPane textPanePrefisso;
 	private JButton buttonIndietro;
 	private JPanel panel;
-	private JButton ritornaInRubrica;
+	private JComboBox<String> comboBoxMail;
 
 	/**
 	 * Launch the application.
@@ -123,33 +116,13 @@ public class VisualizzaContattoFrame extends JFrame {
 	 */
 	
 	public VisualizzaContattoFrame(Controller controller, JFrame Chiamante,int id) {
-		//controller.dumpContatto(id); 
-		
-		
 		frame = this;
 		c=controller;
 		contattoID=id;
 		frameChiamante=Chiamante;
 		setTitle("Visualizzazione");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1110, 700);
-		
-		JMenuBar menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
-		
-		JMenu voceMenuIdietro = new JMenu("New menu");
-		menuBar.add(voceMenuIdietro);
-		
-		ritornaInRubrica = new JButton("Ritorna in Rubrica");
-		ritornaInRubrica.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				frame.setVisible(false);
-				frame.dispose();
-				frameChiamante.setVisible(true);
-			}
-		});
-		voceMenuIdietro.add(ritornaInRubrica);
+		setBounds(100, 50, 1110, 700);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -180,66 +153,37 @@ public class VisualizzaContattoFrame extends JFrame {
 		sl_contentPane.putConstraint(SpringLayout.WEST, textPanePrefisso, 370, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, textPanePrefisso, -250, SpringLayout.EAST, contentPane);
 		textPanePrefisso.setEditable(false);
-		textPaneNome.setText(c.getInfoContattoPrefisso(id));
-		//textPanePrefisso.setText(c.getContatto(id).getPrefissoNome());
+		textPanePrefisso.setText(c.getContatto(id).getPrefissoNome());
 		
 		contentPane.add(textPanePrefisso);
 		
-		bottonModificaContatto = new JButton("Modifica Contatto");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, bottonModificaContatto, 30, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, bottonModificaContatto, -165, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, bottonModificaContatto, 50, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, bottonModificaContatto, -15, SpringLayout.EAST, contentPane);
-		
-		contentPane.add(bottonModificaContatto);
-		
-		textPaneNome = new JTextPane();
+		textPaneNome = new JTextPane(/*Controller.getterNome()*/);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, textPaneNome, 60, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, textPaneNome, 370, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, textPaneNome, -250, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, bottonModificaContatto, -165, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, bottonModificaContatto, -15, SpringLayout.EAST, contentPane);
 		textPaneNome.setEditable(false);
-		textPaneNome.setText(c.getInfoContattoNome(id));
-		//textPaneNome.setText(c.getContatto(id).getNome());
+		textPaneNome.setText(c.getContatto(id).getNome());
 		contentPane.add(textPaneNome);
 		
-		bottonModificaNumeri = new JButton(" Modifica Numeri  ");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, bottonModificaNumeri, 60, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, bottonModificaNumeri, -165, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, bottonModificaNumeri, 80, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, bottonModificaNumeri, -15, SpringLayout.EAST, contentPane);
-		
-		contentPane.add(bottonModificaNumeri);
-		
-		textPaneCognome = new JTextPane();
+		textPaneCognome = new JTextPane(/*Controller.getterCognome()*/);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, textPaneCognome, 90, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, textPaneCognome, 370, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, textPaneCognome, -250, SpringLayout.EAST, contentPane);
 		textPaneCognome.setEditable(false);
-		textPaneNome.setText(c.getInfoContattoCognome(id));
-		//textPaneCognome.setText(c.getContatto(id).getCognome());
+		textPaneCognome.setText(c.getContatto(id).getCognome());
 		contentPane.add(textPaneCognome);
-		
-		bottonModificaIndirizzi = new JButton(" Modifica Indirizzi ");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, bottonModificaIndirizzi, 90, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, bottonModificaIndirizzi, -165, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, bottonModificaIndirizzi, 110, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, bottonModificaIndirizzi, -15, SpringLayout.EAST, contentPane);
-		
-		contentPane.add(bottonModificaIndirizzi);
-		
-		bottonModificaAccount = new JButton("Modifica Account ");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, bottonModificaAccount, 120, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, bottonModificaAccount, -165, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, bottonModificaAccount, 140, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, bottonModificaAccount, -15, SpringLayout.EAST, contentPane);
-		
-		contentPane.add(bottonModificaAccount);
 		
 		ArrayList<String> arrayListContatti = new ArrayList<>(Arrays.asList("Rai", "Lore", "Ale","Jesico"));
 		ArrayList<String> arrayListContattiCognome = new ArrayList<>(Arrays.asList("Mor", "Sep", "Tri","Cal"));
 		
+		comboBoxMail = new JComboBox<String>();
+		sl_contentPane.putConstraint(SpringLayout.WEST, comboBoxMail, 0, SpringLayout.WEST, textPanePrefisso);
+		sl_contentPane.putConstraint(SpringLayout.EAST, comboBoxMail, 0, SpringLayout.EAST, textPanePrefisso);
+	
+		for (int i = 0; i < c.getInfoContattoMailList(id).size(); i++) {
+			comboBoxMail.addItem((String) c.getInfoContattoMailList(id).get(i));
+		}
+		contentPane.add(comboBoxMail);
 		
 		  DefaultTableModel modelNumeri =  new DefaultTableModel() {
 	        @Override
@@ -256,33 +200,22 @@ public class VisualizzaContattoFrame extends JFrame {
 		
 		// Inserimento nella tabella dei numeri del contatto
 		
-		for(int i=0;i<c.getNumeroQuantità(id);i++) {
+		for(int i=0;i<c.getInfoContattoNumeroQuantita(id);i++) {
+
 			modelNumeri.addRow(new Object[]{
-					c.getInfoContattoTagNumero(i,id),
+					c.getInfoContattoTagNumero(i, id),
 					c.getInfoContattoPrefissoNumero(i,id),
-					c.getInfoContattoNumeroNumero(i,id),
-					c.getInfoContattoNumeroTipo(i,id)
-//					c.getContatto(id).getNumero(i).getTag(),
-//					c.getContatto(id).getNumero(i).getPrefisso(),
-//					c.getContatto(id).getNumero(i).getNumero(),	
+					c.getInfoContattoNumeroNumero(i, id),
+					c.getInfoContattoNumeroTipo(i, id)
 			});	
 		}
-		
-		
-		
-		modFotoButton = new JButton("Modifica Foto");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, modFotoButton, 190, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, modFotoButton, 30, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, modFotoButton, 180, SpringLayout.WEST, contentPane);
-		
-		contentPane.add(modFotoButton);
 		contentPane.add(panelFoto);
 	
 		panelFoto.setLayout(null);
 		
-		
+		//TODO aggiungi funzionalità dinamica
 		labelFoto = new JLabel("");
-		labelFoto.setIcon(new ImageIcon(c.getImageModificata(150, 150, new File (c.getPathContatto(id)))));
+		labelFoto.setIcon(new ImageIcon(c.getPathContatto(id)));
 		labelFoto.setBounds(0, 0, 150, 150);
 		panelFoto.add(labelFoto);
 		
@@ -298,7 +231,7 @@ public class VisualizzaContattoFrame extends JFrame {
 	           return false;
 	        }};
 		
-	
+	    modelIndirizzi.addColumn("Tag");    
 		modelIndirizzi.addColumn("Via"); 
 		modelIndirizzi.addColumn("Città"); 
 		modelIndirizzi.addColumn("Codice Postale");
@@ -307,15 +240,13 @@ public class VisualizzaContattoFrame extends JFrame {
 		// Inserimento degli indirizzi del contatto
 		
 		for(int i=0;i<c.getInfoContattoIndirizzoQuantità(id);i++) {
-			modelIndirizzi.addRow(new Object[]{
+
+			modelNumeri.addRow(new Object[]{
+					c.getInfoContattoIndirizzoTag(i, id),
 					c.getInfoContattoIndirizzoVia(i,id),
 					c.getInfoContattoIndirizzoCittà(i, id),
 					c.getInfoContattoIndirizzoCodicePostale(i, id),
 					c.getInfoContattoIndirizzoNazione(i, id)
-//					c.getContatto(id).getIndirizzo(i).getVia(),
-//					c.getContatto(id).getIndirizzo(i).getCittà(),
-//					c.getContatto(id).getIndirizzo(i).getCodicePostale(),
-//					c.getContatto(id).getIndirizzo(i).getNazione()
 			});	
 		}
 		//tableAccounts
@@ -335,15 +266,13 @@ public class VisualizzaContattoFrame extends JFrame {
 		// Inserimento account del contatto
 		
 		for(int i=0;i<c.getInfoContattoAccountQuantità(id);i++) {
-				modelAccounts.addRow(new Object[]{
-					c.getInfoContattoAccountFornitore(i, id),
+
+			modelNumeri.addRow(new Object[]{
+					
+					c.getInfoContattoAccountFornitore(i,id),
 					c.getInfoContattoAccountNickname(i, id),
 					c.getInfoContattoAccountMail(i, id),
 					c.getInfoContattoAccountBenvenuto(i, id)
-//					c.getContatto(id).getAccount(i).getFornitore(),
-//					c.getContatto(id).getAccount(i).getNickname(),
-//					c.getContatto(id).getAccount(i).getMail(),
-//					c.getContatto(id).getAccount(i).getBenvenuto()
 			});	
 		}
 		
@@ -355,37 +284,11 @@ public class VisualizzaContattoFrame extends JFrame {
 		contentPane.add(labelPrefisso);
 		
 		labelMail = new JLabel("E-Mails");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, comboBoxMail, -4, SpringLayout.NORTH, labelMail);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, labelMail, 122, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, labelMail, 245, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, labelMail, 360, SpringLayout.WEST, contentPane);
 		contentPane.add(labelMail);
-		
-		scrollPane = new JScrollPane();
-		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 120, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 370, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, 140, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -250, SpringLayout.EAST, contentPane);
-		contentPane.add(scrollPane);
-		
-		listMail = new JList<Object>();
-		listMail.setModel(new AbstractListModel() {
-			String[] values = new String[] {"Mail", "Mail", "Mail"};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
-		listMail.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		scrollPane.setViewportView(listMail);
-		
-		buttonModificaMail = new JButton("Modifica E-Mail");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, buttonModificaMail, 150, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, buttonModificaMail, -165, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, buttonModificaMail, 170, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, buttonModificaMail, -15, SpringLayout.EAST, contentPane);
-		contentPane.add(buttonModificaMail);
 		
 		panelNumeri = new JPanel();
 		sl_contentPane.putConstraint(SpringLayout.NORTH, panelNumeri, -400, SpringLayout.SOUTH, contentPane);
@@ -442,6 +345,7 @@ public class VisualizzaContattoFrame extends JFrame {
 				
 				panelAccount = new JPanel();
 				sl_contentPane.putConstraint(SpringLayout.NORTH, panelAccount, -170, SpringLayout.SOUTH, contentPane);
+				
 				sl_contentPane.putConstraint(SpringLayout.SOUTH, panelAccount, -45, SpringLayout.SOUTH, contentPane);
 				sl_contentPane.putConstraint(SpringLayout.SOUTH, panelIndirizzi, -5, SpringLayout.NORTH, panelAccount);
 				sl_contentPane.putConstraint(SpringLayout.WEST, panelAccount, 230, SpringLayout.WEST, contentPane);
@@ -473,6 +377,8 @@ public class VisualizzaContattoFrame extends JFrame {
 						scrollPaneAccounts.setViewportView(tableAccounts);
 						
 						buttonIndietro = new JButton("Indietro");
+						sl_contentPane.putConstraint(SpringLayout.WEST, buttonIndietro, 919, SpringLayout.WEST, contentPane);
+						sl_contentPane.putConstraint(SpringLayout.EAST, buttonIndietro, -15, SpringLayout.EAST, contentPane);
 						buttonIndietro.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
 								//TODO serve per cambiare da un frame ad un'altro
@@ -481,98 +387,13 @@ public class VisualizzaContattoFrame extends JFrame {
 								frame.dispose();
 							}
 						});
-						sl_contentPane.putConstraint(SpringLayout.WEST, buttonIndietro, 0, SpringLayout.WEST, bottonModificaContatto);
 						sl_contentPane.putConstraint(SpringLayout.SOUTH, buttonIndietro, -10, SpringLayout.SOUTH, contentPane);
-						sl_contentPane.putConstraint(SpringLayout.EAST, buttonIndietro, 150, SpringLayout.WEST, bottonModificaContatto);
 						contentPane.add(buttonIndietro);
 						
 						panel = new JPanel();
 						sl_contentPane.putConstraint(SpringLayout.NORTH, panelIndirizzi, 10, SpringLayout.NORTH, panel);
 						sl_contentPane.putConstraint(SpringLayout.SOUTH, panel, -280, SpringLayout.SOUTH, contentPane);
 						contentPane.add(panel);
-		
-		//action listeners foto
-		
-		
-		modFotoButton.addMouseListener(new MouseAdapter() {
-			@Override
-			/**
-			 * 
-			 * @param e
-			 */
-			public void mouseClicked(MouseEvent e) {
-				 if(e.getClickCount()==2) {
-					 //TODO elimina vecchia foto o salva (da vagliare)
-					
-					 JFileChooser fileChooser = new JFileChooser();
-					 	
-		                fileChooser.addChoosableFileFilter(new ImageFilter());
-		                fileChooser.setAcceptAllFileFilterUsed(false);
-
-		                int option = fileChooser.showOpenDialog(new JPanel());
-		                if(option == JFileChooser.APPROVE_OPTION){
-		                   File file = fileChooser.getSelectedFile();
-		                    c.setFotoContatto(file, contattoID);
-		                    
-		                    ImageIcon iconFoto = new ImageIcon(c.getImageModificata(150, 150, new File(c.getPathContatto(contattoID))));
-		                    labelFoto.setIcon(iconFoto);
-		            		labelFoto.setBounds(0, 0, 150, 150);
-		            		
-		                }else{
-		                    //TODO 
-		                   //testoFile.setText("Open command canceled");
-		                }
-				 }
-			}
-		});
-		bottonModificaContatto.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(e.getClickCount()==2) {
-					 //TODO modifica del contatto
-					 //Controller.modificaContatto();
-					
-				 }
-			}
-		});
-		
-		bottonModificaNumeri.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(e.getClickCount()==2) {
-					 //TODO modifica dei Numeri
-					 //Controller.modificaNumeri();
-				 }
-			}
-		});
-	
-		bottonModificaIndirizzi.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(e.getClickCount()==2) {
-					 //TODO modifica dei Indirizzi
-					 //Controller.modificaIndirizzi();
-				 }
-			}
-		});
-	
-
-		bottonModificaContatto.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						if(e.getClickCount()==2) {
-							ModificaContattoPanel ModificaContattoPanel = new ModificaContattoPanel();
-							ModificaContattoPanel.setAll(textPanePrefisso.getText(),textPaneNome.getText(),textPaneCognome.getText());
-							int result = JOptionPane.showConfirmDialog(null, ModificaContattoPanel, "Modifica Indirizzo", JOptionPane.OK_CANCEL_OPTION);
-							if (result == JOptionPane.OK_OPTION) {
-								textPanePrefisso.setText(ModificaContattoPanel.getPrefisso());
-								textPaneNome.setText(ModificaContattoPanel.getNome());
-								textPaneCognome.setText(ModificaContattoPanel.getCognome());
-							}
-						 }
-					}
-				});
-		
 	}
 	
 	class ImageFilter extends FileFilter {

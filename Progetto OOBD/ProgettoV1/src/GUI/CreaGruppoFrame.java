@@ -82,7 +82,7 @@ public class CreaGruppoFrame extends JFrame {
 		modelloContatti.addColumn("cognome"); 
 		
 		if (listaContattiArrayList.isEmpty()) {
-			System.out.println("La lista dei contatti per la crea gruppo è vuota");
+			System.out.println("La lista dei contatti per la crea gruppo Ã¨ vuota");
 		}
 		
 		for (Contatto contatto : listaContattiArrayList) {

@@ -2,12 +2,15 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.HeadlessException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import javax.swing.table.DefaultTableModel;
 
 import Controller.Controller;
@@ -36,6 +39,7 @@ import java.awt.event.ActionEvent;
 public class Home extends JFrame {
 
 	private JPanel contentPane;
+	private DefaultTableModel modelloRubrica;
 	private JTable RubricaTable;
 	Rubrica rubrica;
 	Controller c;
@@ -43,39 +47,23 @@ public class Home extends JFrame {
 	private JButton btnModificaContatto;
 	private JMenuItem mntmContattiDuplicati;
 	private JMenuItem mntmAccountDuplicati;
+	private String passwordCassaforte = "";
+	private boolean flagCreaCassaforte = false;
+	private boolean flagModificaCassaforte = false;
+	private boolean isPossibiliModifiche;
+    private String frameCheHaModificatoQualcosa;
 
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-		Controller c = new Controller();
-			
-			public void run() {
-				try {
-					Home frame = new Home(c);
-			 		frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
- 	}
 
-	/**
-	 * Create the frame.
-	 */
-	public Home(Controller c) {
+
+
+	public Home(Controller controller) {
+		c = controller;
 		frame=this;
-		try {
-			c.dumpListaContatti();
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
 		setTitle("Rubrica");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 650, 400);
+		setBounds(350, 150, 650, 400);
+		
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -84,9 +72,23 @@ public class Home extends JFrame {
 		menuBar.add(mnGestrioneGruppi);
 		
 		JMenuItem mntmCreaGruppo = new JMenuItem("Crea Gruppo");
+		mntmCreaGruppo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFrame creaGruppo = new CreaGruppoFrame(c, frame);
+				frame.setVisible(false);
+				creaGruppo.setVisible(true);
+			}
+		});
 		mnGestrioneGruppi.add(mntmCreaGruppo);
 		
 		JMenuItem mntmModificaGruppo = new JMenuItem("Visualizza Gruppi");
+		mntmModificaGruppo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFrame visualizzaGruppo = new VisualizzaGruppiFrame(c, frame);
+				frame.setVisible(false);
+				visualizzaGruppo.setVisible(true);
+			}
+		});
 		mnGestrioneGruppi.add(mntmModificaGruppo);
 		
 		JMenuItem mntmEliminaGruppo = new JMenuItem("Elimina Gruppo");
@@ -96,13 +98,133 @@ public class Home extends JFrame {
 		menuBar.add(mnGestioneCassaforti);
 		
 		JMenuItem mntmCreaCassaforte = new JMenuItem("Crea Cassaforte");
+		mntmCreaCassaforte.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (c.getCassaforte()==null) {
+					passwordCassaforte = JOptionPane.showInputDialog("Inserire la password");
+					if (passwordCassaforte != null) {
+						if (passwordCassaforte.compareTo("")!=0) {
+							flagCreaCassaforte = true;
+							JFrame creaCassaforteFrame = new CreaCassaforteFrame(c, frame, passwordCassaforte, modelloRubrica);
+							creaCassaforteFrame.setVisible(true);
+							frame.setVisible(false);
+						}
+					}
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "La cassaforte è già stata creata", "ERROR", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
 		mnGestioneCassaforti.add(mntmCreaCassaforte);
 		
 		JMenuItem mntmVisualizzaCassaforte = new JMenuItem("Visualizza Cassaforti");
+		mntmVisualizzaCassaforte.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					if (c.getCassaforte()!=null) {
+						String provaPassword = JOptionPane.showInputDialog("Inserire la password");
+						if (provaPassword != null) {
+							if (provaPassword.compareTo(c.getCassaforte().getPassword())==0) {
+								JFrame visualizzaCassaforte = new VisualizzaCassaforteFrame(c, frame);
+								visualizzaCassaforte.setVisible(true);
+								frame.setVisible(false);
+							}
+							else if (provaPassword.compareTo("")==0) {
+								JOptionPane.showMessageDialog(null, "Password non inserita", "ERROR", JOptionPane.ERROR_MESSAGE);
+							}
+							else {
+								JOptionPane.showMessageDialog(null, "Password Errata", "ERROR", JOptionPane.ERROR_MESSAGE);
+							}
+						}
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "La cassaforte non esiste", "ERROR", JOptionPane.ERROR_MESSAGE);
+						// TODO rendilo interattivo
+					}
+				} catch (HeadlessException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
 		mnGestioneCassaforti.add(mntmVisualizzaCassaforte);
 		
-		JMenuItem mntmEliminaCassaforte = new JMenuItem("Elimina Cassaforte");
-		mnGestioneCassaforti.add(mntmEliminaCassaforte);
+		JMenuItem mntmModificaContattiCassaforte = new JMenuItem("Modifica Contatti Cassaforte");
+		mntmModificaContattiCassaforte.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (c.getCassaforte()!=null) {
+					String provaPassword = JOptionPane.showInputDialog("Inserire la password");
+					if (provaPassword != null) {
+						if (provaPassword.compareTo(c.getCassaforte().getPassword())==0) {
+							flagModificaCassaforte = true;
+							JFrame modificaCassaforte = new ModificaCassaforteFrame(c, frame, provaPassword, modelloRubrica);
+							modificaCassaforte.setVisible(true);
+							frame.setVisible(false);
+						}
+						else if (provaPassword.compareTo("")==0) {
+							JOptionPane.showMessageDialog(null, "Password non inserita", "ERROR", JOptionPane.ERROR_MESSAGE);
+						}
+						else {
+							JOptionPane.showMessageDialog(null, "Password Errata", "ERROR", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "La cassaforte non esiste", "ERROR", JOptionPane.ERROR_MESSAGE);
+					// TODO rendilo interattivo
+				}
+				
+			}
+		});
+		mnGestioneCassaforti.add(mntmModificaContattiCassaforte);
+		
+		JMenuItem mntmModificaPassword = new JMenuItem("Modifica Password");
+		mntmModificaPassword.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (c.getCassaforte()!=null) {
+					String provaPassword = JOptionPane.showInputDialog("Inserire la password");
+					if (provaPassword != null) {
+						if (provaPassword.compareTo(c.getCassaforte().getPassword())==0) {
+							String nuovaPassword = JOptionPane.showInputDialog("Inserire la nuova password");
+							if (nuovaPassword != null) {
+								if (nuovaPassword.compareTo(provaPassword) == 0) {
+									JOptionPane.showMessageDialog(null, "La nuova password è uguale alla vecchia", "ERROR", JOptionPane.ERROR_MESSAGE);
+								}
+								else if (nuovaPassword.compareTo("") == 0) {
+									JOptionPane.showMessageDialog(null, "Nuova password non inserita", "ERROR", JOptionPane.ERROR_MESSAGE);
+								}
+								else {
+									try {
+//										c.transactionBegin();
+										try {
+											c.cambiaPasswordCassaforte(provaPassword, nuovaPassword);
+										} catch (Exception ex) {
+											JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+										}
+										c.cambiaPasswordCassaforteDB(nuovaPassword);
+//										c.transactionCommit();
+										JOptionPane.showMessageDialog(null, "Password modificata con successo");
+									} catch (SQLException ex) {
+										JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+									}
+								}
+							}
+						}
+						else if (provaPassword.compareTo("")==0) {
+							JOptionPane.showMessageDialog(null, "Password non inserita", "ERROR", JOptionPane.ERROR_MESSAGE);
+						}
+						else {
+							JOptionPane.showMessageDialog(null, "Password Errata", "ERROR", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "La cassaforte non esiste", "ERROR", JOptionPane.ERROR_MESSAGE);
+					// TODO rendilo interattivo
+				}
+			}
+		});
+		mnGestioneCassaforti.add(mntmModificaPassword);
 		
 		JMenu mnGestioneDuplicati = new JMenu("Gestione Duplicati");
 		menuBar.add(mnGestioneDuplicati);
@@ -122,9 +244,7 @@ public class Home extends JFrame {
 		mntmAccountDuplicati = new JMenuItem("Cerca Account Duplicati");
 		mntmAccountDuplicati.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
-				ArrayList<Contatto>listaRisultati = c.verificaDuplicatiAccount();		
-				
+				ArrayList<Contatto>listaRisultati = c.verificaDuplicatiAccount();
 				JFrame GestioneDuplicatiFrame = new GestioneDuplicatiAccountFrame(c,frame,listaRisultati);
 				frame.setVisible(false);
 				GestioneDuplicatiFrame.setVisible(true);
@@ -133,13 +253,53 @@ public class Home extends JFrame {
 		mnGestioneDuplicati.add(mntmAccountDuplicati);
 		
 		contentPane = new JPanel();
+		contentPane.addAncestorListener(new AncestorListener() {
+			
+			@Override
+			public void ancestorRemoved(AncestorEvent event) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void ancestorMoved(AncestorEvent event) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void ancestorAdded(AncestorEvent event) {
+				if (contentPane.isShowing()) {
+                    if(isPossibiliModifiche) {
+                        if(frameCheHaModificatoQualcosa.compareTo("AggiungiContatto")==0&&modelloRubrica.getRowCount()<c.getListaContatti().size()) {
+                            //aggiunta contatto nella tab di rubrica
+                            modelloRubrica.addRow(new Object[]{
+                                    c.getListaContatti().get(c.getListaContatti().size()-1).getID(),
+                                    c.getListaContatti().get(c.getListaContatti().size()-1).getPrefissoNome(),
+                                    c.getListaContatti().get(c.getListaContatti().size()-1).getNome(),
+                                    c.getListaContatti().get(c.getListaContatti().size()-1).getCognome()
+                            });
+                            }else if (frameCheHaModificatoQualcosa.compareTo("ModificaContattoFrame")==0) {
+                                //TODO implementare aggiorna nella modifica contatto
+                            }else if(frameCheHaModificatoQualcosa.compareTo("ModificaContattiCassaforteFrame")==0) {
+                                //TODO implementare aggiorna quando un contatto viene aggiunto nella cassaforte
+                            }
+
+
+                        //alla fine ripristina isPossibiliModifiche
+                          isPossibiliModifiche=false;
+                    }
+                }
+				
+			}
+		});
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		SpringLayout sl_contentPane = new SpringLayout();
 		contentPane.setLayout(sl_contentPane);
 		
 		//Rubrica = new JTable();
-				DefaultTableModel modelloRubrica = new DefaultTableModel () {
+				modelloRubrica = new DefaultTableModel () {
 					@Override
 			        public boolean isCellEditable(int row, int column) {
 			           //all cells false
@@ -156,9 +316,11 @@ public class Home extends JFrame {
 		btnAggiungiContatto.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				JFrame aggiungiContatto = new AggiungiContatto (c,frame);
+				JFrame aggiungiContatto = new AggiungiContattoFrame (c,frame);
 				frame.setVisible(false);
 				aggiungiContatto.setVisible(true);
+				isPossibiliModifiche=true;
+                frameCheHaModificatoQualcosa="AggiungiContatto";
 			}
 		});
 		btnAggiungiContatto.setIcon(new ImageIcon(Home.class.getResource("/Immagini/aggiungi.jpg")));
@@ -171,6 +333,10 @@ public class Home extends JFrame {
 				//System.out.println(RubricaTable.getSelectedRow());
             	int id = (int) RubricaTable.getModel().getValueAt(RubricaTable.getSelectedRow(),0);
             	ModificaContattoFrame newFrame = new ModificaContattoFrame(c, frame, id);
+            	isPossibiliModifiche=true;
+                frameCheHaModificatoQualcosa="ModificaContattoFrame";
+                newFrame.setVisible(true);
+                frame.setVisible(false);
 			}
 		});
 		btnModificaContatto.setIcon(new ImageIcon(Home.class.getResource("/immagini/edit.png")));
@@ -190,7 +356,7 @@ public class Home extends JFrame {
 							JOptionPane.showMessageDialog(null, "Contatto eliminato con successo");
 						} catch (SQLException ex) {
 							JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
-							ex.printStackTrace(); 
+							ex.printStackTrace(); //TODO toglierlo
 						}
 					}
 					
@@ -222,6 +388,8 @@ public class Home extends JFrame {
 		               // System.out.println(RubricaTable.getSelectedRow());
 		            	int id = (int) RubricaTable.getModel().getValueAt(RubricaTable.getSelectedRow(),0);
 		            	VisualizzaContattoFrame newFrame = new VisualizzaContattoFrame(c, frame, id);
+		            	newFrame.setVisible(true);
+		            	frame.setVisible(false);
 		            }
 		    }
 		});
@@ -246,4 +414,41 @@ public class Home extends JFrame {
 		RubricaTable.removeColumn(RubricaTable.getColumnModel().getColumn(0));
 		scrollPaneRubrica.setViewportView(RubricaTable);
 	}
+	
+//	void aggiornaDopoCreazioneCassaforte () {
+//		ArrayList<Contatto> contattiInCassaforte = new ArrayList<>(c.getContattiCassaforte());
+//		for (Contatto contatto : contattiInCassaforte) {
+//			for (int i = 0; i < modelloRubrica.getRowCount() ; i++) {
+//				if ((int)modelloRubrica.getValueAt(i, 0) == contatto.getID()) {
+//					modelloRubrica.removeRow(i);
+//				}
+//			}
+//		}
+//		flagCreaCassaforte = false;
+//	}
+//	
+//	void aggiornaDopoModificaCassaforte () {	// TODO vedere con Raimondo
+//		ArrayList<Contatto> contattiInCassaforte = new ArrayList<>(c.getContattiCassaforte());
+//		for (Contatto contatto : contattiInCassaforte) {
+//			for (int i = 0; i < modelloRubrica.getRowCount() ; i++) {
+//				if ((int)modelloRubrica.getValueAt(i, 0) == contatto.getID()) {
+//					modelloRubrica.removeRow(i);
+//				}
+//			}
+//		}
+//		ArrayList<Contatto> listaContatti = new ArrayList<>(c.getListaContatti());
+//		for (int i = 0; i < listaContatti.size(); i++) {
+//			if (listaContatti.get(i).getID() != (int)modelloRubrica.getValueAt(i, 0)) {
+//				modelloRubrica.insertRow(i, new Object[] {
+//						listaContatti.get(i).getID(),
+//						listaContatti.get(i).getPrefissoNome(),
+//						listaContatti.get(i).getNome(),
+//						listaContatti.get(i).getCognome()
+//				});
+//			}
+//			System.out.println(listaContatti.get(i).StampaContatto());
+//			System.out.println(modelloRubrica.getValueAt(i, 0));
+//		}
+//		flagModificaCassaforte = false;
+//	}
 }

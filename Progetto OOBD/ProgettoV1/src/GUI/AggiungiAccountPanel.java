@@ -76,7 +76,7 @@ public String getFraseDiBenvenuto() {
     return textAreaFraseDiBenvenuto.getText();
 }
 
-public void setAll(String nickname,String mail, String fornitore,String fraseDiBenvenuto) {
+public void setAll(String fornitore,String nickname,String mail, String fraseDiBenvenuto) {
     textFieldNickname.setText(nickname);
     ComboBoxMail.setSelectedItem(mail) ;
     textFieldForinitore.setText(fornitore);

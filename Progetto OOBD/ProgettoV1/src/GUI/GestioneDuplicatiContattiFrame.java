@@ -53,7 +53,7 @@ public class GestioneDuplicatiContattiFrame extends JFrame {
 	private JButton btnNewButton_1;
 	private JButton btnNewButton_2;
 	private JFrame frame;
-	private ArrayList<String>localList = new ArrayList<>();
+	private ArrayList<String>localList = new ArrayList<>(); 
 	/**
 	 * Launch the application.
 	 */

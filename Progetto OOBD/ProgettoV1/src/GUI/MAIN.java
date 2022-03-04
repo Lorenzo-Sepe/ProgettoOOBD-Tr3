@@ -7,29 +7,26 @@ import javax.swing.JFrame;
 import Controller.Controller;
 
 // TODO: Auto-generated Javadoc
-/**
- * The Class GUIMain.
- */
+
 public class MAIN {
 
-	/**
-	 * Launch the application.
-	 *
-	 * @param args the arguments
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Controller c=new Controller();
-					c.dumpDati();
-					Home window = new Home(c);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    Controller c=new Controller();
+                    System.out.println("dump dati iniziato  sono fuori dal controller ");
+
+                    c.dumpDati();
+                    System.out.println("dump dati finito sono fuori dal controller ");
+                    Home window = new Home(c);
+                    window.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
 
 }

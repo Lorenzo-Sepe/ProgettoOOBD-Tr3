@@ -11,10 +11,10 @@ import java.awt.GridLayout;
 public class AggiungiIndirizzoPanel extends JPanel {
 
 	private JTextField textFieldVia;
-	private JTextField textFieldCitt‡;
+	private JTextField textFieldCitt√†;
 	private JTextField textFieldCodicePostale;
 	private JTextField textFieldNazione;
-	private JTextField textFieldIdentificatore;
+	private JTextField textFieldTag;
 	
 	public AggiungiIndirizzoPanel() {
 		setLayout(new GridLayout(6,3));
@@ -26,12 +26,12 @@ public class AggiungiIndirizzoPanel extends JPanel {
 		add(textFieldVia);
 		textFieldVia.setColumns(15);
 		
-		JLabel lbCitt‡ = new JLabel("citt‡");
-		add(lbCitt‡);
+		JLabel lbCitt√† = new JLabel("citt√†");
+		add(lbCitt√†);
 		
-		textFieldCitt‡ = new JTextField();
-		add(textFieldCitt‡);
-		textFieldCitt‡.setColumns(15);
+		textFieldCitt√† = new JTextField();
+		add(textFieldCitt√†);
+		textFieldCitt√†.setColumns(15);
 		
 		JLabel lbCodicePostale = new JLabel("codice postale");
 		add(lbCodicePostale);
@@ -47,12 +47,12 @@ public class AggiungiIndirizzoPanel extends JPanel {
 		add(textFieldNazione);
 		textFieldNazione.setColumns(15);
 		
-		JLabel lbIdentificatore = new JLabel("identificatore");
-		add(lbIdentificatore);
+		JLabel lbITag = new JLabel("tag");
+		add(lbITag);
 		
-		textFieldIdentificatore = new JTextField();
-		add(textFieldIdentificatore);
-		textFieldIdentificatore.setColumns(15);
+		textFieldTag = new JTextField();
+		add(textFieldTag);
+		textFieldTag.setColumns(15);
 		
 	}
 	
@@ -60,8 +60,8 @@ public class AggiungiIndirizzoPanel extends JPanel {
 		return textFieldVia.getText();
 	}
 	
-	public String getCitt‡ ( ) {
-		return textFieldCitt‡.getSelectedText();
+	public String getCitt√† ( ) {
+		return textFieldCitt√†.getText();
 	}
 	
 	public String getCodicePostale () {
@@ -72,8 +72,16 @@ public class AggiungiIndirizzoPanel extends JPanel {
 		return textFieldNazione.getText();
 	}
 	
-	public String getIdentificatore () {
-		return textFieldIdentificatore.getText();
+	public String getTag () {
+		return textFieldTag.getText();
+	}
+	
+	public void setAll (String tag, String via, String citt√†, String codicePostale, String nazione) {
+		textFieldVia.setText(via);
+		textFieldCitt√†.setText(citt√†);
+		textFieldCodicePostale.setText(codicePostale);
+		textFieldNazione.setText(nazione);
+		textFieldTag.setText(tag);
 	}
 	
 }

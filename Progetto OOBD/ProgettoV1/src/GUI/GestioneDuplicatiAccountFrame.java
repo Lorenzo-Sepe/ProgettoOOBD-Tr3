@@ -203,7 +203,15 @@ public class GestioneDuplicatiAccountFrame extends JFrame {
 		panelTabella.add(toolBar);
 		
 		btnBack = new JButton("Indietro");
-		btnBack.setIcon(new ImageIcon(GestioneDuplicatiAccountFrame.class.getResource("/immagini/back.jpg")));
+		btnBack.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				frameChiamante.setVisible(true);
+				frame.setVisible(false);
+				frame.dispose();
+			}
+		});
+		btnBack.setIcon(new ImageIcon(GestioneDuplicatiAccountFrame.class.getResource("/Immagini/back.jpg")));
 		toolBar.add(btnBack);
 		
 		btnModifica = new JButton("Modifica Account");

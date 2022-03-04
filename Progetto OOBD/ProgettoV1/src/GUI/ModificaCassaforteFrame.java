@@ -49,7 +49,7 @@ public class ModificaCassaforteFrame extends JFrame {
 	private ArrayList<Contatto> RAIlistaContattiCassaforte = new ArrayList<>();
 	
 	
-	public  ModificaCassaforteFrame (Controller controller, JFrame chiamante, String password) {
+	public  ModificaCassaforteFrame (Controller controller, JFrame chiamante, String password, DefaultTableModel modelloContatti) {
 		frame = this;
 		frameChiamante = chiamante;
 		c = controller;
@@ -67,22 +67,22 @@ public class ModificaCassaforteFrame extends JFrame {
 		scrollPaneRubrica.setBounds(15, 43, 390, 232);
 		contentPane.add(scrollPaneRubrica);
 		
-		//Contatti = new JTable();
-		DefaultTableModel modelloContatti =  new DefaultTableModel() {
-	        @Override
-	        public boolean isCellEditable(int row, int column) {
-	           //all cells false
-	           return false;
-	        }};
+//		//Contatti = new JTable();
+//		DefaultTableModel modelloContatti =  new DefaultTableModel() {
+//	        @Override
+//	        public boolean isCellEditable(int row, int column) {
+//	           //all cells false
+//	           return false;
+//	        }};
 		
 		ContattiTable = new JTable(modelloContatti);
 		ListSelectionModel listenerContattoSelezionato=ContattiTable.getSelectionModel();
 		ContattiTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		modelloContatti.addColumn("Id");
-		modelloContatti.addColumn("prefisso");
-		modelloContatti.addColumn("nome"); 
-		modelloContatti.addColumn("cognome"); 
+//		modelloContatti.addColumn("Id");
+//		modelloContatti.addColumn("prefisso");
+//		modelloContatti.addColumn("nome"); 
+//		modelloContatti.addColumn("cognome"); 
 		
 //		listaContatti = c.getListaContatti();
 //		ArrayList<Integer> listaContattiNonInCassaforte = new ArrayList<>();
@@ -203,7 +203,8 @@ public class ModificaCassaforteFrame extends JFrame {
 					modelloCassaforte.removeRow(row);
 					RAIlistaContatti.add(RAIlistaContattiCassaforte.get(row));
 					RAIlistaContattiCassaforte.remove(row);
-					modelloContatti.addRow(new Object[]{prefisso, nome, cognome});
+					int posizioneContatto = 0; //TODO implementare c.posizioneContatto(modelRubrica,nome,cognome)
+					modelloContatti.insertRow(posizioneContatto, new Object[]{id,prefisso, nome, cognome});
 					try {
 						c.eliminaContattoDaCassaforteDB(id);
 					} catch (SQLException ex) {

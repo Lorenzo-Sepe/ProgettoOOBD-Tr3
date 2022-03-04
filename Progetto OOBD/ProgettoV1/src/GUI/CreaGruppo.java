@@ -1,4 +1,4 @@
-package Gui;
+package GUI;
 
 import Model.*;
 import java.awt.BorderLayout;
@@ -9,6 +9,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import Controller.Controller;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -18,6 +21,7 @@ import javax.swing.SpringLayout;
 import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 
 public class CreaGruppo extends JFrame {
 
@@ -25,15 +29,27 @@ public class CreaGruppo extends JFrame {
 	private JTextField nomeGruppo;
 	private JTable Contatti;
 	private JTable Gruppo;
+	
+	static JFrame frameChiamante;
+	static JFrame frame;
+	static Controller c;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
+		Controller baldr = new Controller();
+		JFrame f = new JFrame();
+		try {
+			baldr.dumpDati();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		EventQueue.invokeLater(new Runnable() {			
 			public void run() {
 				try {
-					CreaGruppo frame = new CreaGruppo();
+					CreaGruppo frame = new CreaGruppo(baldr,f);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -45,7 +61,10 @@ public class CreaGruppo extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public CreaGruppo() {
+	public CreaGruppo(Controller controller, JFrame chiamante) {
+		frame = this;
+		c = controller;
+		frameChiamante = frame;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -91,15 +110,25 @@ public class CreaGruppo extends JFrame {
 		modelloContatti.addColumn("nome"); 
 		modelloContatti.addColumn("cognome"); 
 		
-		ArrayList<String> arrayListContattiNome = new ArrayList<>(Arrays.asList("Rai", "Lore", "Ale","Jesico"));
-		ArrayList<String> arrayListContattiCognome = new ArrayList<>(Arrays.asList("Mor", "Sep", "Tri","Cal"));
-		ArrayList<String> arrayListContattiPrefisso = new ArrayList<>(Arrays.asList("Isabel","Cavaliere","Trincalex","Amante"));
+//		ArrayList<String> arrayListContattiNome = new ArrayList<>(Arrays.asList("Rai", "Lore", "Ale","Jesico"));
+//		ArrayList<String> arrayListContattiCognome = new ArrayList<>(Arrays.asList("Mor", "Sep", "Tri","Cal"));
+//		ArrayList<String> arrayListContattiPrefisso = new ArrayList<>(Arrays.asList("Isabel","Cavaliere","Trincalex","Amante"));
+		
+		ArrayList<Contatto> listaContattiArrayList = c.getListaContatti();
+		
+		for (Contatto contatto : listaContattiArrayList) {
+			modelloContatti.addRow(new Object[] {
+				contatto.getPrefissoNome(),
+				contatto.getNome(),
+				contatto.getCognome()
+			});
+		}
 		
 		// Append a row 
-		for(int i=0;i<arrayListContattiNome.size();i++) {
-			modelloContatti.addRow(new Object[]{arrayListContattiPrefisso.get(i), arrayListContattiNome.get(i), arrayListContattiCognome.get(i)});
-			
-		}
+//		for(int i=0;i<arrayListContattiNome.size();i++) {
+//			modelloContatti.addRow(new Object[]{arrayListContattiPrefisso.get(i), arrayListContattiNome.get(i), arrayListContattiCognome.get(i)});
+//			
+//		}
 		scrollPane.setViewportView(Contatti);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();

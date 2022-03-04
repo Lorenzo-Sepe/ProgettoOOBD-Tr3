@@ -25,7 +25,7 @@ public class AggiungiIndirizzoFrame extends JDialog {
 	static private JFrame chiamante;
 	static private JDialog frame;
 	private JTextField textVia;
-	private JTextField textCitt‡;
+	private JTextField textCitt√†;
 	private JTextField textCodicePostale;
 	private JTextField textNazione;
 	private JTextField textIdentificatore;
@@ -72,10 +72,10 @@ public class AggiungiIndirizzoFrame extends JDialog {
 		lblNewLabel_1.setBounds(10, 69, 129, 14);
 		contentPanel.add(lblNewLabel_1);
 		
-		textCitt‡ = new JTextField();
-		textCitt‡.setBounds(174, 66, 161, 20);
-		contentPanel.add(textCitt‡);
-		textCitt‡.setColumns(10);
+		textCitt√† = new JTextField();
+		textCitt√†.setBounds(174, 66, 161, 20);
+		contentPanel.add(textCitt√†);
+		textCitt√†.setColumns(10);
 		
 		JLabel lblNewLabel_2 = new JLabel("Inserire il codice postale");
 		lblNewLabel_2.setBounds(10, 94, 129, 14);

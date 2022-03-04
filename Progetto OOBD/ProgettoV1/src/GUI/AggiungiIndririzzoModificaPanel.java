@@ -11,7 +11,7 @@ import java.awt.GridLayout;
 public class AggiungiIndririzzoModificaPanel extends JPanel {
 
 	private JTextField textFieldVia;
-	private JTextField textFieldCitt‡;
+	private JTextField textFieldCitt√†;
 	private JTextField textFieldCodicePostale;
 	private JTextField textFieldNazione;
 	private JTextField textFieldTag;
@@ -28,12 +28,12 @@ public class AggiungiIndririzzoModificaPanel extends JPanel {
 		add(textFieldVia);
 		textFieldVia.setColumns(15);
 		
-		JLabel lbCitt‡ = new JLabel("citt‡");
-		add(lbCitt‡);
+		JLabel lbCitt√† = new JLabel("citt√†");
+		add(lbCitt√†);
 		
-		textFieldCitt‡ = new JTextField();
-		add(textFieldCitt‡);
-		textFieldCitt‡.setColumns(15);
+		textFieldCitt√† = new JTextField();
+		add(textFieldCitt√†);
+		textFieldCitt√†.setColumns(15);
 		
 		JLabel lbCodicePostale = new JLabel("codice postale");
 		add(lbCodicePostale);
@@ -76,8 +76,8 @@ public class AggiungiIndririzzoModificaPanel extends JPanel {
 		return textFieldVia.getText();
 	}
 	
-	public String getCitt‡ ( ) {
-		return textFieldCitt‡.getText();
+	public String getCitt√† ( ) {
+		return textFieldCitt√†.getText();
 	}
 	
 	public String getCodicePostale () {
@@ -96,9 +96,9 @@ public class AggiungiIndririzzoModificaPanel extends JPanel {
 		return rbtPrincipaleSi.isSelected() ? true : false;
 	}
 	
-	public void setAll (String tag, String via, String citt‡, String codicePostale, String nazione, boolean principale) {
+	public void setAll (String tag, String via, String citt√†, String codicePostale, String nazione, boolean principale) {
 		textFieldVia.setText(via);
-		textFieldCitt‡.setText(citt‡);
+		textFieldCitt√†.setText(citt√†);
 		textFieldCodicePostale.setText(codicePostale);
 		textFieldNazione.setText(nazione);
 		textFieldTag.setText(tag);

@@ -23,6 +23,7 @@ import Model.EnumPrefissoNumero;
 public class AggiungiNumeroPanel extends JPanel{
 
 	private JTextField textFieldTagNumero;
+	JTextField textFieldNumero;
 	JTextField textFieldPrefissoNnmero;
 	JFormattedTextField txtNumero;
 	JRadioButton radioFisso ;
@@ -30,7 +31,7 @@ public class AggiungiNumeroPanel extends JPanel{
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public AggiungiNumeroPanel() {
-		this.setLayout(new GridLayout(5,3));
+		this.setLayout(new GridLayout(4,3));
 	JLabel lbTagNumero = new JLabel("tag");
 	
 	
@@ -78,10 +79,10 @@ public class AggiungiNumeroPanel extends JPanel{
 		
 		this.add(lbNumero);
 		
-//		JTextField textFieldNumero = new JTextField();
-//		textFieldNumero.setToolTipText("Inserisci Sono dei Numeri");
-//		this.add(textFieldNumero);
-//		textFieldNumero.setColumns(10);
+		textFieldNumero = new JTextField();
+		textFieldNumero.setToolTipText("Inserisci Solo dei Numeri");
+		this.add(textFieldNumero);
+		textFieldNumero.setColumns(10);
 
 		
 		txtNumero = new JFormattedTextField();
@@ -90,7 +91,7 @@ public class AggiungiNumeroPanel extends JPanel{
 		txtNumero.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(new DecimalFormat("#0.###", new DecimalFormatSymbols(Locale.US)))));
 		
 		
-		this.add(txtNumero);
+		this.add(textFieldNumero);
 		
 //		this.add(Box.createHorizontalStrut(10));
 		JLabel lbTipoNumero = new JLabel("Tipo");
@@ -115,9 +116,20 @@ public class AggiungiNumeroPanel extends JPanel{
 		return textFieldPrefissoNnmero.getText();
 	}
 	public String getNumero() {
-		return txtNumero.getText();
+		return textFieldNumero.getText();
 	}
 	public String getTipo() {
 		return radioFisso.isSelected() ? radioFisso.getText() : radioMobile.getText();
+	}
+	
+	public void setAll(String tag,String prefisso,String numero,String tipo ) {
+        textFieldTagNumero.setText(tag);
+        textFieldPrefissoNnmero.setText(prefisso);
+        textFieldNumero.setText(numero);
+        if(tipo.compareTo("Fisso")==0) {
+            radioFisso.setSelected(true);
+        }else {
+            radioMobile.setSelected(true);
+        }
 	}
 }

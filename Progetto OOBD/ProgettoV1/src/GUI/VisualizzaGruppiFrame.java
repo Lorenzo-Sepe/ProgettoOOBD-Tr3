@@ -59,11 +59,13 @@ public class VisualizzaGruppiFrame extends JFrame {
 		c = controller;
 
 		
-		try {
-			c.dumpListaGruppi();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (c.getListaGruppi().isEmpty()) {
+			try {
+				c.dumpListaGruppi();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		setResizable(false);
 		setTitle("Visualizza gruppi");

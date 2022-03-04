@@ -11,8 +11,9 @@ import javax.swing.table.DefaultTableModel;
 @SuppressWarnings("serial")
 public class SetDeputatoPanel extends JPanel {
 private 		ArrayList<JComboBox<Object>> arrayListnComboBox= new ArrayList<JComboBox<Object>>();
-
-	public SetDeputatoPanel(DefaultTableModel modelloNumeriDiTelefono) {
+private   static     JComboBox<Object> comboBOxSingolaIstanza=new JComboBox<Object>();
+ 
+	public SetDeputatoPanel(DefaultTableModel modelloNumeriDiTelefono) { 
 
 		
 		JPanel panelBloccoListaNumeri = new JPanel();
@@ -62,6 +63,63 @@ private 		ArrayList<JComboBox<Object>> arrayListnComboBox= new ArrayList<JComboB
 
 	}
 	
+	
+public SetDeputatoPanel(DefaultTableModel modelloNumeriDiTelefono,String tagNumeroInserito,String prefissoNumeroInserito,String numeroInserito,String tipoNumeroInserito) { 
+
+
+		
+		JPanel panel = new JPanel(new GridLayout(1, 2));
+		 ArrayList<String> arrayListnumeroDeputato = new ArrayList<String>();
+		String numeroDeputatoTmp;
+		
+		
+		for (int i = 0; i < modelloNumeriDiTelefono.getRowCount(); i++) {
+
+			numeroDeputatoTmp = "";
+			//parte da 1 per non prendere la colonna tag e finisce a -1 per non prendere la colonna tipo
+			for (int colonna = 1; colonna < modelloNumeriDiTelefono.getColumnCount()-1; colonna++) {
+
+				numeroDeputatoTmp += " " + modelloNumeriDiTelefono.getValueAt(i, colonna).toString();
+			}
+			if (modelloNumeriDiTelefono.getValueAt(i, 3).toString().compareToIgnoreCase(tipoNumeroInserito) != 0)
+				arrayListnumeroDeputato.add(numeroDeputatoTmp);
+			
+			}
+
+			for (String dep : arrayListnumeroDeputato) {
+				System.out.println("numeria arraylisy setdeputato :  "+dep);
+			}
+//			panel.add(new JLabel(tagNumeroInserito+" "));
+//			panel.add(new JLabel(prefissoNumeroInserito));
+//			panel.add(new JLabel(numeroInserito+" "));
+//			panel.add(new JLabel(tipoNumeroInserito));
+			
+			panel.add(new JLabel(tagNumeroInserito+" "+prefissoNumeroInserito+numeroInserito+" "+tipoNumeroInserito));
+		
+				comboBOxSingolaIstanza =new JComboBox<Object>(arrayListnumeroDeputato.toArray());
+				System.out.println("primo elemento");
+				arrayListnComboBox.add(comboBOxSingolaIstanza);
+				panel.add(comboBOxSingolaIstanza);
+				
+			
+
+			this.add(panel);
+
+
+	}
+public String getPrefissoDeputato(){
+	String NumeroCompleto=  comboBOxSingolaIstanza.getSelectedItem().toString();
+	if(NumeroCompleto.startsWith(" " ))NumeroCompleto= NumeroCompleto.replaceFirst(" ","");
+	return NumeroCompleto.substring(0,NumeroCompleto.lastIndexOf(" "));	
+}
+
+public String getNumeroDeputato(){
+
+	String NumeroCompleto=  comboBOxSingolaIstanza.getSelectedItem().toString();
+	return NumeroCompleto.substring(NumeroCompleto.lastIndexOf(" ")+1);
+}
+
+
 
 	public String getPrefissoDeputato(int index){
 		String NumeroCompleto=  arrayListnComboBox.get(index).getSelectedItem().toString();
@@ -80,4 +138,3 @@ private 		ArrayList<JComboBox<Object>> arrayListnComboBox= new ArrayList<JComboB
 
 	
 }
-
