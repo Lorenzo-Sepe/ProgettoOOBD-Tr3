@@ -96,7 +96,7 @@ public class GestioneDuplicatiAccountFrame extends JFrame {
 		
 		sl_panelLista.putConstraint(SpringLayout.NORTH, scrollPaneContatti, 5, SpringLayout.SOUTH, lblmail);
 		sl_panelLista.putConstraint(SpringLayout.WEST, scrollPaneContatti, 5, SpringLayout.WEST, panelLista);
-		sl_panelLista.putConstraint(SpringLayout.SOUTH, scrollPaneContatti, 0, SpringLayout.SOUTH, panelLista);
+		sl_panelLista.putConstraint(SpringLayout.SOUTH, scrollPaneContatti, -40, SpringLayout.SOUTH, panelLista);
 		sl_panelLista.putConstraint(SpringLayout.EAST, scrollPaneContatti, -5, SpringLayout.EAST, panelLista);
 		panelLista.add(scrollPaneContatti);
 		
@@ -142,11 +142,17 @@ public class GestioneDuplicatiAccountFrame extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				System.out.println("Sono in listner");
+				int cont = modelloAccount.getRowCount();
+				while (cont>0) {
+					int i=0;
+					modelloAccount.removeRow(i);
+					cont--;
+				}
+					
+				
 				int id = (int) tableRisultati.getModel().getValueAt(tableRisultati.getSelectedRow(),0);
 				c.dumpContatto(id);
-				System.out.println(id);
-				int x=c.getInfoContattoAccountQuantità(id);
-				System.out.println(c.getInfoContattoAccountQuantità(id));
+
 				for (int i = 0; i < c.getInfoContattoAccountQuantità(id); i++) {
 					System.out.println("Sono in for");
 					modelloAccount.addRow(new Object[] {
