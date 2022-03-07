@@ -3,59 +3,42 @@ package Model;
 import java.util.ArrayList;
 
 public class Rubrica {
-	private String nome;
 	private ArrayList<Contatto> contatti= new ArrayList<>();
 	private ArrayList<Gruppo> gruppi = new ArrayList<>();
 	
-	private Cassaforte cassaforte =null;
-	
-	public Rubrica (String nome) {
-		this.setNome(nome);
-	}
-	public String getNome() {
-		return nome;
-	}
+	private Cassaforte cassaforte =null;	
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-	
-	public void aggiungiContatto ( Contatto c) {
+	/**
+	 * aggiunge un contatto alla rubrica
+	 * @param c oggetto della classe Contatto che corrisponde al contatto da aggiungere alla rubrica
+	 */
+	public void aggiungiContatto (Contatto c) {
 		contatti.add(c);
 		
 	}
 	
+	/**
+	 * elimina un contatto dalla rubrica
+	 * @param c oggetto della classe contatto che corrisponde al contatto da eliminare dalla rubrica
+	 * @return	valore booleano che rappresenta la riuscita o meno dell'eliminazione del contatto dalla rubrica
+	 */
 	public boolean eliminaContatto (Contatto c) {
 		boolean riuscita;
 		riuscita = contatti.remove(c);
 		return riuscita;
 	}
-	public void modificaContatto (Contatto c, int op, String modifica) {
-		switch (op)
-		{
-		case 1:
-			c.setPrefissoNome(modifica);
-		break;
-		case 2:
-			c.setNome(modifica);
-		break;
-		case 3:
-			c.setCognome(modifica);
-		break;
-		case 4:
-			c.setPathFoto(modifica);
-		break;
-		case 5:
-			c.aggiungiEmail(modifica);
-		}
-	}
+	
+	
+	/**
+	 * restituisce la lista dei contatti della rubrica
+	 * @return ArrayList di Contatto corrispondente alla lista dei contatti della rubrica
+	 */
 	public ArrayList<Contatto> getListaContatti(){
-		return contatti;
-		
+		return contatti;		
 	}
 	/**
-	 * 
-	 * @param id
+	 * restituisce il contatto con l'id inserito
+	 * @param id identificatore del contatto da restituire
 	 * @return contatto associato al id inserito
 	 */
 	public Contatto getContatto(int id) {
@@ -65,11 +48,20 @@ public class Rubrica {
 		}
 		return null;
 	}
+	
+	/**
+	 * crea un gruppo e lo aggiunge alla lista dei gruppi della rubrica
+	 * @param nomeGruppo Stringa che corrisponde al nome del gruppo da aggiungere
+	 */
 	public void creaGruppo(String nomeGruppo) {
 		Gruppo gruppo = new Gruppo(nomeGruppo);
 		gruppi.add(gruppo);
 	}
 	
+	/**
+	 * elimina un gruppo dalla lista
+	 * @param nomeGruppo Stringa che corrisponde al nome del gruppo da eliminare
+	 */
 	public void eliminaGruppo(String nomeGruppo) {
 		for (Gruppo gruppo : gruppi) {
 			if (nomeGruppo.compareTo(gruppo.getNomeGruppo())==0) {
@@ -79,24 +71,42 @@ public class Rubrica {
 		}
 	}
 	
+	/**
+	 * restituisce la lista dei gruppi della rubrica
+	 * @return ArrayList di Gruppo che corrisponde alla lista dei gruppi della rubrica
+	 */
 	public ArrayList<Gruppo> getListaGruppi (){
 		return gruppi;
 	}
 	
+	/**
+	 * restituisce un gruppo della lista
+	 * @param nomeGruppo nome del gruppo da restituire
+	 * @return oggetto della classe Gruppo
+	 */
+	public Gruppo getGruppo (String nomeGruppo) {
+		for (Gruppo gruppo : gruppi) {
+			if (nomeGruppo.compareTo(gruppo.getNomeGruppo())==0) {
+				return gruppo;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * crea la cassaforte della rubrica
+	 * @param password Stringa che corrisponde alla password della cassaforte
+	 */
 	public void creaCassaforte(String password) {
 		if(cassaforte==null)
 		cassaforte = new Cassaforte( password);
 	}
-	
-	public void aggiungiContattoCassaforte(int id) {
-		
-		cassaforte.aggiungiContatto(getContatto(id));
-		contatti.remove(getContatto(id));
-	}
 
+	/**
+	 * restituisce la cassaforte della rubrica
+	 * @return oggetto della classe Cassaforte corrispondente alla cassaforte della rubrica
+	 */
 	public Cassaforte  getCassaforte() {
 		return cassaforte;
-	}
-
-	
+	}	
 }
