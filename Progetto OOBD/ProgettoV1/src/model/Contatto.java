@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 
 import Model.NumeriTelefonici;
 
+@SuppressWarnings("unused")
 public class Contatto {
 	private int contatto_ID;
 	private String prefissoNome;
@@ -44,166 +45,238 @@ public class Contatto {
 		
 	}
 
-public void provaDao() {
 	
-}
-	
-	public static void main(String[] args) {
-		String path="C:\\Users\\Utente\\Pictures\\Camera";
-		
-		
-	}
-	
+	/**
+	 * imposta il codice identificativo del contatto
+	 * @param id valore che verrà assegnato all'identificatore univoco del contatto
+	 */
 	public void setID (int id) {
 		this.contatto_ID = id;
 	}
 	
+	/**
+	 * restituisce l'identificativo del contatto
+	 * @return il valore identificativo univoco del contatto
+	 */
 	public int getID () {
 		return contatto_ID;
 	}
 	
+	/**
+	 * imposta il prefisso del nome del contatto
+	 * @param pref stringa che verrà assegnata al prefisso del nome del contatto
+	 */
 	public void setPrefissoNome (String pref) {
 		this.prefissoNome = pref;
 	}
 	
+	/**
+	 * restituisce il prefisso del nome del contatto
+	 * @return stringa che corrisponde al prefisso del contatto
+	 */
 	public String getPrefissoNome () {
 		return prefissoNome;
 	}
 	
+	/**
+	 * imposta il nome del contatto
+	 * @param stringa che verrà assegnato al nome del contatto
+	 */
 	public void setNome (String nome) {
 		this.nome = nome;
 	}
 	
+	/**
+	 * restituisce il nome del contatto
+	 * @return stringa che corrisponde al nome del contatto
+	 */
 	public String getNome () {
 		return nome;
 	}
 	
+	/**
+	 * imposta il cognome del contatto
+	 * @param cognome stringa che verrà assegnato al cognome del contatto
+	 */
 	public void setCognome (String cognome) {
 		this.cognome = cognome;
 	}
 	
+	/**
+	 * restituisce il cognome del contatto
+	 * @return stringa che corrisponde al cognome del contatto
+	 */
 	public String getCognome () {
 		return cognome;
 	}
 	
+	/**
+	 * imposta il path della foto che verrà assegnata al contatto
+	 * @param PF stringa che verrà assegnata al path della foto contatto
+	 */
 	public void setPathFoto (String PF) {
 		this.pathFoto = PF;
 	}
 	
+	/**
+	 * restituisce il path della foto del contatto
+	 * @return stringa che corrisponde al path della foto contatto
+	 */
 	public String getPathFoto () { 
 		return pathFoto;
 	}
 	
+	/**
+	 * aggiunge un indirizzo alla lista di indirizzi del contatto
+	 * @param i oggetto della classe Indirizzi che verrà aggiunto all'ArrayList di oggetti Indirizzi
+	 */
 	public void aggiungiIndirizzo (Indirizzi i) {
 		listaIndirizzi.add(i);
 	}
-	public void aggiungiIndirizzo(ArrayList<Indirizzi>arraylist){
-		if(listaIndirizzi.isEmpty()) {
-			listaIndirizzi=arraylist;
-		}else {
-			listaIndirizzi.addAll(arraylist);
-		}
-	}
 	
+	/**
+	 * elimina un indirizzo alla lista di indirizzi del contatto
+	 * @param i oggetto della classe indirizzo che corrisponde all'elemento nella ArrayList di Indirizzi 
+	 * @return valore booleano che rappresenta la riuscita o meno dell'eliminazione dell'indirizzo dalla lista
+	 */
 	public boolean EliminaIndirizzo (Indirizzi i) {
 		boolean riuscita;
 		riuscita = listaIndirizzi.remove(i);
 		return riuscita;
 	}
+	
+	/**
+	 * aggiunge una lista di numeri al contatto
+	 * @param listaNumeri2 ArrayList di oggetti NumeriTelefonici che verrà assegnato alla lista di numeri del contatto
+	 */
+	public void setNumero(ArrayList<NumeriTelefonici> listaNumeri2) {
+        listaNumeri= listaNumeri2;
 
-	public void aggiungiFoto(String path) {
-		pathFoto= new String(path);
-		
-	}
-	
-	
-	
+    }
 
+	/**
+	 * aggiunge una lista di account al contatto
+	 * @param listaAccount2 ArrayList di oggetti Account che verrà assegnato alla lista di account del contatto
+	 */
+    public void setAccount(ArrayList<Account> listaAccount2) {
+        listaAccount=listaAccount2;
+
+    }
+
+    /**
+     * aggiunge una lista di indirizzi al contatto
+     * @param listaIndirizzi2 ArrayList di oggetti Indirizzi che verrà assegnato alla lista di indirizzi del contatto
+     */
+    public void setIndirizzo(ArrayList<Indirizzi> listaIndirizzi2) {
+        listaIndirizzi=listaIndirizzi2;
+    }
+
+    /**
+     * aggiunge una lista di mail al contatto
+     * @param listaEmail2 ArrayList di stringhe che verrà assegnato alla lista di mail del contatto
+     */
+    public void setEmail(ArrayList<String> listaEmail2) {
+            ListaEmail=listaEmail2;
+    }
+	
+	/**
+	 * aggiunge una mail alla lista di mail del contatto
+	 * @param modifica stringa che corrisponde alla mail da aggiungere alla lista
+	 */
 	public void aggiungiEmail(String modifica) {
-		// TODO Auto-generated method stub
 		ListaEmail.add(modifica);
 	}
-	public void aggiungiEmail(ArrayList<String>arraylist){
-		if(ListaEmail.isEmpty()) {
-			ListaEmail=arraylist;
-		}else {
-			ListaEmail.addAll(arraylist);
-		}
+	
+	/**
+	 * aggiunge un numero telefonico alla lista di numeri
+	 * @param numero oggetto della classe NumeriTelefonici che corrisponde al numero da aggiungere alla lista di numeri
+	 */
+	public void aggiungiNumero(NumeriTelefonici numero){
+		listaNumeri.add(numero);
 	}
-public void aggiungiNumero(NumeriTelefonici numero){
-	listaNumeri.add(numero);
-}
-public void aggiungiNumero(ArrayList<NumeriTelefonici>numeri){
-	if(listaNumeri.isEmpty()) {
-		listaNumeri=numeri;
-	}else {
-		listaNumeri.addAll(numeri);
+	
+	/**
+	 * elimina un numero dalla lista dei numeri
+	 * @param numero oggetto della classe NumeriTelefonici che corrisponde al numero da eliminare
+	 */
+	public void eliminaNumero (NumeriTelefonici numero) {
+		listaNumeri.remove(numero);
 	}
-}
-public void aggiungiAccount(Account a) {
-	listaAccount.add(a);
-}
-public void aggiungiAccount(ArrayList<Account>arraylist){
-	if(listaAccount.isEmpty()) {
-		listaAccount=arraylist;
-	}else {
-		listaAccount.addAll(arraylist);
+	
+	/**
+	 * elimina un account dalla lista di account
+	 * @param a oggetto della classe Account che corrisponde all'account che verrà eliminato dalla lista
+	 */
+	public void eliminaAccount (Account a) {
+		listaAccount.remove(a);
 	}
-}
-	public String StampaContatto() { 
-		
+	
+	/**
+	 * restituisce i campi del contatto
+	 * @return stringa composta dalla somma di prefisso, nome e cognome del contatto
+	 */
+	public String StampaContatto() { 		
 		return new String(this.contatto_ID+" "+this.prefissoNome+" "+this.nome+" "+this.cognome) ;
 	}
 
-
+	/**
+	 * restituisce un numero dalla lista
+	 * @param i indice nella lista del numero da restituire
+	 * @return oggetto della classe NumeriTelefonici nella posizione i dell'ArrayList di NumeriTelefonici presente in contatto
+	 */
 	public NumeriTelefonici getNumero(int i) {
 		return listaNumeri.get(i);
 	}
 
-
+	/**
+	 * restituisce un indirizzo dalla lista
+	 * @param j indice nella lista dell'indirizzo da restituire
+	 * @return oggetto della classe Indirizzi nella posizione j dell'ArrayList di Indirizzi presente in contatto
+	 */
 	public Indirizzi getIndirizzo(int j) {
 		return  listaIndirizzi.get(j);
 		
 	}
+	
+	/**
+	 * restituisce un account dalla lista
+	 * @param i indice nella lista dell'account da restituire
+	 * @return oggetto della classe Account nella posizione i dell'ArrayList di Account presente in contatto
+	 */
 	public Account getAccount(int i) {
 		return listaAccount.get(i);
 	}
 
+	/**
+	 * restituisce la lista dei numeri del contatto
+	 * @return ArrayList di NumeriTelefonici corrispondente alla lista dei numeri del contatto
+	 */
 	public ArrayList<NumeriTelefonici> getListaNumeri() {
 		return listaNumeri;
 	
 	}
 
-
+	/**
+	 * restituisce la lista degli indirizzi del contatto
+	 * @return ArrayList di Indirizzi corrispondente alla lista degli indirizzi del contatto
+	 */
 	public ArrayList<Indirizzi> getListaIndirizzi() {
 		return listaIndirizzi;
 	}
 
+	/**
+	 * restituisce la lista degli account del contatto
+	 * @return ArrayList di Account corrispondente alla lista degli account del contatto
+	 */
 	public ArrayList<Account> getListaAccount() {
 		return listaAccount;
 	}
-
-	public ArrayList<Gruppo> getListaGruppo() {
-		return listaGruppo;
-	}
-
-	public void aggiungiGruppo(Gruppo gruppo) {
-		this.listaGruppo.add(gruppo) ;
-	}
-	public void aggiungiGruppo(ArrayList<Gruppo>arraylist){
-		if(listaGruppo.isEmpty()) {
-			listaGruppo=arraylist;
-		}else {
-			listaGruppo.addAll(arraylist);
-		}
-	}
-
-	public Cassaforte getVisibilita() {
-		return visibilita;
-	}
-
-	public void setCassaforte(Cassaforte visibilita) {
-		this.visibilita = visibilita;
-	}
 	
+	/**
+	 * restituisce la lista delle mail del contatto
+	 * @return ArrayList di stringhe corrispondente alla lista dele mail del contatto
+	 */
+	public ArrayList<String> getListaEmail() {
+		return ListaEmail;
+	}	
 }	
