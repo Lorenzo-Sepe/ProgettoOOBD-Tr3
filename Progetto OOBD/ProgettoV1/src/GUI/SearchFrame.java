@@ -22,6 +22,10 @@ import javax.swing.ButtonGroup;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
+import javax.swing.ImageIcon;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class SearchFrame extends JFrame {
 	
@@ -57,20 +61,22 @@ public class SearchFrame extends JFrame {
 	private JLabel labelPrefissoNumero;
 	private JLabel labelNumero;
 	private JPanel panelRadioButtons;
-	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private final ButtonGroup buttonGroup =  new ButtonGroup();
 	private JTextField textFieldNumero;
 	private JTextField textFieldPrefissoNumero;
-	Controller Controller;
-	JFrame FrameChiamante;
-	JFrame Frame;
+	 Controller Controller;
+	 JFrame FrameChiamante;
+	 JFrame frame;
 	
-//	/**
-//	 * Launch the application.
-//	 */
+	/**
+	 * Launch the application.
+	 */
 //	public static void main(String[] args) {
 //		EventQueue.invokeLater(new Runnable() {
 //			public void run() {
 //				try {
+//					
+//					Controller Controller = new Controller();
 //					SearchFrame frame = new SearchFrame(Controller, FrameChiamante);
 //					frame.setVisible(true);
 //				} catch (Exception e) {
@@ -84,10 +90,10 @@ public class SearchFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public SearchFrame(Controller Controller,	JFrame FrameChiamante ) {
-		Frame= this;
+		frame= this;
 		setTitle("Ricerca");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 800, 450);
+		setBounds(100, 100, 650, 418);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -97,7 +103,7 @@ public class SearchFrame extends JFrame {
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, tabbedPane, 10, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, tabbedPane, 0, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, tabbedPane, -30, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, tabbedPane, -35, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, tabbedPane, 0, SpringLayout.EAST, contentPane);
 		contentPane.add(tabbedPane);
 		
@@ -109,12 +115,54 @@ public class SearchFrame extends JFrame {
 	           //all cells false
 	           return false;
 	        }
+	        
+	        
 	        };
 		
+	    modelContatti.addColumn("Id");
 	    modelContatti.addColumn("Prefisso Nome");
 	    modelContatti.addColumn("Nome");
 	    modelContatti.addColumn("Cognome");    
 		
+		DefaultTableModel modelContatti2 =  new DefaultTableModel() {
+	        @Override
+	        public boolean isCellEditable(int row, int column) {
+	           //all cells false
+	           return false;
+	        }
+	        };
+		
+	    modelContatti2.addColumn("Id");
+	    modelContatti2.addColumn("Prefisso Nome");
+	    modelContatti2.addColumn("Nome");
+	    modelContatti2.addColumn("Cognome");  
+	    
+	    DefaultTableModel modelContatti3 =  new DefaultTableModel() {
+	        @Override
+	        public boolean isCellEditable(int row, int column) {
+	           //all cells false
+	           return false;
+	        }
+	        };
+		
+	    modelContatti3.addColumn("Id");
+	    modelContatti3.addColumn("Prefisso Nome");
+	    modelContatti3.addColumn("Nome");
+	    modelContatti3.addColumn("Cognome");  
+	    
+	    DefaultTableModel modelContatti4 =  new DefaultTableModel() {
+	        @Override
+	        public boolean isCellEditable(int row, int column) {
+	           //all cells false
+	           return false;
+	        }
+	        };
+		
+	    modelContatti4.addColumn("Id");
+	    modelContatti4.addColumn("Prefisso Nome");
+	    modelContatti4.addColumn("Nome");
+	    modelContatti4.addColumn("Cognome");  
+	    
 		panelRicercaNome = new JPanel();
 		tabbedPane.addTab("Ricerca per Nome", null, panelRicercaNome, null);
 		SpringLayout sl_panelRicercaNome = new SpringLayout();
@@ -166,22 +214,52 @@ public class SearchFrame extends JFrame {
 		sl_panelRicercaNome.putConstraint(SpringLayout.EAST, scrollPaneContatti, 0, SpringLayout.EAST, panelRicercaNome);
 		panelRicercaNome.add(scrollPaneContatti);
 		
-		tableContatti = new JTable(modelContatti );
+		tableContatti = new JTable(modelContatti);
+		tableContatti.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount()==2) {
+					int row = tableContatti.getSelectedRow();
+					if (row>=0) {
+						int id = (int)modelContatti.getValueAt(row,0);
+						JFrame visualizzaContatto = new VisualizzaContattoFrame(Controller, frame, id);
+						visualizzaContatto.setVisible(true);
+						frame.setVisible(false);
+					}
+				}
+			}
+		});
+		tableContatti.removeColumn(tableContatti.getColumnModel().getColumn(0));
 		scrollPaneContatti.setViewportView(tableContatti);
 		
 		JButton buttonSearchNome = new JButton("Ricerca ");
-		sl_panelRicercaNome.putConstraint(SpringLayout.NORTH, buttonSearchNome, 0, SpringLayout.NORTH, textFieldPrefissoNome);
 		sl_panelRicercaNome.putConstraint(SpringLayout.WEST, buttonSearchNome, -130, SpringLayout.EAST, panelRicercaNome);
-		sl_panelRicercaNome.putConstraint(SpringLayout.SOUTH, buttonSearchNome, 0, SpringLayout.SOUTH, textFieldPrefissoNome);
-		sl_panelRicercaNome.putConstraint(SpringLayout.EAST, buttonSearchNome, -30, SpringLayout.EAST, panelRicercaNome);
+		sl_panelRicercaNome.putConstraint(SpringLayout.EAST, buttonSearchNome, 0, SpringLayout.EAST, scrollPaneContatti);
+		buttonSearchNome.setHorizontalAlignment(SwingConstants.LEFT);
+		sl_panelRicercaNome.putConstraint(SpringLayout.SOUTH, buttonSearchNome, 30, SpringLayout.NORTH, textFieldPrefissoNome);
+		buttonSearchNome.setIcon(new ImageIcon(SearchFrame.class.getResource("/immagini/confirm.png")));
+		sl_panelRicercaNome.putConstraint(SpringLayout.NORTH, buttonSearchNome, 0, SpringLayout.NORTH, textFieldPrefissoNome);
 		buttonSearchNome.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+		    	    for (int i = 0; i < modelContatti.getRowCount(); i++) {
+		    	    	modelContatti.removeRow(i);
+		    	    }
+		    	
+				
 				String Prefisso = textFieldPrefissoNome.getText();
 				String Nome = textFieldNome.getText();
 				String Cognome = textFieldCognome.getText();
 				
 				ArrayList<Contatto> RisultatiRicercaAnagrafica =  Controller.SearchAnagrafica(Prefisso,Nome,Cognome);
 				//TODO Aggiornare la tabella
+				for(int i=0;i<RisultatiRicercaAnagrafica.size();i++) {
+					modelContatti.addRow(new Object[]{
+							RisultatiRicercaAnagrafica.get(i).getID(),
+							RisultatiRicercaAnagrafica.get(i).getPrefissoNome(),
+							RisultatiRicercaAnagrafica.get(i).getNome(),
+							RisultatiRicercaAnagrafica.get(i).getCognome()
+					});
+				}
 			}
 		});
 		panelRicercaNome.add(buttonSearchNome);
@@ -201,7 +279,23 @@ public class SearchFrame extends JFrame {
 		sl_panelRicercaMail.putConstraint(SpringLayout.EAST, scrollPane, 0, SpringLayout.EAST, panelRicercaMail);
 		panelRicercaMail.add(scrollPane);
 		
-		tableMail = new JTable(modelContatti);
+		tableMail = new JTable(modelContatti2);
+		tableMail.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount()==2) {
+					int row = tableMail.getSelectedRow();
+					if (row >= 0) {
+						int id = (int)modelContatti2.getValueAt(row, 0);
+						JFrame visualizzaContatto = new VisualizzaContattoFrame(Controller, frame, id);
+						visualizzaContatto.setVisible(true);
+						frame.setVisible(false);
+					}
+				}
+			}
+		});
+		
+		tableMail.removeColumn(tableMail.getColumnModel().getColumn(0));
 		scrollPane.setViewportView(tableMail);
 		
 		labelMail = new JLabel("Inserire E-Mail");
@@ -219,17 +313,32 @@ public class SearchFrame extends JFrame {
 		textFieldMail.setColumns(10);
 		
 		buttonRicercaMail = new JButton("Ricerca");
+		buttonRicercaMail.setIcon(new ImageIcon(SearchFrame.class.getResource("/immagini/confirm.png")));
+		buttonRicercaMail.setHorizontalAlignment(SwingConstants.LEFT);
+		sl_panelRicercaMail.putConstraint(SpringLayout.SOUTH, buttonRicercaMail, 50, SpringLayout.NORTH, panelRicercaMail);
+		sl_panelRicercaMail.putConstraint(SpringLayout.EAST, buttonRicercaMail, 0, SpringLayout.EAST, panelRicercaMail);
 		buttonRicercaMail.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				 for (int i = 0; i < modelContatti2.getRowCount(); i++) {
+		    	    	modelContatti2.removeRow(i);
+		    	    }
+				
 				String mail = textFieldMail.getText();
 				ArrayList<Contatto> RisultatiRicercaMail = Controller.searchMail(mail);
 				//TODO Aggiornare la tabella 
+				
+				for(int i=0;i<RisultatiRicercaMail.size();i++) {
+					modelContatti2.addRow(new Object[]{
+							RisultatiRicercaMail.get(i).getID(),
+							RisultatiRicercaMail.get(i).getPrefissoNome(),
+							RisultatiRicercaMail.get(i).getNome(),
+							RisultatiRicercaMail.get(i).getCognome()
+					});
+				}
 			}
 		});
 		sl_panelRicercaMail.putConstraint(SpringLayout.NORTH, buttonRicercaMail, 20, SpringLayout.NORTH, panelRicercaMail);
 		sl_panelRicercaMail.putConstraint(SpringLayout.WEST, buttonRicercaMail, -130, SpringLayout.EAST, panelRicercaMail);
-		sl_panelRicercaMail.putConstraint(SpringLayout.SOUTH, buttonRicercaMail, 0, SpringLayout.SOUTH, textFieldMail);
-		sl_panelRicercaMail.putConstraint(SpringLayout.EAST, buttonRicercaMail, -30, SpringLayout.EAST, panelRicercaMail);
 		panelRicercaMail.add(buttonRicercaMail);
 		
 		//Ricerca per Account
@@ -245,7 +354,22 @@ public class SearchFrame extends JFrame {
 		sl_panelRicercaAccount.putConstraint(SpringLayout.EAST, scrollPane_1, 0, SpringLayout.EAST, panelRicercaAccount);
 		panelRicercaAccount.add(scrollPane_1);
 		
-		tableAccount = new JTable(modelContatti);
+		tableAccount = new JTable(modelContatti3);
+		tableAccount.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount()==2) {
+					int row = tableAccount.getSelectedRow();
+					if (row >= 0) {
+						int id = (int)modelContatti3.getValueAt(row, 0);
+						JFrame visualizzaContatto = new VisualizzaContattoFrame(Controller, frame, id);
+						visualizzaContatto.setVisible(true);
+						frame.setVisible(false);
+					}
+				}
+			}
+		});
+		tableAccount.removeColumn(tableAccount.getColumnModel().getColumn(0));
 		scrollPane_1.setViewportView(tableAccount);
 		
 		labelInserireNickname = new JLabel("Inserire Nickname");
@@ -276,18 +400,33 @@ public class SearchFrame extends JFrame {
 		textFieldFornitore.setColumns(10);
 		
 		buttonRicercaAccount = new JButton("Ricerca");
+		buttonRicercaAccount.setIcon(new ImageIcon(SearchFrame.class.getResource("/immagini/confirm.png")));
+		buttonRicercaAccount.setHorizontalAlignment(SwingConstants.LEFT);
+		sl_panelRicercaAccount.putConstraint(SpringLayout.NORTH, buttonRicercaAccount, 20, SpringLayout.NORTH, panelRicercaAccount);
+		sl_panelRicercaAccount.putConstraint(SpringLayout.SOUTH, buttonRicercaAccount, 50, SpringLayout.NORTH, panelRicercaAccount);
+		sl_panelRicercaAccount.putConstraint(SpringLayout.EAST, buttonRicercaAccount, 0, SpringLayout.EAST, scrollPane_1);
 		buttonRicercaAccount.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				 for (int i = 0; i < modelContatti3.getRowCount(); i++) {
+		    	    	modelContatti3.removeRow(i);
+		    	    }
+				
 				String nickname = textFieldNickname.getText();
 				String fornitore = textFieldFornitore.getText();
 				ArrayList<Contatto> RisultatiRicercaAccount = Controller.searchAccount(nickname,fornitore);
 				//TODO Aggiornare la tabella 
+				
+				for(int i=0;i<RisultatiRicercaAccount.size();i++) {
+					modelContatti3.addRow(new Object[]{
+							RisultatiRicercaAccount.get(i).getID(),
+							RisultatiRicercaAccount.get(i).getPrefissoNome(),
+							RisultatiRicercaAccount.get(i).getNome(),
+							RisultatiRicercaAccount.get(i).getCognome()
+					});
+				}
 			}
 		});
-		sl_panelRicercaAccount.putConstraint(SpringLayout.NORTH, buttonRicercaAccount, 20, SpringLayout.NORTH, panelRicercaAccount);
 		sl_panelRicercaAccount.putConstraint(SpringLayout.WEST, buttonRicercaAccount, -130, SpringLayout.EAST, panelRicercaAccount);
-		sl_panelRicercaAccount.putConstraint(SpringLayout.SOUTH, buttonRicercaAccount, 0, SpringLayout.SOUTH, textFieldNickname);
-		sl_panelRicercaAccount.putConstraint(SpringLayout.EAST, buttonRicercaAccount, -30, SpringLayout.EAST, panelRicercaAccount);
 		panelRicercaAccount.add(buttonRicercaAccount);
 		
 		panelRicercaNumero = new JPanel();
@@ -301,7 +440,22 @@ public class SearchFrame extends JFrame {
 		sl_panelRicercaNumero.putConstraint(SpringLayout.EAST, scrollPaneNumero, 0, SpringLayout.EAST, panelRicercaNumero);
 		panelRicercaNumero.add(scrollPaneNumero);
 		
-		tableNumeri = new JTable(modelContatti);
+		tableNumeri = new JTable(modelContatti4);
+		tableNumeri.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount()==2) {
+					int row = tableNumeri.getSelectedRow();
+					if (row >= 0) {
+						int id = (int)modelContatti4.getValueAt(row, 0);
+						JFrame visualizzaContatto = new VisualizzaContattoFrame(Controller, frame, id);
+						visualizzaContatto.setVisible(true);
+						frame.setVisible(false);
+					}
+				}
+			}
+		});
+		tableNumeri.removeColumn(tableNumeri.getColumnModel().getColumn(0));
 		scrollPaneNumero.setViewportView(tableNumeri);
 		
 		labelPrefissoNumero = new JLabel("Inserire Prefisso Numero");
@@ -318,10 +472,7 @@ public class SearchFrame extends JFrame {
 		
 		panelRadioButtons = new JPanel();
 		sl_panelRicercaNumero.putConstraint(SpringLayout.NORTH, scrollPaneNumero, 20, SpringLayout.SOUTH, panelRadioButtons);
-		sl_panelRicercaNumero.putConstraint(SpringLayout.NORTH, panelRadioButtons, 80, SpringLayout.NORTH, panelRicercaNumero);
-		sl_panelRicercaNumero.putConstraint(SpringLayout.WEST, panelRadioButtons, 30, SpringLayout.WEST, panelRicercaNumero);
 		sl_panelRicercaNumero.putConstraint(SpringLayout.SOUTH, panelRadioButtons, 110, SpringLayout.NORTH, panelRicercaNumero);
-		sl_panelRicercaNumero.putConstraint(SpringLayout.EAST, panelRadioButtons, 347, SpringLayout.WEST, panelRicercaNumero);
 		panelRicercaNumero.add(panelRadioButtons);
 		
 		JRadioButton radioButtonFisso = new JRadioButton("Numero Fisso");
@@ -334,6 +485,9 @@ public class SearchFrame extends JFrame {
 		panelRadioButtons.add(radioButtonMobile);
 		
 		textFieldNumero = new JTextField();
+		sl_panelRicercaNumero.putConstraint(SpringLayout.NORTH, panelRadioButtons, 10, SpringLayout.SOUTH, textFieldNumero);
+		sl_panelRicercaNumero.putConstraint(SpringLayout.WEST, panelRadioButtons, 0, SpringLayout.WEST, textFieldNumero);
+		sl_panelRicercaNumero.putConstraint(SpringLayout.EAST, panelRadioButtons, 300, SpringLayout.WEST, textFieldNumero);
 		sl_panelRicercaNumero.putConstraint(SpringLayout.NORTH, textFieldNumero, 50, SpringLayout.NORTH, panelRicercaNumero);
 		sl_panelRicercaNumero.putConstraint(SpringLayout.WEST, textFieldNumero, 200, SpringLayout.WEST, panelRicercaNumero);
 		sl_panelRicercaNumero.putConstraint(SpringLayout.EAST, textFieldNumero, -250, SpringLayout.EAST, panelRicercaNumero);
@@ -348,24 +502,61 @@ public class SearchFrame extends JFrame {
 		textFieldPrefissoNumero.setColumns(10);
 		
 		JButton buttonRicercaNumeri = new JButton("Ricerca");
+		buttonRicercaNumeri.setIcon(new ImageIcon(SearchFrame.class.getResource("/immagini/confirm.png")));
+		buttonRicercaNumeri.setHorizontalAlignment(SwingConstants.LEFT);
+		sl_panelRicercaNumero.putConstraint(SpringLayout.SOUTH, buttonRicercaNumeri, 10, SpringLayout.SOUTH, textFieldPrefissoNumero);
+		sl_panelRicercaNumero.putConstraint(SpringLayout.EAST, buttonRicercaNumeri, 0, SpringLayout.EAST, scrollPaneNumero);
+		buttonRicercaNumeri.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 for (int i = 0; i < modelContatti4.getRowCount(); i++) {
+		    	    	modelContatti4.removeRow(i);
+		    	    }
+				
+				String prefissoNumero = textFieldPrefissoNumero.getText();
+				String numero = textFieldNumero.getText();
+				String tipoNumero;
+				if (radioButtonFisso.isSelected()) {
+					tipoNumero = "Fisso";
+				}else {
+					tipoNumero = "Mobile";
+				}
+				ArrayList<Contatto> RisultatiRicercaNumeri = Controller.searchNumeri(prefissoNumero, numero, tipoNumero);
+				//TODO Aggiornare la tabella 
+				for(int i=0;i<RisultatiRicercaNumeri.size();i++) {
+					modelContatti4.addRow(new Object[]{
+							RisultatiRicercaNumeri.get(i).getID(),
+							RisultatiRicercaNumeri.get(i).getPrefissoNome(),
+							RisultatiRicercaNumeri.get(i).getNome(),
+							RisultatiRicercaNumeri.get(i).getCognome()
+					});
+				}
+			}
+		});
 		sl_panelRicercaNumero.putConstraint(SpringLayout.NORTH, buttonRicercaNumeri, 0, SpringLayout.NORTH, textFieldPrefissoNumero);
 		sl_panelRicercaNumero.putConstraint(SpringLayout.WEST, buttonRicercaNumeri, -130, SpringLayout.EAST, panelRicercaNumero);
-		sl_panelRicercaNumero.putConstraint(SpringLayout.SOUTH, buttonRicercaNumeri, 0, SpringLayout.SOUTH, textFieldPrefissoNumero);
-		sl_panelRicercaNumero.putConstraint(SpringLayout.EAST, buttonRicercaNumeri, -30, SpringLayout.EAST, panelRicercaNumero);
 		panelRicercaNumero.add(buttonRicercaNumeri);
 		
+		JLabel lblNewLabel = new JLabel("Inserire tipo numero");
+		sl_panelRicercaNumero.putConstraint(SpringLayout.NORTH, lblNewLabel, 0, SpringLayout.NORTH, panelRadioButtons);
+		sl_panelRicercaNumero.putConstraint(SpringLayout.WEST, lblNewLabel, 0, SpringLayout.WEST, labelPrefissoNumero);
+		sl_panelRicercaNumero.putConstraint(SpringLayout.EAST, lblNewLabel, 0, SpringLayout.EAST, labelPrefissoNumero);
+		panelRicercaNumero.add(lblNewLabel);
+		
 		buttonClose = new JButton("Indietro");
+		sl_contentPane.putConstraint(SpringLayout.WEST, buttonClose, -130, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, buttonClose, 0, SpringLayout.EAST, contentPane);
+		buttonClose.setIcon(new ImageIcon(SearchFrame.class.getResource("/immagini/back.jpg")));
+		buttonClose.setHorizontalAlignment(SwingConstants.LEFT);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, buttonClose, -30, SpringLayout.SOUTH, contentPane);
 		buttonClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FrameChiamante.setVisible(true);
-				Frame.setVisible(false);
-				Frame.dispose();
+				frame.setVisible(false);
+				frame.dispose();
 			}
 		});
-		sl_contentPane.putConstraint(SpringLayout.NORTH, buttonClose, 10, SpringLayout.SOUTH, tabbedPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, buttonClose, -90, SpringLayout.EAST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, buttonClose, 0, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, buttonClose, -5, SpringLayout.EAST, contentPane);
 		contentPane.add(buttonClose);
-	}
+    	}
+	
 }
