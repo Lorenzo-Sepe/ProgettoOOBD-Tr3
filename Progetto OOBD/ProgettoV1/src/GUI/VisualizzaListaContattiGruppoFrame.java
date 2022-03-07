@@ -76,6 +76,20 @@ public class VisualizzaListaContattiGruppoFrame extends JDialog {
 		};
 		
 		tableContatti = new JTable(modelloContatti);
+		tableContatti.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount()==2) {
+					int row = tableContatti.getSelectedRow();
+					int id = (int)modelloContatti.getValueAt(row, 0);
+					JFrame visualizzaContatto = new VisualizzaContattoFrame(controller, frameChiamante,id);
+					visualizzaContatto.setVisible(true);
+					frame.setVisible(false);
+					frameChiamante.setVisible(false);
+					frame.dispose();
+				}
+			}
+		});
 		ListSelectionModel listenerContattoSelezionato = tableContatti.getSelectionModel();
 		tableContatti.setSelectionMode(listenerContattoSelezionato.SINGLE_SELECTION);
 		
