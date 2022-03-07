@@ -1,85 +1,86 @@
-package model;
+package Model;
 
 
-import java.util.*;
 
-/**
- * 
- */
+
 public class Indirizzi {
 
-		private int id;
+	   private int id;
 	   private boolean principale;
 	   private String via;
-	   private String citt√†;
-	   private int codicePostale;
+	   private String citt‡;
+	   private String codicePostale;
 	   private String nazione;
-	   private String identificatore;
+	   private String tag;
 	   
 //Costruttore
 	   
-	   public Indirizzi (int id, boolean principale, String via, String citt√†, int codicePostale, String nazione, String identificatore)
+	   public Indirizzi (int id, boolean principale, String via, String citt‡, String codicePostale, String nazione, String identificatore)
 	   {
 		this.id = id;    
 		this.principale = principale;   
 		this.via = via;
-		this.citt√†=citt√†;
+		this.citt‡=citt‡;
 		this.codicePostale=codicePostale; 
 		this.nazione=nazione;	
-		this.identificatore = identificatore;
+		this.tag = identificatore;
 	   }
 	   
-//Setter	   
 
-	   public void setID(int id) {
-		   this.id = id;
-	   }
-	   
-	public void setVia(String via) {
-			this.via = via;
-		}
- 
-	   public void setCitt√†(String citt√†) {
-			this.citt√† = citt√†;
-		}
-
-	   public void setCodicePostale(int codicePostale) {
-			this.codicePostale = codicePostale;
-		}
-	   
-	   public void setNazione(String nazione) {
-			this.nazione = nazione;
-		}
-	   
-	   public void setIdentificatore(String identificatore) {
-		   this.identificatore = identificatore;
-	   }
 //Getter	   
 	   
+	   /**
+	    * restituisce l'identificatore univoco dell'indirizzo
+	    * @return identificatore dell'indirizzo
+	    */
 	   public int getID() {
 		   return id;
 	   }
 	   
+	   /**
+	    * restituisce la via
+	    * @return Stringa corrispondente alla via
+	    */
 	   public String getVia() {
 			return via;
 		}
 	   
-	   public String getCitt√†() {
-			return citt√†;
+	   /**
+	    * restituisce la citt‡
+	    * @return Stringa corrispondente alla citt‡
+	    */
+	   public String getCitt‡() {
+			return citt‡;
 		}
 	   
+	   /**
+	    * restituisce la nazione
+	    * @return Stringa corrispondente alla nazione
+	    */
 	   public String getNazione() {
 			return nazione;
 		}
 	   
-	   public Integer getCodicePostale() {
+	   /**
+	    * restituisce il codice postale
+	    * @return Stringa corrispondente al codice postale
+	    */
+	   public String getCodicePostale() {
 		   return codicePostale;
 	   }
 	   
-	   public String getIdentificatore() {
-		   return identificatore;
+	   /**
+	    * restituisce il tag del numero
+	    * @return Stringa corrispondente al tag
+	    */
+	   public String getTag() {
+		   return tag;
 	   }
 	   
+	   /**
+	    * 
+	    * @return valore booleano che Ë uguale a true se l'indirizzo Ë principale, false altrimenti
+	    */
 	   public Boolean getPrincipale() {
 		   return principale;
 	   }
@@ -87,12 +88,9 @@ public class Indirizzi {
     /**
      * 
      */
-    public void setPrincipale() {
-        // TODO implement here
-    }
 
 	public String stampaIndirizzo() {
-		return  identificatore+" "+ via+" "+citt√†+" "+codicePostale;
+		return  tag+" "+ via+" "+citt‡+" "+codicePostale;
 	}
 
 }
