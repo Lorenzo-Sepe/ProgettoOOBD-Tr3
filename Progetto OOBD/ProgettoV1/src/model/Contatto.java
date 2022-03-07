@@ -1,16 +1,7 @@
 package Model;
 
-import java.awt.Component;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
-
-import Model.NumeriTelefonici;
-
-@SuppressWarnings("unused")
 public class Contatto {
 	private int contatto_ID;
 	private String prefissoNome;
@@ -21,8 +12,6 @@ public class Contatto {
 	private ArrayList<Indirizzi> listaIndirizzi = new ArrayList<Indirizzi>();
 	private ArrayList<NumeriTelefonici> listaNumeri = new ArrayList<NumeriTelefonici>();
 	private ArrayList<Account> listaAccount = new ArrayList<Account>();
-	private ArrayList<Gruppo> listaGruppo= new ArrayList<Gruppo>();
-	private Cassaforte visibilita = null;
 	
 
 	public Contatto (int contattoID ,String prefisso, String nome, String cognome,String path) {
