@@ -1,10 +1,11 @@
-package model;
+package Model;
 
 /**
  * 
  */
 public class Account {
 
+		private int id;
 	 	private String fornitore;
 	    private String nickname;
 	    private String benvenuto;
@@ -21,48 +22,54 @@ public class Account {
     	this.benvenuto = benvenuto;
     	this.mail = mail;
     }
-
-    //Setter
     
-    public void setFornitore(String fornitore) {
+    public  Account(int id,String fornitore, String nickname, String benvenuto, String mail) {
+    	this.id = id;
     	this.fornitore = fornitore;
-    }
-    
-    public void setNickname(String nickname) {
-    	this.nickname = nickname;
-    }
-    
-    public void setBenvenuto(String benvenuto) {
+    	this.nickname = nickname; 
     	this.benvenuto = benvenuto;
-    }
-    
-    public void setMail(String mail) {
     	this.mail = mail;
     }
     
     //Getter
     
+    /**
+     * restituisce il fornitore dell'account
+     * @return Stringa corrispondente al fornitore
+     */
     public String getFornitore() {
 		return fornitore;
 	}
     
+    /**
+     * restituisce il nickname dell'account
+     * @return Stringa corrispondente al nickname
+     */
     public String getNickname() {
 		return nickname;
 	}
+    
+    /**
+     * restituisce la frase di benvenuto dell'account
+     * @return Stringa corrispondente alla frase di benvenuto
+     */
     public String getBenvenuto() {
 		return benvenuto;
 	}
+    
+    /**
+     * resituisce la mail associata all'account
+     * @return Stringa corrispondente alla mail
+     */
     public String getMail() {
 		return mail;
 	}
     
     /**
-     * 
+     * restituisce l'identificatore univoco dell'account
+     * @return identificatore dell'account
      */
-   
-
-    public void gestioneDuplicati() {
-        // TODO implement here
+    public int getID() {
+    	return id;
     }
-
 }
