@@ -85,7 +85,7 @@ public class VisualizzaContattoCassaforteFrame extends JFrame {
 		c=controller;
 		contattoID = id;
 		frameChiamante=Chiamante;
-		c.dumpContattoCassaforte(contattoID);
+		c.dumpContattoCassaforte(id);
 //		c.transactionBegin();
 		setTitle("Visualizza");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -160,15 +160,15 @@ public class VisualizzaContattoCassaforteFrame extends JFrame {
 		modelIndirizzi.addColumn("Id");
 	    modelIndirizzi.addColumn("Tag");
 		modelIndirizzi.addColumn("Via"); 
-		modelIndirizzi.addColumn("Città"); 
+		modelIndirizzi.addColumn("Citta"); 
 		modelIndirizzi.addColumn("Codice Postale");
 		modelIndirizzi.addColumn("Nazione");
 		
-		for(int i=0;i<c.getInfoContattoIndirizzoQuantità(id);i++) {
+		for(int i=0;i<c.getInfoContattoIndirizzoQuantita(id);i++) {
 			modelIndirizzi.addRow(new Object[]{
 					c.getInfoContattoIndirizzoId(i,id),
 					c.getInfoContattoIndirizzoVia(i,id),
-					c.getInfoContattoIndirizzoCittà(i, id),
+					c.getInfoContattoIndirizzoCitta(i, id),
 					c.getInfoContattoIndirizzoCodicePostale(i, id),
 					c.getInfoContattoIndirizzoNazione(i, id)
 			});	
@@ -198,7 +198,7 @@ public class VisualizzaContattoCassaforteFrame extends JFrame {
 		
 		// Inserimento account del contatto
 		
-		for(int i=0;i<c.getInfoContattoAccountQuantità(id);i++) {
+		for(int i=0;i<c.getInfoContattoAccountQuantita(id);i++) {
 			modelAccounts.addRow(new Object[]{
 				c.getInfoContattoAccountFornitore(i, id),
 				c.getInfoContattoAccountNickname(i, id),

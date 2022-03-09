@@ -170,6 +170,7 @@ public class ModificaCassaforteFrame extends JFrame {
 					String nome = (String) modelloContatti.getValueAt(row, 2);
 					String cognome = (String) modelloContatti.getValueAt(row, 3);
 					modelloContatti.removeRow(row);
+					System.out.println("Aggiungi RAIlistaContatti.get(row)+row"+RAIlistaContatti.get(row).StampaContatto()+"-"+row);
 					RAIlistaContattiCassaforte.add(RAIlistaContatti.get(row));
 					RAIlistaContatti.remove(row);
 					modelloCassaforte.addRow(new Object[]{id, prefisso, nome, cognome});
@@ -259,7 +260,9 @@ public class ModificaCassaforteFrame extends JFrame {
 //					listaContattiId.add((int)modelloCassaforte.getValueAt(i, 0));
 //					contattiInCassaforte.add(contatto);
 //				}
-				
+				for (Contatto contatto : RAIlistaContattiCassaforte) {
+					System.out.println("Sono in mod cassadorte frame-"+contatto.StampaContatto());
+				}
 				c.setListaContattiCassaforte(RAIlistaContattiCassaforte);
 				c.transactionCommit();
 				frameChiamante.setVisible(true);

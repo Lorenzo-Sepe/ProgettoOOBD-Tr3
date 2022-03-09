@@ -63,6 +63,7 @@ public class VisualizzaCassaforteFrame extends JFrame {
 		ArrayList<Contatto> contattiProtetti = c.getContattiCassaforte();
 		
 		for (Contatto contatto : contattiProtetti) {
+			System.out.println("sono dentro la visualizza cassadrote frame, id del contatto e-"+contatto.getID());
 			modelCassaforte.addRow(new Object[] {
 					contatto.getID(),
 					contatto.getPrefissoNome(),
@@ -77,8 +78,9 @@ public class VisualizzaCassaforteFrame extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount()==2) {
 					int row = tableCassaforte.getSelectedRow();
-					int id = (int)modelCassaforte.getValueAt(row, 0);
-					JFrame visualizzaContatto = new VisualizzaContattoCassaforteFrame(controller, frame, id);
+					int contattoSelezionatoID = (int)modelCassaforte.getValueAt(row, 0);
+					System.out.println("id conta selez:-"+contattoSelezionatoID);
+					JFrame visualizzaContatto = new VisualizzaContattoCassaforteFrame(controller, frame, contattoSelezionatoID);
 					visualizzaContatto.setVisible(true);
 					frame.setVisible(false);
 				}
