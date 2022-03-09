@@ -567,7 +567,6 @@ public class Controller{
 	 * @return ArrayList dei membri del gruppo
 	 */
 	public ArrayList<Contatto> getListaMembriGruppo (String nomeGruppo) {
-		ArrayList<Contatto> listaContattiInGruppo = new ArrayList<>();
 		return rubrica.getGruppo(nomeGruppo).getMembriGruppo();
 	}
 
@@ -1143,8 +1142,8 @@ public class Controller{
 	 * @return I contatti che hanno email uguale al parametro mail dato 
 	 */
 	public ArrayList<Contatto> verificaDuplicatiContatto(String mail) {
-	    ArrayList<Contatto> listaRisultato = new ArrayList();
-	    ArrayList<Integer> listaID = new ArrayList();
+	    ArrayList<Contatto> listaRisultato = new ArrayList<Contatto>();
+	    ArrayList<Integer> listaID = new ArrayList<Integer>();
 	    RubricaDAO rubricaDao = new ImplementazioneRubricaDAO();
 	    listaID = rubricaDao.verificaDuplicatiContattoDao(mail);
 	        for (int j = 0; j < listaID.size(); j++) {
@@ -1169,8 +1168,8 @@ public class Controller{
  * @return ArrayList {@literal<Contatto>} con tutti i contatit che hanno email uguali fra i loro possibili {@link Model.Account}
  */
 	public ArrayList<Contatto> verificaDuplicatiAccount() {
-	    ArrayList<Contatto> listaRisultato = new ArrayList();
-	    ArrayList<Integer> listaID = new ArrayList();
+	    ArrayList<Contatto> listaRisultato = new ArrayList<Contatto>();
+	    ArrayList<Integer> listaID = new ArrayList<Integer>();
 	    AccountDAO accountDao = new ImplementazioneAccountDAO();
 	    listaID=accountDao.verificaDuplicatiAccountDao();
 	        for (int j = 0; j < listaID.size(); j++) {
@@ -1516,7 +1515,6 @@ public void modificaContattoAnagrafiche(int contattoID, String contattoPrefisso,
 public void eliminaNumero(int contattoID,String prefisso, String numero,String tipo) throws Exception {
  	ContattoDAO contattoDao= new ImplementazioneContattoDAO();
  	int idNumero=0;
- 	NumeriTelefoniciDAO numeroDao=new ImplementazioneNumeriTelefoniciDAO();
  	if(tipo.compareToIgnoreCase("fisso")==0) {
  		idNumero=contattoDao.getIDNumeroFisso(prefisso, numero, contattoID);
  	}else {
