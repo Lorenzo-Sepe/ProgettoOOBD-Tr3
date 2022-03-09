@@ -90,6 +90,46 @@ public class ImplementazioneNumeriTelefoniciDAO implements NumeriTelefoniciDAO {
 	
 	}
     
+	public NumeriTelefonici readDeputatoDiNumeroDB(int idNumero, String tipo)  {
+     		NumeriTelefonici numero=null;
+     		PreparedStatement readNumeroPS;
+     		PreparedStatement readNumeroDeputatoPS;
+     		
+     		int idDeputato= 0;
+             String tabellaTipo= tipo.compareToIgnoreCase("fisso") ==0 ? "fissi" : "mobili";
+             String tabellatipoDeputato= tipo.compareToIgnoreCase("fisso") !=0 ? "fissi" : "mobili";
+             String tipoDeputato= tipo.compareToIgnoreCase("fisso") !=0 ? "Fisso" : "Mobile";
+            try {
+             readNumeroPS = connection.prepareStatement("SELECT * FROM numeri_telefonici_"+tabellaTipo+" WHERE numero_id = ?;");
+                 readNumeroPS.setInt(1, idNumero);
+                 System.out.println("Sono IMPLNumeriDao nerlla readDep query:-"+readNumeroPS.toString());
+
+                 ResultSet rs = readNumeroPS.executeQuery();
+                 if(rs.next()) {
+                    idDeputato=rs.getInt("reindirizzamento");
+                    if(idDeputato>0) {
+                 	   readNumeroDeputatoPS = connection.prepareStatement("SELECT * FROM numeri_telefonici_"+tabellatipoDeputato+" WHERE numero_id = ?;");
+                 	   readNumeroDeputatoPS.setInt(1, idDeputato);
+                 	  System.out.println("Sono IMPLNumeriDao nerlla readDep query2:-"+readNumeroDeputatoPS.toString());
+                 	   ResultSet rsDeputato =  readNumeroDeputatoPS.executeQuery();
+                 	   
+                 	   if(rsDeputato.next()) {
+                 		  
+                 		  numero= new NumeriTelefonici(rsDeputato.getString("identificatore"),rsDeputato.getString("prefisso_nazionale"), rsDeputato.getString("numero"), tipoDeputato) ;
+                 	   }
+                    }
+         
+         
+      }else {
+      	throw new Exception("Errore nella ricerca del numero ");
+      }
+            }catch(Exception e) {
+            		numero=null;
+            }
+            
+  return numero;
+
+}
    
     
   
