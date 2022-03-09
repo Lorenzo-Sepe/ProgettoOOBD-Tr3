@@ -8,19 +8,19 @@ public class Indirizzi {
 	   private int id;
 	   private boolean principale;
 	   private String via;
-	   private String citt‡;
+	   private String citt√†;
 	   private String codicePostale;
 	   private String nazione;
 	   private String tag;
 	   
 //Costruttore
 	   
-	   public Indirizzi (int id, boolean principale, String via, String citt‡, String codicePostale, String nazione, String identificatore)
+	   public Indirizzi (int id, boolean principale, String via, String citt√†, String codicePostale, String nazione, String identificatore)
 	   {
 		this.id = id;    
 		this.principale = principale;   
 		this.via = via;
-		this.citt‡=citt‡;
+		this.citt√†=citt√†;
 		this.codicePostale=codicePostale; 
 		this.nazione=nazione;	
 		this.tag = identificatore;
@@ -46,11 +46,11 @@ public class Indirizzi {
 		}
 	   
 	   /**
-	    * restituisce la citt‡
-	    * @return Stringa corrispondente alla citt‡
+	    * restituisce la citt√†
+	    * @return Stringa corrispondente alla citt√†
 	    */
-	   public String getCitt‡() {
-			return citt‡;
+	   public String getCitt√†() {
+			return citt√†;
 		}
 	   
 	   /**
@@ -79,18 +79,26 @@ public class Indirizzi {
 	   
 	   /**
 	    * 
-	    * @return valore booleano che Ë uguale a true se l'indirizzo Ë principale, false altrimenti
+	    * @return valore booleano che √® uguale a true se l'indirizzo √® principale, false altrimenti
 	    */
 	   public Boolean getPrincipale() {
 		   return principale;
 	   }
+	
+	/**
+     * imposta l'indirizzo principale
+     * @param b valore booleano che imposta il valore
+     */
+    public void setPrincipale(boolean b) {
+        principale = b;        
+    }
 	   
     /**
      * 
      */
 
 	public String stampaIndirizzo() {
-		return  tag+" "+ via+" "+citt‡+" "+codicePostale;
+		return  tag+" "+ via+" "+citt√†+" "+codicePostale;
 	}
 
 }
