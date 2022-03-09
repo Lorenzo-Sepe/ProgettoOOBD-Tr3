@@ -23,12 +23,16 @@ import Model.NumeriTelefonici;
 import Model.Rubrica;
 import ImplementazioneDAOpostgreSQL.*;
 
-public class Controller {
+public class Controller{
 	private static Rubrica rubrica;
 	// private boolean sync =false;
 
 	// metodi
 
+	/**
+	 * scarica dal database i dati salvati
+	 * @throws SQLException
+	 */
 	public void dumpDati() throws SQLException {
 		rubrica = new Rubrica();
 		dumpListaContatti();
@@ -36,18 +40,39 @@ public class Controller {
 			dumpCassaforte();
 		}
 	}
-	
+
+	/**
+	 * <p>
+	 * Funziona che inizializza usando i dati presenti sul database.
+	 * </p>
+	 * <p>
+	 * Utilizza  altre funzioni Per recuperare i dati: <br>
+	 * 		{@link #dumpListaContatti() } <br>
+	 * 		{@link #dumpListaCassaforte() } <br>
+	 *
+	 *  </p>
+	 * @throws SQLException
+	 */
 	public void dumpCassaforte () throws SQLException {
 		rubrica.creaCassaforte(dumpPasswordCassaforte());
 		dumpListaCassaforte();
 	}
 
+	/**
+	 * <p>
+	 * salva nel {@link Controller#rubrica} un ArrayList di {@link Model.Contatto} recuperati dal database  <b> tramite apposite DAO</b>
+	 * </p>
+	 * <p>
+	 * funzione Utilizzata in:  {@link #dumpDati()} <br>
+	 *  @see {@link RubricaDAO}
+	 * </p>
+	 */
 	public void dumpListaContatti() throws SQLException {
 		RubricaDAO rubricaDao = new ImplementazioneRubricaDAO();
 		ArrayList<Contatto> contattiDB = rubricaDao.selectAllDB();
 		for (Contatto contatto : contattiDB) {
 
-			System.out.println("prova ripeti for " + contatto.StampaContatto());
+			//System.out.println("prova ripeti for " + contatto.StampaContatto());
 
 			rubrica.aggiungiContatto(contatto);
 
@@ -55,16 +80,16 @@ public class Controller {
 	}
 
 	/**
-     *  <p>
-     * Funzione per recuperare tutte le informazioni di un contatto<b> tramite apposite  DAO per comunicare con il Database</b>
-     * </p>
-     * @param contattoID 
-     * <p>
-     * funzione Utilizzata in:  {@link #dumpDati()} <br>
-     *  @see {@link DAO}
-     * </p>
-     * 
-     */
+	 *  <p>
+	 * Funzione per recuperare tutte le informazioni di un contatto<b> tramite apposite  DAO per comunicare con il Database</b>
+	 * </p>
+	 * @param contattoID
+	 * <p>
+	 * funzione Utilizzata in:  {@link #dumpDati()} <br>
+	 *  @see {@link DAO}
+	 * </p>
+	 *
+	 */
 
     public void dumpContatto(int contattoID) {
         ContattoDAO contattoDao = new ImplementazioneContattoDAO();
@@ -91,16 +116,33 @@ public class Controller {
 
 
     }
-	
+
+		/**
+		 * <p>
+			 * Funzione per recuperare La lista dei gruppi<b> tramite apposite  DAO per comunicare con il Database</b>
+			 * </p>
+			 * <p>
+			 *  @see {@link RubricaDAO} <br>
+			 * </p>
+		 * @throws SQLException
+		 */
 	public void dumpListaGruppi() throws SQLException {
 		RubricaDAO rubricaDao = new ImplementazioneRubricaDAO();
 		ArrayList<Gruppo> listaGruppi = rubricaDao.selectListaGruppiDB();
 		for (Gruppo gruppo : listaGruppi) {
-			System.out.println("prova ripeti for "+gruppo.getNomeGruppo());			
+			System.out.println("prova ripeti for "+gruppo.getNomeGruppo());
 			rubrica.creaGruppo(gruppo.getNomeGruppo());
 		}
 	}
-	
+	/**
+	 * <p>
+	 * Funzione per recuperare La lista dei contatti salvati  nel sottosistema di sicurezza<b> tramite apposite  DAO per comunicare con il Database</b>
+	 * </p>
+	 * <p>
+	 *  @see {@link RubricaDAO} <br>
+	 * </p>
+	 * @throws SQLException
+	 */
 	public void dumpListaCassaforte() throws SQLException {
 		RubricaDAO rubricaDao = new ImplementazioneRubricaDAO();
 		ArrayList <Contatto> listaContattiProtetti = new ArrayList<>();
@@ -109,22 +151,38 @@ public class Controller {
 	}
 
 	/**
-	 * 
+	 * getter della lista contatti
 	 * @return ArrayList di Contatti della rubrica
 	 */
-	public ArrayList<Contatto> getListaContatti() {		
+	public ArrayList<Contatto> getListaContatti() {
 		return rubrica.getListaContatti();
 	}
-	
+
+	/**
+	 * getter della gruppi
+	 * @return ArrayList dei gruppi presenti
+	 */
 	public ArrayList<Gruppo> getListaGruppi () {
 		return rubrica.getListaGruppi();
 	}
 
+	/**
+	* Tramite un medoto presente in {@link Model.Rubrica} si scorre la ArrayList  e restituisce un oggetto  {@link Model.Contatto}
+	* @param id int codice che identifica univocamente il contatto
+	 * @return singolo contatto appartenente al model
+	 */
 	public Contatto getContatto(int id) {
 		return rubrica.getContatto(id);
 
 	}
 
+	/**
+ * <p>
+ * dato un valore String vede se fa parte dell'enumeration  del prefissi <br> <b>attenzione è Case Sensitive </b>
+ * </p>
+ * @param value valore che verrà confrontato con i valori assunti dall'enumeration  {@link Model.EnumPrefissoNumero}
+ * @return ritorna true se il valore è uguale a uno dei prefissi dell'enumeration <br> altrimenti restituisce false
+ */
 	public boolean isPrefissoNumero(String value) {
 		EnumPrefissoNumero[] arrayEnumPrefissi = EnumPrefissoNumero.class.getEnumConstants();
 		for (EnumPrefissoNumero enumPrefissoNumero : arrayEnumPrefissi) {
@@ -134,6 +192,18 @@ public class Controller {
 		return false;
 	}
 
+	/**
+	* <p>
+	 * Verifica se il numero modificato inserto è valido <br>
+	 * Riprende la funzione {@link #checkFormNumero(String, String, ArrayList)} <br>
+	 * Differisce nella verifica della unicità del numero <br> Prima di fare il controllo elimina la prima occorrenza trovatasi nell'ArrayList
+	* </p>
+	* @param prefisso
+	 * @param numero
+	 * @param numeri ArrayList {@literal<String>} (formattata in questo modo Prefisso+numero)
+	 * @throws Exception in caso di anomali lancia un messaggio di errore
+	 * @see {@link #checkFormNumero(String, String, ArrayList) }
+	 */
 	public void checkFormNumeroModifica(String prefisso, String numero, ArrayList<String> numeriParametro) throws Exception {
         // TODO Da decidere come dare
         // verifica se i dati inseriti sono formattati bene
@@ -146,13 +216,23 @@ public class Controller {
         else if (!isPrefissoNumero(prefisso))
             throw new Exception("il prefisso inserito non compare tra i prefissi selezionabili");
 
-        // Verifica unicità numero
+        // Verifica unicita numero
         numeri.remove(prefisso + numero);
         if (numeri.contains(prefisso + numero))
-            throw new Exception("Il numero inserito è già presente nel contatto");
+            throw new Exception("Il numero inserito è gia presente nel contatto");
 
     }
-	
+
+	/**
+	 * verifica se il numero inserito è valido <br>
+	 *   Controlla se il parametro prefisso sia uno dei possibili fissi dall'enumeration  {@link Model.EnumPrefissoNumero} <br>
+	 *  Controlla se il numero è formato solo da numeri <br>
+	 *  Controlla se il numero non sia presente tra ArrayList <br>
+	 * @param prefisso String
+	 * @param numero String
+	 * @param numeri ArrayList {@literal<String>} (formattata in questo modo Prefisso+numero)
+	 * @throws Exception in caso di anomali lancia un messaggio di errore
+	 */
 	public void checkFormNumero(String prefisso, String numero, ArrayList<String> numeri) throws Exception {
 		// TODO Da decidere come dare
 		// verifica se i dati inseriti sono formattati bene
@@ -165,12 +245,19 @@ public class Controller {
 		else if (!isPrefissoNumero(prefisso))
 			throw new Exception("il prefisso inserito non compare tra i prefissi selezionabili");
 
-		// Verifica unicità numero
+		// Verifica unicita numero
 		if (numeri.contains(prefisso + numero))
-			throw new Exception("Il numero inserito è già presente nel contatto");
+			throw new Exception("Il numero inserito è gia presente nel contatto");
 
 	}
 
+	/**
+	 * verifica se l'indirizzo inserito è valido
+	 * <br>Controlla se il parametro contiene solo numeri
+	 * @param codicePostale
+	 * @return restituisce true se non ci sono anomalie nella formattazione del codice postale
+	 * @throws Exception in caso di anomali lancia un messaggio di errore
+	 */
 	public boolean checkFormIndirizzo(String codicePostale) throws Exception {
 		if (codicePostale.matches("[0-9]+") == false) {
 			throw new Exception("il codice postale contiene dei caratteri");
@@ -178,6 +265,14 @@ public class Controller {
 		return true;
 	}
 
+	/**
+	 * verifica se la mail inserita è valida
+	 * <br>controlla se il parametro mail sia ben formattato <br>
+	 * controlla se il parametro mail  non appare nella ArrayList <br>
+	 * @param mail String
+	 * @param arrayListMail  ArrayList {@literal<String>}
+	 * @throws Exception in caso di anomali lancia un messaggio di errore
+	 */
 	public void checkFormMail(String mail, ArrayList<String> arrayListMail) throws Exception {
 		Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$",Pattern.CASE_INSENSITIVE);
 		Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(mail);
@@ -185,12 +280,18 @@ public class Controller {
 		if (!matcher.find())
 			throw new Exception("Email non valida");
 
-		// Verifica unicità mail
+		// Verifica unicita mail
 		if (arrayListMail.contains(mail))
-			throw new Exception("la mail inserita è già presente nel contatto");
+			throw new Exception("la mail inserita è gia presente nel contatto");
 
 	}
 
+	/**
+	 * verifica se si sono inseriti due numeri con tipo diverso
+	 * <br>dato un ArrayList di stringe vede se ci siano almeno un occorenza di valore <b>fisso </b> e una di valore  <b>mobile</b>
+	 * @param arraylisyTipi ArrayList {@literal<String>}
+	 * @throws Exception in caso di anomali lancia un messaggio di errore
+	 */
 	public void checkAlmenoDueNumeriConTipoDiverso(ArrayList<String> arraylisyTipi) throws Exception {
 		boolean existTipoFisso = false;
 		boolean existTipoMobile = false;
@@ -207,7 +308,15 @@ public class Controller {
 		if (existTipoFisso == false || existTipoMobile == false)
 			throw new Exception("Non ci sono almeno due numeri con tip diverso ");
 	}
-	
+
+	/**
+	 * verifica che il nuovo nome non corrisponde ad un nome gia inserito e che il gruppo non sia vuoto
+	 * <br>Controlla che il nomeGruppo non sia vuoto o che sai già stato usato  <br>
+	 * Controlla che ci sia almeno un membro nel gruppo <br>
+	 * @param nomeGruppo String
+	 * @param membriGuppo ArrayList {@literal<Integer>} lista Id dei membri
+	 * @throws Exception  in caso di anomali lancia un messaggio di errore
+	 */
 	public void checkGruppo (String nuovoNomeGruppo, String vecchioNomeGruppo ,ArrayList<Contatto> membriGuppo) throws Exception {
 		while (nuovoNomeGruppo != null && nuovoNomeGruppo.startsWith(" ")) {
 			nuovoNomeGruppo = nuovoNomeGruppo.substring(1);
@@ -221,12 +330,20 @@ public class Controller {
 		else  if (nuovoNomeGruppo.compareTo(vecchioNomeGruppo)!=0) {
 			for (Gruppo gruppo : rubrica.getListaGruppi()) {
 				if (nuovoNomeGruppo.compareTo(gruppo.getNomeGruppo())==0) {
-					throw new Exception("Esiste già un gruppo con questo nome");
+					throw new Exception("Esiste gia un gruppo con questo nome");
 				}
 			}
 		}
 	}
-	
+
+	/**
+	 * verifica che il nuovo gruppo abbia un nome diverso da quelli gia esistenti e che non sia vuoto
+	 * <br>Controlla che il nomeGruppo non sia vuoto o che sai già stato usato  <br>
+	 * Controlla che ci sia almeno un membro nel gruppo <br>
+	 * @param nomeGruppo String
+	 * @param membriGuppo ArrayList {@literal<Integer>} lista Id dei membri
+	 * @throws Exception  in caso di anomali lancia un messaggio di errore
+	 */
 	public void checkGruppo (String nomeGruppo,ArrayList<Contatto> membriGuppo) throws Exception {
 		while (nomeGruppo != null && nomeGruppo.startsWith(" ")) {
 			nomeGruppo = nomeGruppo.substring(1);
@@ -240,12 +357,27 @@ public class Controller {
 		else {
 			for (Gruppo gruppo : rubrica.getListaGruppi()) {
 				if (nomeGruppo.compareTo(gruppo.getNomeGruppo())==0) {
-					throw new Exception("Esiste già un gruppo con questo nome");
+					throw new Exception("Esiste gia un gruppo con questo nome");
 				}
 			}
 		}
 	}
 
+	/**
+	 * associa al numero 1 il numero 2 come reindirizzamento <br>
+	 * Dati due numeri  devono già essere presenti nel Database <br>
+	 *
+	 * @param contattoId <b>int</b> identifica univocamente un contatto
+	 * @param prefisso1  <b>String</b> prefisso del numero principale
+	 * @param numero1  <b>String</b> Numero principale
+	 * @param tipo1 <b>String</b> tipo del Numero principale
+	 * @param prefisso2 <b>String</b> prefisso del numero secondario
+	 * @param numero2	<b>String</b> numero secondario
+	 * @param tipo2	<b>String</b> tipo del numero secondario
+	 * @throws Exception se  i due tipi sono uguali lancia un exception <br> lancia un exception se non andassse a buon fine il salvataggio nel database;
+	 * @throws Exception se il numeri non sono già presenti nel database
+	 * @see {@link #aggiungiNumero(int, String, String, String, String)} metodo per salvare un numero nel database
+	 */
 	public void setDeputato (int contattoId, String prefisso1, String numero1, String tipo1, String prefisso2, String numero2, String tipo2) throws Exception {
         if (tipo1.compareToIgnoreCase(tipo2)==0) {
             throw new Exception("Il tipo del numero è uguale");
@@ -261,16 +393,13 @@ public class Controller {
             }
         }
     }
-	
-	public NumeriTelefonici getDeputatoDiNumero (int id, String pref, String num) {
-	 	NumeriTelefonici deputato = rubrica.getContatto(id).getNumero(pref, num).getDeputato();
-	 	  return deputato;	 
-	   }
-	
+
+
+
 	/**
-     * Metodo che crea  contatto da aggiungere nella arraylist delle rubrica <br>
+     * Metodo che crea un contatto da aggiungere nella arraylist delle rubrica <br>
      * salva anche nel database <br>
-     * 
+     *
      * @param prefisso <b>String</b>
      * @param nome <b>String</b>
      * @param cognome <b>String</b>
@@ -294,76 +423,170 @@ public class Controller {
         rubrica.aggiungiContatto(new Contatto(id, prefisso, nome, cognome, path));
         return id;
     }
-	
+
+    /**
+		* elimina dal database il contatto di id dato
+		* @param id int codice che identifica univocamente il contatto
+		* @throws SQLException
+		*/
 	public void eliminaContattoDB (int id) throws SQLException {
 		RubricaDAO rubricDao = new ImplementazioneRubricaDAO();
 		rubricDao.removeContattoDB(id);
 	}
 
+	/**
+	 * Salva nel database un nuovo numero del contatto associato
+	 * @param id int codice che identifica univocamente il contatto
+	 * @param tag String
+	 * @param prefisso String
+	 * @param numero String
+	 * @param tipo String
+	 * @throws Exception per
+	 */
 	public void aggiungiNumero(int id,String tag,String prefisso,String numero, String tipo) {
 		ContattoDAO contattoDao = new ImplementazioneContattoDAO();
 		contattoDao.addNumeriDB(id, prefisso, numero, tag, tipo);
 	}
-	public void aggiungiIndirizzo(int id,String tag,String via,String  citta ,String  codicePostale, String nazione, boolean principale) {
-		ContattoDAO contattoDao = new ImplementazioneContattoDAO();
-		contattoDao.addIndirizziDB(id, via, citta, codicePostale, nazione, tag, principale);
-	}
-	
+
+	/**
+	 * Salva nel database un nuovo indirizzo  del contatto associato <br>
+	 * <b>Nota: </b> qualora il parametro principale  è true diventera l'unico indirizzo ad esserlo
+	 * @param id int codice che identifica univocamente il contatto
+	 * @param tag String
+	 * @param via String
+	 * @param citta String
+	 * @param codicePostale String
+	 * @param nazione String
+	 * @param principale  boolean true per indicare che è l'indirizzo principale <br>False per il contrario
+	 * @return dopo la creazione del contatto restituisce un identificativo  univoco che è associato al indirizzo
+	 *
+	 */
+	 public int aggiungiIndirizzo(int id,String tag,String via,String  citta ,String  codicePostale, String nazione, boolean principale) {
+ 		ContattoDAO contattoDao = new ImplementazioneContattoDAO();
+ 		return contattoDao.addIndirizziDB(id, via, citta, codicePostale, nazione, tag, principale);
+ 	}
+
+	/**
+	 *  Salva nel database un nuovo indirizzo email  del contatto associato
+	 * @param id int codice che identifica univocamente il contatto
+	 * @param mail String
+	 * @see {@link ContattoDAO}
+	 */
 	public void aggiungiMail(int id,String mail) {
 		ContattoDAO contattoDao = new ImplementazioneContattoDAO();
 		contattoDao.addEmailDB(id, mail);
 	}
-	
+
+	/**
+	 * elimina dal database la mail data del contatto di id dato
+	 * @param id int codice che identifica univocamente il contatto
+	 * @param mailSelected
+	 * @throws SQLException
+	 */
 	public void eliminaMail(int id, String mailSelected) throws SQLException {
 	    ContattoDAO contattoDao = new ImplementazioneContattoDAO();
 	    contattoDao.deleteMail(id,mailSelected);
 	}
-	
+
+	/**
+	 * modifica nel database la mail con il parametro NewEmail nel contatto di id dato
+	 * @param id
+	 * @param oldEmail
+	 * @param newEmail
+	 * @throws SQLException
+	 */
 	public void modificaMail(int id, String oldEmail, String newEmail) throws SQLException {
 	    ContattoDAO contattoDao = new ImplementazioneContattoDAO();
 	    contattoDao.updateMail(id, oldEmail, newEmail);
 
 	}
-	
+
+	/**
+	 * aggiunge al contatto di id dato un nuovo Account
+	 * @param id int codice che identifica univocamente il contatto
+	 * @param nickname String
+	 * @param fornitore String
+	 * @param benvenuto String
+	 * @param email String
+	 * @return
+	 */
 	public int aggiungiAccount(int id,String nickname,String fornitore,String benvenuto, String email) {
 		ContattoDAO contattoDao = new ImplementazioneContattoDAO();
 		return contattoDao.addAccountDB(id, nickname, fornitore, benvenuto, email);
 	}
-	
+
+	/**
+	 * aggiunge nel database un nuovo gruppo con i contatti al suo interno
+	 * @param nomeGruppo String
+	 * @param membriGruppo String
+	 * @throws SQLException
+	 */
 	public void aggiungiGruppo (String nomeGruppo, ArrayList<Contatto> membriGruppo) throws SQLException {
 		RubricaDAO rubricaDao = new ImplementazioneRubricaDAO();
 		rubricaDao.addGruppoDB(nomeGruppo, membriGruppo);
-		
+
 		rubrica.creaGruppo(nomeGruppo);
 	}
-	
+
+	/**
+	 * verifica che un contatto di id dato sia in un gruppo
+	 * @param idContatto int codice che identifica univocamente il contatto
+	 * @return true se appartiene, false altrimenti
+	 */
 	public boolean checkContattoInGruppo (int idContatto) {
 		GruppoDAO gruppoDao = new ImplementazioneGruppoDAO();
 		return gruppoDao.checkContattoInGruppo(idContatto);
 	}
-	
+
+	/**
+	 * Elimina il gruppo dal database
+	 * @param nomeGruppo String
+	 * @throws SQLException
+	 */
 	public void eliminaGruppo (String nomeGruppo) throws SQLException {
 		RubricaDAO rubricaDao = new ImplementazioneRubricaDAO();
 		rubricaDao.deleteGruppoDB(nomeGruppo);
 		rubrica.eliminaGruppo(nomeGruppo);
 	}
-	
+
+	/**
+	 * modifica il nome ed elementi del gruppo selezionato del database
+	 * @param vecchioNome vecchio nome del gruppo
+	 * @param nuovoNome nuovo nome del gruppo
+	 * @param membriGruppo arraylist dei membri
+	 * @throws SQLException
+	 */
 	public void modificaGruppo (String vecchioNome, String nuovoNome, ArrayList<Contatto> membriGruppo) throws SQLException {
 		RubricaDAO rubricaDao = new ImplementazioneRubricaDAO();
 		rubricaDao.updateGruppoDB(vecchioNome, nuovoNome, membriGruppo);
 	}
-	
+
+	/**
+	 * metodo che va a prendere i membri dal gruppo
+	 * @param nomeGruppo
+	 * @return ArrayList dei membri del gruppo
+	 */
 	public ArrayList<Contatto> getListaMembriGruppo (String nomeGruppo) {
 		ArrayList<Contatto> listaContattiInGruppo = new ArrayList<>();
 		return rubrica.getGruppo(nomeGruppo).getMembriGruppo();
 	}
-	
+
+	/**
+	 * metodo che va a scaricare dal database i membri del gruppo
+	 * @param nomeGruppo
+	 * @throws SQLException
+	 */
 	public void dumpListaMembriGruppo (String nomeGruppo) throws SQLException {
 		GruppoDAO gruppoDao = new ImplementazioneGruppoDAO();
 		ArrayList<Contatto> listaMembriGruppo = gruppoDao.selectListaContattiGruppoDB(nomeGruppo);
 		rubrica.getGruppo(nomeGruppo).setMembriGruppo(listaMembriGruppo);
 	}
-	
+
+	/**
+	 * metodo che aggiorna la lista contatti
+	 * @param nomeGruppo
+	 * @return Arraylist dei contatti meno i membri del gruppo selezionato
+	 */
 	public ArrayList<Contatto> getListaContattiMenoGruppo (String nomeGruppo) {
 		ArrayList<Contatto> listaContattiMenoGruppo = new ArrayList<Contatto> (getListaContatti()); //TODO Speriamo bene
 		ArrayList<Contatto> membriGruppo = new ArrayList<Contatto> (getListaMembriGruppo(nomeGruppo)); //TODO Speriamo bene
@@ -383,67 +606,110 @@ public class Controller {
 		}
 		return listaContattiMenoGruppo;
 	}
-	
-	
+
+	/**
+	 * metodo che crea la cassaforte nel database
+	 * @param password
+	 * @throws SQLException
+	 */
 	public void creaCassaforte (String password) throws SQLException {
 		RubricaDAO rubricaDAO = new ImplementazioneRubricaDAO();
 		rubrica.creaCassaforte(password);
 		rubricaDAO.createCassaforteDB(password);
 	}
-	
+
+	/**
+	 * metodo che aggiunge alla cassaforte la lista dei contatti inseriti
+	 * @param password
+	 * @param listaContatti
+	 * @throws SQLException
+	 */
 	public void aggiungiListaContattiCassaforte (String password ,ArrayList<Contatto> listaContatti) throws SQLException {
 		getCassaforte().setListaContatti(listaContatti);
 		RubricaDAO rubricaDAO = new ImplementazioneRubricaDAO();
 		rubricaDAO.setPasswordContattiDB(password, listaContatti);
 	}
-	
+
+	/**
+	 * metodo usato per prendere la cassaforte
+	 * @return oggetto Cassaforte
+	 */
 	public Cassaforte getCassaforte () {
 		return rubrica.getCassaforte();
 	}
-	
+
+	/**
+	 *  scarica dal database la password della cassaforte
+	 * @return la password della cassaforte
+	 * @throws SQLException
+	 */
 	public String dumpPasswordCassaforte () throws SQLException {
 		String password;
 		CassaforteDAO cassaforteDao = new ImplementazioneCassaforteDAO();
 		password = cassaforteDao.getPasswordDB();
 		return password;
 	}
-	
+
+	/**
+	 * aggiunge un contatto alla cassaforte
+	 * @param id
+	 * @throws SQLException
+	 */
 	public void aggiungiContattoInCassaforteDB (int id) throws SQLException {
 		CassaforteDAO cassaforteDao = new ImplementazioneCassaforteDAO();
 		String password = rubrica.getCassaforte().getPassword();
 		cassaforteDao.addContattoCassaforteDB(id, password);
 	}
-	
+
+	/**
+	 * elimina un contatto dalla cassaforte
+	 * @param id
+	 * @throws SQLException
+	 */
 	public void eliminaContattoDaCassaforteDB (int id) throws SQLException {
 		CassaforteDAO cassaforteDao = new ImplementazioneCassaforteDAO();
 		cassaforteDao.removeContattoCassaforteDB(id);
 	}
-	
+
+	/**
+	 * cambia nel database la cassaforte
+	 * @param nuovaPassword
+	 * @throws SQLException
+	 */
 	public void cambiaPasswordCassaforteDB (String nuovaPassword) throws SQLException {
 		CassaforteDAO cassaforteDao = new ImplementazioneCassaforteDAO();
 		String vecchiaPassword = rubrica.getCassaforte().getPassword();
 		cassaforteDao.changePasswordDB(nuovaPassword, vecchiaPassword);
 	}
-	
+
+	/**
+	 * metodo per cominciare la transaction nel database
+	 */
 	public void transactionBegin () {
 		RubricaDAO rubrDao = new ImplementazioneRubricaDAO();
 		rubrDao.transactionsBegin();
 	}
-	
+
+	/**
+	 * metodo per confermare la transazione del database
+	 */
 	public void transactionCommit () {
 		RubricaDAO rubrDao = new ImplementazioneRubricaDAO();
 		rubrDao.transactionsCommit();
 	}
-	
+
+	/**
+	 * metodo per annullare la transazione nel database
+	 */
 	public void transactionRollBack () {
 		RubricaDAO rubrDao = new ImplementazioneRubricaDAO();
 		rubrDao.transactionsRollBack();
 	}
-	
+
 	/**
 	 * dato un contatto salva in locale soltanto le anagrafiche il database
 	 * inserisce tutto
-	 * 
+	 *
 	 * @param contatto
 	 * @throws SQLException
 	 */
@@ -460,7 +726,7 @@ public class Controller {
 		}
 		if (!contatto.getListaIndirizzi().isEmpty()) {
 			for (Indirizzi indirizzo : contatto.getListaIndirizzi()) {
-				contattoDao.addIndirizziDB(id, indirizzo.getVia(), indirizzo.getCittà(), indirizzo.getCodicePostale(),
+				contattoDao.addIndirizziDB(id, indirizzo.getVia(), indirizzo.getCitta(), indirizzo.getCodicePostale(),
 						indirizzo.getNazione(), indirizzo.getTag(),
 						indirizzo.getPrincipale().booleanValue());
 			}
@@ -479,7 +745,7 @@ public class Controller {
 	}
 
 	/**
-	 * 
+	 * metodo per ottenere il path relativo di una foto
 	 * @param id
 	 * @return Il percorso completo di dove salvare la foto profilo
 	 */
@@ -497,7 +763,7 @@ public class Controller {
 	}
 
 	/**
-	 * 
+	 * metodo che modifica la dimensione delle immagini inserite
 	 * @param width
 	 * @param height
 	 * @param file
@@ -527,7 +793,7 @@ public class Controller {
 
 	/**
 	 * Copia e fa un resize
-	 * 
+	 *
 	 * @param pathSorgente path della foto da salvare
 	 * @param id           ID del contatto
 	 * @param w
@@ -546,7 +812,7 @@ public class Controller {
 		// writes to the output file
 		String estenzione = name.substring(name.lastIndexOf(".") + 1);
 		pathDestinazione = GetRelativePath() + "User" + id + "." + estenzione; // concatenazione directory di
-																				// salvataggio pi� l' ID del contatto
+																				// salvataggio più l' ID del contatto
 		System.out.println("pathSorgente: " + pathSorgente + "\n estensione: " + estenzione);
 		System.out.println("pathDestinazione: " + pathDestinazione + "\n estensione: " + estenzione);
 		ImageIO.write(img, estenzione, new File(pathDestinazione));
@@ -596,6 +862,10 @@ public class Controller {
         return "User" + id + "." + estenzione;
     }
 
+	/**
+	 * elimina nel database la foto dal contatto
+	 * @param id
+	 */
 	private void eliminaFotoContatto(int id) {
 
 		File fileFotoContatto = new File(getPathContatto(id));
@@ -604,6 +874,11 @@ public class Controller {
 
 	}
 
+	/**
+	 * metodo che verifica se il contatto ha la foto
+	 * @param id
+	 * @return vero se il contatto ha la foto selezionata, falso altrimenti
+	 */
 	private boolean esisteUnaFotoContatto(int id) {
 		String pathContatto = getPathContatto(id);
 		if (pathContatto.substring(pathContatto.lastIndexOf("/")).startsWith("User" + id))
@@ -612,6 +887,11 @@ public class Controller {
 
 	}
 
+	/**
+	 * metodo copia la foto dal sorgente
+	 * @param pathSorgente
+	 * @param pathDestiCompleto
+	 */
 	public void copiaFoto(String pathSorgente, String pathDestiCompleto) {
 		BufferedImage bufferFoto = null;
 		String estenzione = pathSorgente.substring(pathSorgente.lastIndexOf(".") + 1);
@@ -620,7 +900,6 @@ public class Controller {
 			File outputfile = new File(pathDestiCompleto);
 			ImageIO.write(bufferFoto, estenzione, outputfile);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}
@@ -665,6 +944,12 @@ public class Controller {
 
 	}
 
+	/**
+	 * getter metodo che restituiesce il path della contatto indicato <br>
+	 * @param id del contatto dato
+	 * @return path della foto associata al contatto
+	 * @see {@link #getGetRelativePath}
+	 */
 	public String getPathContatto(int id) {
         String path;
         try {
@@ -688,7 +973,12 @@ public class Controller {
     }
 
 	// metodi di Rubrica e Cassaforte
-
+	
+	/**
+	 * metodo per la creazione della cassaforte
+	 * @param pass
+	 * @throws Exception se già esiste una cassaforte 
+	 */
 	public void CreaCassaforte(String pass) throws Exception {
 		if (rubrica.getCassaforte() == null) {
 			rubrica.creaCassaforte(cifraPassword(pass));
@@ -697,6 +987,12 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * metodo che verifica che la String oldPass sia corretta e dopo la modifica con la stringa newPAss
+	 * @param oldPass String vecchia passoword
+	 * @param newPass String Nuova password
+	 * @throws Exception se la passoword inserita non è uguale alla precedente password
+	 */
 	public void cambiaPasswordCassaforte(String oldPass, String newPass) throws Exception {
 		if (ceckPassword(oldPass)) {
 			rubrica.getCassaforte().setPassword(newPass);
@@ -704,12 +1000,23 @@ public class Controller {
 			throw new Exception("Errore la passoword inserita non è uguale alla precedente password");
 		}
 	}
-	
+
+	/**
+	 * Metodo per verificare l'esistenza della cassaforte
+	 * @return true se la cassaforte esiste, false altrimenti
+	 * @throws SQLException
+	 */
 	public boolean cassaforteExist () throws SQLException {
 		RubricaDAO rubricaDao = new ImplementazioneRubricaDAO();
 		return rubricaDao.cassaforteExist();
 	}
 
+	/**
+	 *  confronta se la password inserita sia uguale a quella associata alla cassaforte
+	 * @param oldPass String
+	 * @return true se le due stringhe corrispondono, false altrimenti
+	 * @throws Exception
+	 */
 	private boolean ceckPassword(String oldPass) throws Exception {
 		if (rubrica.getCassaforte().getPassword().compareTo(oldPass) == 0) {
 			return true;
@@ -718,11 +1025,22 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * Metodo per cifrare la passowrd
+	 * @param pass String
+	 * @return 
+	 */
 	private String cifraPassword(String pass) {
 		// TODO Creare metodo funzionate ;
 		return pass;
 	}
 
+	/**
+	 * 
+	 * @param pass
+	 * @return un Arraylist di {@link Model.Contatto} appartenenti alla cassaforte
+	 * @throws Exception
+	 */
 	public ArrayList<Contatto> getContattiCassaforte(String pass) throws Exception {
 		if (ceckPassword(pass)) {
 			return rubrica.getCassaforte().getListaGruppo();
@@ -730,7 +1048,7 @@ public class Controller {
 			throw new Exception("La password inserita non è corretta, ");
 		}
 	}
-	
+
 	public ArrayList<Contatto> getContattiCassaforte () {
 		return rubrica.getCassaforte().getListaGruppo();
 	}
@@ -742,7 +1060,7 @@ public class Controller {
 	}
 
 	/**
-	 * 
+	 *cerca i contatti con email simili alla stringa data 
 	 * @param mail
 	 * @return lista di contatti risultanti dalla ricerca
 	 */
@@ -759,16 +1077,16 @@ public class Controller {
 
 
 	/**
-	 * 
-	 * @param prefisso
-	 * @param nome
-	 * @param cognome
+	 *cerca i contatti con anagrafie simili alle stringhe date 
+	 * @param prefisso String
+	 * @param nome String
+	 * @param cognome String
 	 * @return arraylist dei contatti risultati
 	 */
 	public ArrayList<Contatto> SearchAnagrafica(String prefisso, String nome, String cognome) {
 	    ContattoDAO contattoDao = new ImplementazioneContattoDAO();
-	    prefisso="%"+prefisso+"%"; 
-	       nome="%"+nome+"%"; 
+	    prefisso="%"+prefisso+"%";
+	       nome="%"+nome+"%";
 	        cognome="%"+cognome+"%";
 	    ArrayList<Integer> ListID =  contattoDao.SearchAnagrafica(prefisso,nome,cognome);
 	    ArrayList <Contatto> ListRisultati = new ArrayList <>();
@@ -776,19 +1094,19 @@ public class Controller {
 	    for (int i = 0; i < ListID.size(); i++) {
 	         ListRisultati.add(rubrica.getContatto(ListID.get(i)));
 	    }
-	        
+
 	    return ListRisultati;
 	}
 
 	/**
-	 * 
-	 * @param nickname
-	 * @param fornitore
+	 *cerca i contatti con parametri di account simili alle stringhe date 
+	 * @param nickname String
+	 * @param fornitore String
 	 * @return lista dei risultati della search
 	 */
 	public ArrayList<Contatto> searchAccount(String nickname, String fornitore) {
 	    ContattoDAO contattoDao = new ImplementazioneContattoDAO();
-	    nickname="%"+nickname+"%";  
+	    nickname="%"+nickname+"%";
 	    fornitore="%"+fornitore+"%";
 	    ArrayList<Integer> ListID =  contattoDao.SearchAccount(nickname, fornitore);
 	    //TODO Controllare la correttezza
@@ -800,7 +1118,7 @@ public class Controller {
 	}
 
 	/**
-	 * 
+	 *cerca i contatti con Numeri simili alle stringa  data 
 	 * @param prefissoNumero
 	 * @param numero
 	 * @param tipoNumero
@@ -808,8 +1126,8 @@ public class Controller {
 	 */
 	public ArrayList<Contatto> searchNumeri(String prefissoNumero, String numero, String tipoNumero) {
 	    ContattoDAO contattoDao = new ImplementazioneContattoDAO();
-	    prefissoNumero="%"+prefissoNumero+"%";  
-	    numero="%"+numero+"%";  
+	    prefissoNumero="%"+prefissoNumero+"%";
+	    numero="%"+numero+"%";
 	    ArrayList<Integer> ListID =  contattoDao.SearchNumeri(prefissoNumero, numero, tipoNumero);
 	    //TODO Controllare la correttezza
 	    ArrayList <Contatto> ListRisultati = new ArrayList <>();
@@ -818,7 +1136,12 @@ public class Controller {
 	    }
 	    return ListRisultati;
 	}
-	
+
+	/**
+	 * 
+	 * @param mail String
+	 * @return I contatti che hanno email uguale al parametro mail dato 
+	 */
 	public ArrayList<Contatto> verificaDuplicatiContatto(String mail) {
 	    ArrayList<Contatto> listaRisultato = new ArrayList();
 	    ArrayList<Integer> listaID = new ArrayList();
@@ -830,6 +1153,10 @@ public class Controller {
 	    return listaRisultato;
 	}
 
+	/**
+	 * 
+	 * @return ArrayList di stringhe contenente tutte le email che sono presenti in più contatti
+	 */
 	public ArrayList<String> verificaMailDuplicate() {
 	    ArrayList<String> listaMail = new ArrayList<String>();
 	    RubricaDAO rubricaDao = new ImplementazioneRubricaDAO();
@@ -837,7 +1164,10 @@ public class Controller {
 	    return listaMail;
 	}
 
-
+/**
+ * 
+ * @return ArrayList {@literal<Contatto>} con tutti i contatit che hanno email uguali fra i loro possibili {@link Model.Account}
+ */
 	public ArrayList<Contatto> verificaDuplicatiAccount() {
 	    ArrayList<Contatto> listaRisultato = new ArrayList();
 	    ArrayList<Integer> listaID = new ArrayList();
@@ -848,10 +1178,10 @@ public class Controller {
 	    }
 	    return listaRisultato;
 	}
-	
+
 	/**
-	 * 
-	 * @param id
+	 *Getter del prefisso del contatto associato al parametro dato 
+	 * @param id int codice che identifica univocamente il contatto
 	 * @return prefisso del contatto
 	 */
 	public String getInfoContattoPrefisso (int id){
@@ -859,46 +1189,54 @@ public class Controller {
 		String Prefisso = contattoChiamato.getPrefissoNome();
 		return Prefisso;
 	}
-	
+
 	/**
-	 * 
-	 * @param id
+	 *Getter del nome del contatto associato al parametro dato 
+	 * @param id int codice che identifica univocamente il contatto
 	 * @return nome del contatto
 	 */
 public String getInfoContattoNome (int id){
 	Contatto contattoChiamato = rubrica.getContatto(id);
 	String nome = contattoChiamato.getNome();
 	return nome;
-}	
+}
 
 /**
- * 
- * @param id
+ *Getter del cognome del contatto associato al parametro dato 
+	 * @param id int codice che identifica univocamente il contatto
  * @return cognome del contatto
  */
 public String getInfoContattoCognome (int id){
 	Contatto contattoChiamato = rubrica.getContatto(id);
 	String cognome = contattoChiamato.getCognome();
 	return cognome;
-}	
+}
 
 
 
 /**
- * 
- * @param id
- * @return quantità di numeri associati al contatto
+ *Getter di quanti numeri ha il contatto associato al parametro dato 
+	 * @param id int codice che identifica univocamente il contatto
+ * @return quantita di numeri associati al contatto
  */
 public Integer getInfoContattoNumeroQuantita (int id) {
     Integer ris = rubrica.getContatto(id).getListaNumeri().size();
     return ris;
 }
-/**
- * 
- * @param id
- * @return quantità di numeri associati al contatto
- */
 
+
+/**
+ * Modifica {@link Model.NumeriTelefonici} del contatto associato
+ * @param contattoID int codice che identifica univocamente il contatto
+ * @param tag String
+ * @param prefisso String
+ * @param numero String
+ * @param tipoNEW String
+ * @param tipoOLD String
+ * @param PrefissoOLD String
+ * @param numeroOLD String
+ * @throws Exception
+ */ 
 public void modificaNumero(int contattoID,String tag,String prefisso,String numero,String tipoNEW,String tipoOLD,String PrefissoOLD,String numeroOLD) throws Exception {
     ContattoDAO contattoDao= new ImplementazioneContattoDAO();
     int idNumero=0;
@@ -913,15 +1251,20 @@ public void modificaNumero(int contattoID,String tag,String prefisso,String nume
 
 }
 
+/**
+ * Getter di quanti numeri ha il contatto associato al parametro dato 
+	 * @param id int codice che identifica univocamente il contatto
+ * @return
+ */
 public Integer getNumeroQuantita (int id) {
 	Integer ris = rubrica.getContatto(id).getListaNumeri().size();
 	return ris;
 }
 
 /**
- * 
- * @param i
- * @param id
+ *Getter del tag del numero del contatto associato ai parametri dati
+ * @param i index dell'elemento che vuoi prendere dall' ArrayList
+* @param id int codice che identifica univocamente il contatto
  * @return tag del numero di telefono
  */
 public String getInfoContattoTagNumero(int i, int id) {
@@ -930,10 +1273,10 @@ public String getInfoContattoTagNumero(int i, int id) {
 }
 
 /**
- * 
- * @param i
- * @param id
- * @return prefisso nazionale del numero 
+ *Getter del prefisso del numero del contatto associato ai parametri dati
+ * @param i index dell'elemento che vuoi prendere dall' ArrayList
+* @param id int codice che identifica univocamente il contatto
+ * @return prefisso nazionale del numero
  */
 public String getInfoContattoPrefissoNumero(int i ,int id) {
 	String ris = rubrica.getContatto(id).getNumero(i).getPrefisso();
@@ -941,10 +1284,10 @@ public String getInfoContattoPrefissoNumero(int i ,int id) {
 }
 
 /**
- * 
- * @param i
- * @param id
- * @return numero di telefono
+ *Getter del numero del contatto associato ai parametri dati
+ * @param i index dell'elemento che vuoi prendere dall' ArrayList
+* @param id int codice che identifica univocamente il contatto
+*  @return numero di telefono
  */
 public String getInfoContattoNumeroNumero(int i, int id) {
 	String ris = rubrica.getContatto(id).getNumero(i).getNumero();
@@ -952,9 +1295,9 @@ public String getInfoContattoNumeroNumero(int i, int id) {
 }
 
 /**
- * 
- * @param i
- * @param id
+ *Getter del tipo del numero del contatto associato ai parametri dati
+ * @param i index dell'elemento che vuoi prendere dall' ArrayList
+* @param id int codice che identifica univocamente il contatto
  * @return tipo del numero
  */
 public String getInfoContattoNumeroTipo(int i, int id) {
@@ -963,15 +1306,21 @@ public String getInfoContattoNumeroTipo(int i, int id) {
 }
 
 /**
- * 
- * @param id
+ *Getter di quanti {@link Model.Indirizzi} ha il contatto associato al parametro dato 
+* @param id int codice che identifica univocamente il contatto
  * @return numero degli indirizzi associati al Contatto
  */
-public Integer getInfoContattoIndirizzoQuantità (int id) {
+public Integer getInfoContattoIndirizzoQuantita (int id) {
 	Integer ris = rubrica.getContatto(id).getListaIndirizzi().size();
 	return ris;
 }
 
+/**
+ * Getter del {@link Model.Account} del contatto associato ai parametri dati
+ * @param i index dell'elemento che vuoi prendere dall' ArrayList
+* @param id int codice che identifica univocamente il contatto
+ * @return
+ */
 public int  getInfoContattoAccountId(int i, int id) {
     return getContatto(id).getListaAccount().get(i).getID();
 }
@@ -982,10 +1331,10 @@ public int getInfoContattoIndirizzoId(int i, int id) {
 }
 
 /**
- * 
- * @param i
- * @param id
- * @return via dell'indirizzo 
+ *Getter della via dell'indirizzo del contatto associato ai parametri dati
+ * @param i index dell'elemento che vuoi prendere dall' ArrayList
+* @param id int codice che identifica univocamente il contatto
+ * @return via dell'indirizzo
  */
 public String getInfoContattoIndirizzoVia(int i, int id) {
 	String ris = rubrica.getContatto(id).getIndirizzo(i).getVia();
@@ -993,20 +1342,20 @@ public String getInfoContattoIndirizzoVia(int i, int id) {
 }
 
 /**
- * 
- * @param i
- * @param id
- * @return città dell'indirizzo
+ *Getter della citta' dell'indirizzo del contatto associato ai parametri dati
+ * @param i index dell'elemento che vuoi prendere dall' ArrayList
+* @param id int codice che identifica univocamente il contatto
+ * @return citta dell'indirizzo
  */
-public String getInfoContattoIndirizzoCittà(int i, int id) {
-	String ris = rubrica.getContatto(id).getIndirizzo(i).getCittà();
+public String getInfoContattoIndirizzoCitta(int i, int id) {
+	String ris = rubrica.getContatto(id).getIndirizzo(i).getCitta();
 	return ris;
 }
 
 /**
- * 
- * @param i
- * @param id
+ *Getter del codice postale dell'indirizzo del contatto associato ai parametri dati
+ * @param i index dell'elemento che vuoi prendere dall' ArrayList
+* @param id int codice che identifica univocamente il contatto
  * @return codice postale dell'indrizzo
  */
 public String getInfoContattoIndirizzoCodicePostale(int i, int id) {
@@ -1015,9 +1364,9 @@ public String getInfoContattoIndirizzoCodicePostale(int i, int id) {
 }
 
 /**
- * 
- * @param i
- * @param id
+ *Getter della nazione dell'indirizzo del contatto associato ai parametri dati
+ * @param i index dell'elemento che vuoi prendere dall' ArrayList
+* @param id int codice che identifica univocamente il contatto
  * @return nazione dell'indirizzo
  */
 public String getInfoContattoIndirizzoNazione(int i, int id) {
@@ -1026,19 +1375,19 @@ public String getInfoContattoIndirizzoNazione(int i, int id) {
 }
 
 /**
- * 
- * @param id
+ *Getter di quanti {@link Model.Account} ha il contatto associato al parametro dato 
+	 * @param id int codice che identifica univocamente il contatto
  * @return numero di account associati al contatto
  */
-public Integer getInfoContattoAccountQuantità(int id) {
+public Integer getInfoContattoAccountQuantita(int id) {
 	Integer ris = rubrica.getContatto(id).getListaAccount().size();
 	return ris;
 }
 
 /**
- * 
- * @param i
- * @param id
+ *Getter del  fornitore  del {@link Model.Account} del contatto associato ai parametri dati
+ * @param i index dell'elemento che vuoi prendere dall' ArrayList
+* @param id int codice che identifica univocamente il contatto
  * @return fornitore dell'account
  */
 public String getInfoContattoAccountFornitore(int i, int id) {
@@ -1047,9 +1396,9 @@ public String getInfoContattoAccountFornitore(int i, int id) {
 }
 
 /**
- * 
- * @param i
- * @param id
+ *Getter del nickname del {@link Model.Account} del contatto associato ai parametri dati
+ * @param i index dell'elemento che vuoi prendere dall' ArrayList
+* @param id int codice che identifica univocamente il contatto
  * @return nickname associata all'account
  */
 public String getInfoContattoAccountNickname(int i, int id) {
@@ -1058,9 +1407,9 @@ public String getInfoContattoAccountNickname(int i, int id) {
 }
 
 /**
- * 
- * @param i
- * @param id
+ *Getter dell'email associa al {@link Model.Account} del contatto associato ai parametri dati
+ * @param i index dell'elemento che vuoi prendere dall' ArrayList
+* @param id int codice che identifica univocamente il contatto
  * @return mail associata all'account
  */
 public String getInfoContattoAccountMail(int i, int id) {
@@ -1069,9 +1418,9 @@ public String getInfoContattoAccountMail(int i, int id) {
 }
 
 /**
- * 
- * @param i
- * @param id
+ *Getter della frase di benvenuto del {@link Model.Account} del contatto associato ai parametri dati
+ * @param i index dell'elemento che vuoi prendere dall' ArrayList
+* @param id int codice che identifica univocamente il contatto
  * @return frase di benvenuto dell'Account
  */
 public String getInfoContattoAccountBenvenuto(int i, int id) {
@@ -1079,14 +1428,32 @@ public String getInfoContattoAccountBenvenuto(int i, int id) {
 	return ris;
 }
 
+/**
+ * Getter di tutte emal associate al contatto al parametro dato
+* @param id int codice che identifica univocamente il contatto
+ * @return ArrayList@{@literal<String>} 
+ */
 public ArrayList<String> getInfoContattoMailList(int id) {
     return rubrica.getContatto(id).getListaEmail();
 }
 
+/**
+ * Setta la lista dei contatti che sono nella cassaforte
+ * @param contattiInCassaforte ArrayList{@literal<Contatto>}
+ * @see
+ * {@link Model.Contatto} <br>
+ *{@link Model.Cassaforte}
+ */
 public void setListaContattiCassaforte(ArrayList<Contatto> contattiInCassaforte) {
 	rubrica.getCassaforte().setListaContatti(contattiInCassaforte);
 }
 
+/**
+ * elimina 
+ * @param contattoId int codice che identifica univocamente il contatto
+ * @param idOld int codice che identifica univocamente account 
+ * @param index usato per eliminare Account dalla Arraylist{@literal<Account>} del contatto
+ */
 public void eliminaAccount(int contattoId,int idOld,int index) {
     ContattoDAO contattoDao = new ImplementazioneContattoDAO();
     contattoDao.deleteAccountDB(idOld);
@@ -1095,30 +1462,18 @@ public void eliminaAccount(int contattoId,int idOld,int index) {
 
 }
 
-public ArrayList<Account> eliminaAccountLista(int idOld, ArrayList <Account> lista) {
-    int indexOld=0;
-    for (int i = 0; i < lista.size(); i++) {
-        if(lista.get(i).getID()==idOld) {
-            indexOld = i;
-        }
-    } 
-    lista.remove(indexOld);
 
-    return lista;
-}
-
-public ArrayList<Account> modificaAccountLista(int idMod, ArrayList<Account> listaAccount, String fornitore, String nickname, String mail, String benvenuto) {
-    int indexMod=0;
-    for (int i = 0; i < listaAccount.size(); i++) {
-        if(listaAccount.get(i).getID()==idMod) {
-            indexMod = i;
-        }
-    } 
-    Account AccountMod = new Account (listaAccount.get(indexMod).getID(),fornitore,nickname,benvenuto,mail); 
-    listaAccount.set(indexMod, AccountMod);
-    return listaAccount;
-}
-
+/**
+ * 
+ * @param idContatto int codice che identifica univocamente il contatto
+ * @param index usato per modficare  Account dalla Arraylist{@literal<Account>} del contatto
+ * @param idMod int codice che identifica univocamente account
+ * @param fornitore String
+ * @param nickname String
+ * @param mail String
+ * @param fraseDiBenvenuto String
+ * @throws SQLException
+ */
 public void modificaAccount(int idContatto,int index,int idMod, String fornitore, String nickname, String mail, String fraseDiBenvenuto) throws SQLException {
     AccountDAO accountDao = new ImplementazioneAccountDAO();
 
@@ -1128,6 +1483,14 @@ public void modificaAccount(int idContatto,int index,int idMod, String fornitore
 
 }
 
+/**
+ * Modifica le anagrafie del contatto 
+ * @param contattoID int codice che identifica univocamente il contatto
+ * @param contattoPrefisso String
+ * @param contattoNome String
+ * @param contattoCognome String
+ * @param contattoPath String
+ */
 public void modificaContattoAnagrafiche(int contattoID, String contattoPrefisso, String contattoNome,String contattoCognome,String contattoPath) {
     Contatto contatto =getContatto(contattoID);
     ContattoDAO contattoDao = new ImplementazioneContattoDAO();
@@ -1142,6 +1505,14 @@ public void modificaContattoAnagrafiche(int contattoID, String contattoPrefisso,
 
 }
 
+/**
+ *
+ * @param contattoID int codice che identifica univocamente il contatto
+ * @param prefisso String
+ * @param numero String
+ * @param tipo String
+ * @throws Exception
+ */
 public void eliminaNumero(int contattoID,String prefisso, String numero,String tipo) throws Exception {
  	ContattoDAO contattoDao= new ImplementazioneContattoDAO();
  	int idNumero=0;
@@ -1151,23 +1522,43 @@ public void eliminaNumero(int contattoID,String prefisso, String numero,String t
  	}else {
  		idNumero=contattoDao.getIDNumeroMobile(prefisso, numero, contattoID);
  	}
- 	
+
  	contattoDao.removeNumeriDB(idNumero, tipo);
- 	
- 	
+
+
  }
 
+/**
+ * metodo che elimina un indirizzo di un dato contatto
+ * @param idContatto int codice che identifica univocamente il contatto
+ * @param idIndirizzo  int codice che identifica univocamente indirizzo
+ * @param indexIndirizzo usato per eliminare indirizzo dalla Arraylist{@literal<indirizzo>} del contatto
+ * @throws SQLException
+ */
 public void deleteIndirizzo(int idContatto,int idIndirizzo,int indexIndirizzo) throws SQLException {
     ContattoDAO contattoDao = new ImplementazioneContattoDAO();
     contattoDao.deleteIndirizzoDB(idIndirizzo);
     rubrica.getContatto(idContatto).getListaIndirizzi().remove(indexIndirizzo);
 }
 
+/**
+ * metodo che modifica un indirizzo
+ * @param idContatto int codice che identifica univocamente accoun
+ * @param idIndirizzo int codice che identifica univocamente indirizzo
+ * @param tag String
+ * @param via String
+ * @param citta String
+ * @param codicePostale String
+ * @param nazione String
+ * @param principale String
+ * @param indexIndirizzo usato per modificare indirizzo dalla Arraylist{@literal<indirizzo>} del contatto
+
+ */
 public void modificaIndirizzo(int idContatto,int idIndirizzo,String tag,String via,String  citta ,String  codicePostale, String nazione, boolean principale,int indexIndirizzo) {
  	IndirizziDAO indirizzoDao = new ImplementazioneIndirizziDAO();
- 	
+
  	indirizzoDao.updateIndirizzoDB(idContatto, idIndirizzo, via, citta, codicePostale, nazione, tag, principale);
- 	
+
  	if(principale && indexIndirizzo!=0) {
  		if(indexIndirizzo==0) {
  			rubrica.getContatto(idContatto).getListaIndirizzi().remove(indexIndirizzo);
@@ -1175,35 +1566,56 @@ public void modificaIndirizzo(int idContatto,int idIndirizzo,String tag,String v
  	}else {
  		rubrica.getContatto(idContatto).getListaIndirizzi().remove(indexIndirizzo);
  		rubrica.getContatto(idContatto).getListaIndirizzi().add(indexIndirizzo, new Indirizzi(idIndirizzo, principale, via, citta, codicePostale, nazione, nazione));
- 		
+
  	}
  		for(Indirizzi indrizzo : getContatto(idContatto).getListaIndirizzi()) {
  			System.out.println("Sono dentro Controller.modificaIndirizzo:-"+indrizzo.stampaIndirizzo());
  		}
- 
+
  }
 }
 
+/**
+ * Getter del tag dell'indirizzo del contatto associato ai parametri dati
+ * @param i index dell'elemento che vuoi prendere dall' ArrayList
+* @param id int codice che identifica univocamente il contatto
+ * @return
+ */
 public String getInfoContattoIndirizzoTag(int i, int id) {
  	String ris = rubrica.getContatto(id).getIndirizzo(i).getTag();
- //	System.out.println("Tag:-"+ris);
+
  	return ris;
  }
- 
- 
+
+ /**
+  * metodo che modifica nell'indirizzo di un contatto
+  * @param id int codice che identifica univocamente il contatto
+  * @param tag String
+  * @param via String
+  * @param citta String
+  * @param codicePostale String
+  * @param nazione String
+  * @param principale String
+  * @return id dell'indirizzo modificato
+  */
  public int aggiungiIndirizzoModifica(int id,String tag,String via,String  citta ,String  codicePostale, String nazione, boolean principale) {
  	ContattoDAO contattoDao = new ImplementazioneContattoDAO();
  	int idIndirizzo = contattoDao.addIndirizziDB(id, via, citta, codicePostale, nazione, tag, principale);
  	if(principale) {
  		getContatto(id).getListaIndirizzi().add(0,new Indirizzi(idIndirizzo, principale, via, citta, codicePostale, nazione, tag));
- 
+
  	}else {
  		getContatto(id).getListaIndirizzi().add(new Indirizzi(idIndirizzo, principale, via, citta, codicePostale, nazione, tag));
  	}
- 	
+
  	return idIndirizzo;
  }
- 
+
+ /**
+  * metodo per estrarre dal path in ingresso l'estenzione dell'immagine
+  * @param path
+  * @return estenzione dell'immagine se trovata altrimente null
+  */
  private String getEstenzioneImmagine(String path) {
 	 String JPEG = "jpeg";
      String JPG = "jpg";
@@ -1220,44 +1632,33 @@ public String getInfoContattoIndirizzoTag(int i, int id) {
     }
 
 
- //Sepe
 
-public ArrayList<String> riempiListaMail(int id) {
-    ArrayList<String> ris = rubrica.getContatto(id).getListaEmail();
-    return ris;
-}
 
-public ArrayList<Account> aggiungiAccountLista(int newId, String fornitore, String nick, String mail, String benvenuto, ArrayList<Account> listaAccount) {
-    Account newAccount =new Account(newId, fornitore,nick, benvenuto,mail);
-    listaAccount.add(newAccount);
-    return listaAccount;
-}
-	
-	public void dumpContattoCassaforte(int contattoID) {
-	ContattoDAO contattoDao = new ImplementazioneContattoDAO();
-	CassaforteDAO cassaforteDao = new ImplementazioneCassaforteDAO();
-	try {
-		ArrayList<Contatto> listaContatti = cassaforteDao.getContattiProtetti();
-	  Contatto contatto = rubrica.getCassaforte().getContatto(contattoID);
-	  if( contatto.getPathFoto()!=null&&contatto.getPathFoto().compareTo("")!=0) {
-	      contatto.setPathFoto("User"+contattoID+"."+getEstenzioneImmagine(contatto.getPathFoto()));
-	  }else {
-	      contatto.setPathFoto("");
-	  }
-	  contatto.setNumero(contattoDao.getListaNumeri(contattoID));
 
-	  contatto.setAccount(contattoDao.getListaAccount(contattoID));
-	  contatto.setIndirizzo(contattoDao.getListaIndirizzi(contattoID));
-	  for(Indirizzi indirizzo : contatto.getListaIndirizzi()) {
-	      System.out.println("Stampa Indirizzo DEl contatto:-"+indirizzo.stampaIndirizzo());
-	  }
-	  contatto.setEmail(contattoDao.getListaEmail(contattoID));
-	  rubrica.aggiungiContatto(contatto);
-	}
-	catch (Exception e) {
-		e.printStackTrace();
-	}
-	
-}
+
+/**
+ * metodo che cerca il deputato di un numero dato dal database
+ * @param contattoID int codice che identifica univocamente il contatto
+ * @param prefN String
+ * @param numero String
+ * @param tipoNumero String
+ * @return oggetto NumeriTefonici del deputato
+ */
+public NumeriTelefonici getDeputatoDiNumero (int contattoID, String prefN, String numero,String tipoNumero) {
+    NumeriTelefoniciDAO numeroDao= new ImplementazioneNumeriTelefoniciDAO();
+    ContattoDAO contattoDao = new ImplementazioneContattoDAO();
+    int idNumero=0;
+    try {
+    if(tipoNumero.compareToIgnoreCase("fisso")==0)
+        idNumero = contattoDao.getIDNumeroFisso(prefN, numero, contattoID);
+    else
+        idNumero = contattoDao.getIDNumeroMobile(prefN, numero, contattoID);
+
+    return numeroDao.readDeputatoDiNumeroDB(idNumero, tipoNumero);
+
+    }catch (Exception e) {
+        return null;
+    }
+    }
 
 }
