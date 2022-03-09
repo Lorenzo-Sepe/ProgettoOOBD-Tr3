@@ -1652,5 +1652,14 @@ public NumeriTelefonici getDeputatoDiNumero (int contattoID, String prefN, Strin
         return null;
     }
     }
+	
+	/**
+ * elimina il contatto
+ * @param id int id del contatto da eliminare
+ */
+public void eliminaContatto(int id) {
+	rubrica.eliminaContatto(rubrica.getContatto(id));
+}
+}
 
 }
