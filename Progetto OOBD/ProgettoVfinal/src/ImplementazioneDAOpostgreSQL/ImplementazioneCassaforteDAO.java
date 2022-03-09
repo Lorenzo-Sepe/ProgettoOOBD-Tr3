@@ -63,4 +63,16 @@ private Connection connection;
 		changePasswordPS.execute();
 	}
 	
+	public ArrayList<Contatto> getContattiProtetti () throws SQLException {
+		PreparedStatement getContattiProtettiPS;
+		ArrayList<Contatto> contattiProtetti = new ArrayList<>();
+		getContattiProtettiPS = connection.prepareStatement("SELECT * FROM contatto WHERE \"Password_Cassaforte\" IS NOT NULL");
+		ResultSet rs = getContattiProtettiPS.executeQuery();
+		while (rs.next()) {
+			Contatto contatto = new Contatto(rs.getInt("contatto_id"),rs.getString("prefisso_nome"), rs.getString("nome"), rs.getString("cognome"),rs.getString("path_foto"));
+			contattiProtetti.add(contatto);
+		}
+		return contattiProtetti;
+	}
+	
 }
