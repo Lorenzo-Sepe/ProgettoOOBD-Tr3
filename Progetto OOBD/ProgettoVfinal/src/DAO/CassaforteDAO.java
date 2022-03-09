@@ -11,5 +11,7 @@ public interface CassaforteDAO {
 	public void removeContattoCassaforteDB(int id) throws SQLException;
 	
 	public void changePasswordDB (String nuovaPassword, String vecchiaPassword) throws SQLException;
+	
+	public ArrayList<Contatto> getContattiProtetti () throws SQLException;
 
 }
