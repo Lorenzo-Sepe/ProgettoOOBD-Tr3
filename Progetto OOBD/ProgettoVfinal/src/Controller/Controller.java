@@ -1556,23 +1556,17 @@ public void deleteIndirizzo(int idContatto,int idIndirizzo,int indexIndirizzo) t
  */
 public void modificaIndirizzo(int idContatto,int idIndirizzo,String tag,String via,String  citta ,String  codicePostale, String nazione, boolean principale,int indexIndirizzo) {
  	IndirizziDAO indirizzoDao = new ImplementazioneIndirizziDAO();
-
+ 	
  	indirizzoDao.updateIndirizzoDB(idContatto, idIndirizzo, via, citta, codicePostale, nazione, tag, principale);
-
- 	if(principale && indexIndirizzo!=0) {
- 		if(indexIndirizzo==0) {
+ 	
+ 	if(principale) {
  			rubrica.getContatto(idContatto).getListaIndirizzi().remove(indexIndirizzo);
+ 			rubrica.getContatto(idContatto).getListaIndirizzi().get(0).setPrincipale(false);
  			rubrica.getContatto(idContatto).getListaIndirizzi().add(0, new Indirizzi(idIndirizzo, principale, via, citta, codicePostale, nazione, nazione));
- 	}else {
- 		rubrica.getContatto(idContatto).getListaIndirizzi().remove(indexIndirizzo);
- 		rubrica.getContatto(idContatto).getListaIndirizzi().add(indexIndirizzo, new Indirizzi(idIndirizzo, principale, via, citta, codicePostale, nazione, nazione));
-
+ 	} else {
+ 		rubrica.getContatto(idContatto).getListaIndirizzi().get(indexIndirizzo).setAll(principale, via, citta, codicePostale, nazione, tag);
+ 		
  	}
- 		for(Indirizzi indrizzo : getContatto(idContatto).getListaIndirizzi()) {
- 			System.out.println("Sono dentro Controller.modificaIndirizzo:-"+indrizzo.stampaIndirizzo());
- 		}
-
- }
 }
 
 /**
