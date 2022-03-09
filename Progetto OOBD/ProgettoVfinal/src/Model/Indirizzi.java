@@ -8,19 +8,19 @@ public class Indirizzi {
 	   private int id;
 	   private boolean principale;
 	   private String via;
-	   private String città;
+	   private String citta;
 	   private String codicePostale;
 	   private String nazione;
 	   private String tag;
 	   
 //Costruttore
 	   
-	   public Indirizzi (int id, boolean principale, String via, String città, String codicePostale, String nazione, String identificatore)
+	   public Indirizzi (int id, boolean principale, String via, String citta, String codicePostale, String nazione, String identificatore)
 	   {
 		this.id = id;    
 		this.principale = principale;   
 		this.via = via;
-		this.città=città;
+		this.citta=citta;
 		this.codicePostale=codicePostale; 
 		this.nazione=nazione;	
 		this.tag = identificatore;
@@ -46,11 +46,11 @@ public class Indirizzi {
 		}
 	   
 	   /**
-	    * restituisce la città
-	    * @return Stringa corrispondente alla città
+	    * restituisce la citta
+	    * @return Stringa corrispondente alla citta
 	    */
-	   public String getCittà() {
-			return città;
+	   public String getCitta() {
+			return citta;
 		}
 	   
 	   /**
@@ -79,26 +79,48 @@ public class Indirizzi {
 	   
 	   /**
 	    * 
-	    * @return valore booleano che è uguale a true se l'indirizzo è principale, false altrimenti
+	    * @return valore booleano che � uguale a true se l'indirizzo � principale, false altrimenti
 	    */
 	   public Boolean getPrincipale() {
 		   return principale;
 	   }
-	
-	/**
-     * imposta l'indirizzo principale
-     * @param b valore booleano che imposta il valore
-     */
-    public void setPrincipale(boolean b) {
-        principale = b;        
-    }
 	   
     /**
      * 
      */
 
 	public String stampaIndirizzo() {
-		return  tag+" "+ via+" "+città+" "+codicePostale;
+		return  tag+" "+ via+" "+citta+" "+codicePostale;
 	}
+
+
+	/**
+	 * imposta l'indirizzo principale
+	 * @param b valore booleano che imposta il valore
+	 */
+	public void setPrincipale(boolean b) {
+		principale = b;		
+	}
+	
+	/**
+     * 
+
+     * @param principale String
+     * @param via String
+     * @param citta String
+     * @param codicePostale String 
+     * @param nazione
+     */
+    public void setAll(boolean principale, String via, String citta, String codicePostale,
+            String nazione,String tag) {
+
+        this.principale = principale;
+        this.via = via;
+        this.citta=citta;
+        this.codicePostale=codicePostale; 
+        this.nazione=nazione;
+        this.tag = tag;
+
+    }
 
 }
