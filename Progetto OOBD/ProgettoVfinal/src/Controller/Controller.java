@@ -1232,5 +1232,32 @@ public ArrayList<Account> aggiungiAccountLista(int newId, String fornitore, Stri
     listaAccount.add(newAccount);
     return listaAccount;
 }
+	
+	public void dumpContattoCassaforte(int contattoID) {
+	ContattoDAO contattoDao = new ImplementazioneContattoDAO();
+	CassaforteDAO cassaforteDao = new ImplementazioneCassaforteDAO();
+	try {
+		ArrayList<Contatto> listaContatti = cassaforteDao.getContattiProtetti();
+	  Contatto contatto = rubrica.getCassaforte().getContatto(contattoID);
+	  if( contatto.getPathFoto()!=null&&contatto.getPathFoto().compareTo("")!=0) {
+	      contatto.setPathFoto("User"+contattoID+"."+getEstenzioneImmagine(contatto.getPathFoto()));
+	  }else {
+	      contatto.setPathFoto("");
+	  }
+	  contatto.setNumero(contattoDao.getListaNumeri(contattoID));
+
+	  contatto.setAccount(contattoDao.getListaAccount(contattoID));
+	  contatto.setIndirizzo(contattoDao.getListaIndirizzi(contattoID));
+	  for(Indirizzi indirizzo : contatto.getListaIndirizzi()) {
+	      System.out.println("Stampa Indirizzo DEl contatto:-"+indirizzo.stampaIndirizzo());
+	  }
+	  contatto.setEmail(contattoDao.getListaEmail(contattoID));
+	  rubrica.aggiungiContatto(contatto);
+	}
+	catch (Exception e) {
+		e.printStackTrace();
+	}
+	
+}
 
 }
