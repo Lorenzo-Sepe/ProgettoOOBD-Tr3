@@ -144,9 +144,9 @@ public class Controller{
 	 * @throws SQLException
 	 */
 	public void dumpListaCassaforte() throws SQLException {
-		RubricaDAO rubricaDao = new ImplementazioneRubricaDAO();
+		CassaforteDAO cassaforteDao = new ImplementazioneCassaforteDAO();
 		ArrayList <Contatto> listaContattiProtetti = new ArrayList<>();
-		listaContattiProtetti = rubricaDao.getContattiProtetti();
+		listaContattiProtetti = cassaforteDao.getContattiProtetti();
 		rubrica.getCassaforte().setListaContatti(listaContattiProtetti);
 	}
 
