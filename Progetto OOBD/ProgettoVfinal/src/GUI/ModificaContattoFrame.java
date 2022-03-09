@@ -22,7 +22,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.JTextPane;
 
 import Controller.Controller;
-
+import Model.NumeriTelefonici;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -83,7 +83,6 @@ public class ModificaContattoFrame extends JFrame {
 	private String pathFoto=null;
 	private JComboBox<String> comboBoxMail;
 	private int contattoID;
-	private JButton btnProvaBegin;
 
 
 
@@ -190,16 +189,16 @@ c.transactionBegin();
 		modelIndirizzi.addColumn("id");
 	    modelIndirizzi.addColumn("Tag");
 		modelIndirizzi.addColumn("Via"); 
-		modelIndirizzi.addColumn("Città"); 
+		modelIndirizzi.addColumn("Citta"); 
 		modelIndirizzi.addColumn("Codice Postale");
 		modelIndirizzi.addColumn("Nazione");
 		
-		for(int i=0;i<c.getInfoContattoIndirizzoQuantità(id);i++) {
+		for(int i=0;i<c.getInfoContattoIndirizzoQuantita(id);i++) {
 			modelIndirizzi.addRow(new Object[]{
 					c.getInfoContattoIndirizzoId(i,id),
 					c.getInfoContattoIndirizzoTag(i, id),
 					c.getInfoContattoIndirizzoVia(i,id),
-					c.getInfoContattoIndirizzoCittà(i, id),
+					c.getInfoContattoIndirizzoCitta(i, id),
 					c.getInfoContattoIndirizzoCodicePostale(i, id),
 					c.getInfoContattoIndirizzoNazione(i, id)
 			});	
@@ -228,7 +227,7 @@ c.transactionBegin();
 		
 		// Inserimento account del contatto
 		
-		for(int i=0;i<c.getInfoContattoAccountQuantità(id);i++) {
+		for(int i=0;i<c.getInfoContattoAccountQuantita(id);i++) {
 			modelAccounts.addRow(new Object[]{
 				c.getInfoContattoAccountId(i, id),
 				c.getInfoContattoAccountFornitore(i, id),
@@ -296,7 +295,27 @@ c.transactionBegin();
 		};
 		
 		tableNumeri = new JTable(modelloNumeri);
-		
+		tableNumeri.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount()==2) {
+                    int row = tableNumeri.getSelectedRow();
+                    String tag = tableNumeri.getValueAt(row, 0).toString();
+                    String prefN = tableNumeri.getValueAt(row, 1).toString();
+                    String numero = tableNumeri.getValueAt(row, 2).toString();
+                    String tipoNumero= modelloNumeri.getValueAt(row, 3).toString();
+                    NumeriTelefonici deputato = c.getDeputatoDiNumero(contattoID, prefN,numero,tipoNumero);
+                    System.out.println("Test deputato "+deputato);
+                    if(deputato!=null) {
+                        JPanel visualizzaDeputato = new VisualizzaDeputatoPanel(tag, prefN, numero, deputato.getTag(), deputato.getPrefisso(), deputato.getNumero());
+                        JOptionPane.showMessageDialog(null, visualizzaDeputato, "Visualizza deputato",JOptionPane.INFORMATION_MESSAGE);
+                    }else {
+
+                    }
+
+                }
+            }
+        });
 		modelloNumeri.addColumn("tag");
 		modelloNumeri.addColumn("prefisso");
 		modelloNumeri.addColumn("numero");
@@ -553,12 +572,12 @@ c.transactionBegin();
 						String idIndirizzo=null;
 						
 						if(row==0 ) {
-							JOptionPane.showMessageDialog(null,"Il primo indirizzo inserito sarà considerato principale");
+							JOptionPane.showMessageDialog(null,"Il primo indirizzo inserito sara considerato principale");
 							AggiungiIndirizzoPanel panelAggiungiIndirizzo= new AggiungiIndirizzoPanel();
 							result = JOptionPane.showConfirmDialog(null, panelAggiungiIndirizzo, "Inserisci Indirizzo", JOptionPane.OK_CANCEL_OPTION);
 							 tagIndirizzo=panelAggiungiIndirizzo.getTag();
 							 viaIndirizzo =panelAggiungiIndirizzo.getVia();
-							 cittaIndirizzo =panelAggiungiIndirizzo.getCittà();
+							 cittaIndirizzo =panelAggiungiIndirizzo.getCitta();
 							  codicePostaleIndirizzo =panelAggiungiIndirizzo.getCodicePostale();
 							 nazioneIndirizzo =panelAggiungiIndirizzo.getNazione();
 							 IsPrincipale=true;
@@ -570,7 +589,7 @@ c.transactionBegin();
 							result = JOptionPane.showConfirmDialog(null, panelAggiungiIndirizzo, "Inserisci Indirizzo", JOptionPane.OK_CANCEL_OPTION);
 							tagIndirizzo=panelAggiungiIndirizzo.getTag();
 							 viaIndirizzo =panelAggiungiIndirizzo.getVia();
-							 cittaIndirizzo =panelAggiungiIndirizzo.getCittà();
+							 cittaIndirizzo =panelAggiungiIndirizzo.getCitta();
 							  codicePostaleIndirizzo =panelAggiungiIndirizzo.getCodicePostale();
 							 nazioneIndirizzo =panelAggiungiIndirizzo.getNazione();
 							 IsPrincipale=panelAggiungiIndirizzo.getPrincipale();
@@ -679,7 +698,7 @@ c.transactionBegin();
 								result = JOptionPane.showConfirmDialog(null, panelModificaIndirizzo, "Modifica Indirizzo", JOptionPane.OK_CANCEL_OPTION);
 								if (result == JOptionPane.OK_OPTION) {tagIndirizzo=panelModificaIndirizzo.getTag();
 								 viaIndirizzo =panelModificaIndirizzo.getVia();
-								 cittaIndirizzo =panelModificaIndirizzo.getCittà();
+								 cittaIndirizzo =panelModificaIndirizzo.getCitta();
 								 codicePostaleIndirizzo =panelModificaIndirizzo.getCodicePostale();
 								 nazioneIndirizzo =panelModificaIndirizzo.getNazione();
 									IsPrincipale=true;
@@ -690,7 +709,7 @@ c.transactionBegin();
 								result = JOptionPane.showConfirmDialog(null, panelModificaIndirizzo, "Modifica Indirizzo", JOptionPane.OK_CANCEL_OPTION);
 								if (result == JOptionPane.OK_OPTION) {tagIndirizzo=panelModificaIndirizzo.getTag();
 								 viaIndirizzo =panelModificaIndirizzo.getVia();
-								 cittaIndirizzo =panelModificaIndirizzo.getCittà();
+								 cittaIndirizzo =panelModificaIndirizzo.getCitta();
 								 codicePostaleIndirizzo =panelModificaIndirizzo.getCodicePostale();
 								 nazioneIndirizzo =panelModificaIndirizzo.getNazione();
 									IsPrincipale=panelModificaIndirizzo.getPrincipale();
@@ -1039,26 +1058,6 @@ c.transactionBegin();
 							}
 						});
 						contentPane.add(btnModificaEmail);
-						
-						JButton btnProvaCOmmit = new JButton("Prova COMMIT");
-						btnProvaCOmmit.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent e) {
-								c.transactionCommit();
-							}
-						});
-						sl_contentPane.putConstraint(SpringLayout.NORTH, btnProvaCOmmit, 6, SpringLayout.SOUTH, panelAccount);
-						sl_contentPane.putConstraint(SpringLayout.EAST, btnProvaCOmmit, -27, SpringLayout.WEST, buttonIndietro);
-						contentPane.add(btnProvaCOmmit);
-						
-						btnProvaBegin = new JButton("Begin");
-						btnProvaBegin.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent e) {
-								c.transactionBegin();
-							}
-						});
-						sl_contentPane.putConstraint(SpringLayout.SOUTH, btnProvaBegin, 0, SpringLayout.SOUTH, buttonIndietro);
-						sl_contentPane.putConstraint(SpringLayout.EAST, btnProvaBegin, -11, SpringLayout.WEST, btnProvaCOmmit);
-						contentPane.add(btnProvaBegin);
 						
 						
 		
