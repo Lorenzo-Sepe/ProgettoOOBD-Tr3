@@ -11,8 +11,6 @@ import java.util.ArrayList;
 
 import DAO.AccountDAO;
 import Database.Connessione;
-import Model.Account;
-import Model.Contatto;
 
 /**
  * @author LorenzoSepe
@@ -45,28 +43,6 @@ private Connection connection;
             e.printStackTrace();
         }
     }
-
-	public ArrayList<Account> leggiAccountDB(Contatto c) {
-			PreparedStatement leggiAccountPS;
-			ArrayList<Account> listaAccount = new ArrayList<>();		
-			try {
-				leggiAccountPS = connection.prepareStatement(
-						//da cambare una volta finito il database
-						"SELECT * FROM \"Account\".\"Contatto\" WHERE \"Contatto_Associato\"='"+c.getID()+"';");
-						
-			ResultSet rs = leggiAccountPS.executeQuery();
-			while (rs.next()) {
-				Account i = new Account (rs.getString("Fornitore"), rs.getString("Nickname"),rs.getString("Frase_di_Benvenuto"),  rs.getString("Mail") );
-				listaAccount.add(i);
-			}
-			rs.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			return listaAccount;		
-		}
 	
 	public ArrayList<Integer> verificaDuplicatiAccountDao() {
         PreparedStatement verificaDuplicatiAccountDaoPS;

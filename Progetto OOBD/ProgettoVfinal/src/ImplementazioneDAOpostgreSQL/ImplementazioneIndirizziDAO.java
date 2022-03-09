@@ -6,19 +6,11 @@ package ImplementazioneDAOpostgreSQL;
 import java.sql.Connection;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import DAO.IndirizziDAO;
 import Database.Connessione;
-import Model.Contatto;
-import Model.Indirizzi;
+
 
 
 
@@ -48,7 +40,7 @@ public class ImplementazioneIndirizziDAO implements IndirizziDAO {
 		}
 	 }
 
-	public void updateIndirizzoDB(int idContatto,int idIndirizzo ,String via, String città, String codicePostale, String nazione, String tag, boolean principale ) {
+	public void updateIndirizzoDB(int idContatto,int idIndirizzo ,String via, String citta, String codicePostale, String nazione, String tag, boolean principale ) {
         PreparedStatement addIndirizziDB;
         PreparedStatement addAbitaDB;
         
@@ -57,7 +49,7 @@ public class ImplementazioneIndirizziDAO implements IndirizziDAO {
                     + "    SET  via=? ,  \"città\" =? , codice_postale = ? , nazione = ? \r\n"
                     + "    WHERE indirizzi_id = ? ;   ");
             addIndirizziDB.setString(1, via);
-            addIndirizziDB.setString(2, città);
+            addIndirizziDB.setString(2, citta);
             addIndirizziDB.setString(3, codicePostale);
             addIndirizziDB.setString(4, nazione);
             addIndirizziDB.setInt(5, idIndirizzo);

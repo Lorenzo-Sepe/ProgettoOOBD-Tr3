@@ -268,7 +268,6 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 	
 	public void setDeputatoMobileSuFIsso(int idContatto,String mobilePrefisso,String mobileNumero,String fissoPrefisso,String fissoNumero) {
         PreparedStatement getDeputato ;
-        String nomeProcedura="\"SetDeputato_Mobile\"";
         try {
             getDeputato=connection.prepareStatement("update Numeri_telefonici_mobili set \"reindirizzamento\" = ? where \"numero_id\" =  ?  ;");
          //   getDeputato=connection.prepareStatement("CALL "+nomeProcedura+"( ?, ?);");
@@ -296,9 +295,6 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 
     public void setDeputatoFissoSuMobile(int idContatto,String mobilePrefisso,String mobileNumero, String fissoPrefisso,String fissoNumero) {
         PreparedStatement getDeputato ;
-        String nomeProcedura="\"SetDeputato_Fisso\"";
-        
-
         try {
             getDeputato=connection.prepareStatement("update Numeri_telefonici_fissi set reindirizzamento = ? where numero_id =  ?  ;");
             

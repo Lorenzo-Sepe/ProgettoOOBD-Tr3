@@ -34,7 +34,6 @@ public class ImplementazioneNumeriTelefoniciDAO implements NumeriTelefoniciDAO {
 	}
      
     public void updateNumeroDB (int idContatto,int idNumero,String tag, String prefisso,String numero,String tipoNew,String tipoOLD) throws SQLException {
-        PreparedStatement updateNumeroPS;
         //SET numero_id=?, contatto_associato=?, prefisso_nazionale=?, numero=?, identificatore=?, reindirizzamento=?
         String nomeProcedura= "\"Update_Tabelle_Numeri\"";
         
