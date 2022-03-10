@@ -2,8 +2,6 @@ package GUI;
 
 import java.awt.EventQueue;
 
-import javax.swing.JFrame;
-
 import Controller.Controller;
 
 // TODO: Auto-generated Javadoc
@@ -15,10 +13,10 @@ public class MAIN {
             public void run() {
                 try {
                     Controller c=new Controller();
-                    System.out.println("dump dati iniziato  sono fuori dal controller ");
+                    //System.out.println("dump dati iniziato  sono fuori dal controller ");
 
                     c.dumpDati();
-                    System.out.println("dump dati finito sono fuori dal controller ");
+                   // System.out.println("dump dati finito sono fuori dal controller ");
                     Home window = new Home(c);
                     window.setVisible(true);
                 } catch (Exception e) {

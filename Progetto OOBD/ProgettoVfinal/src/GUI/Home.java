@@ -1,13 +1,26 @@
 package GUI;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JToolBar;
+import javax.swing.ListSelectionModel;
+import javax.swing.SpringLayout;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
@@ -15,27 +28,9 @@ import javax.swing.table.DefaultTableModel;
 
 import Controller.Controller;
 import Model.Contatto;
-import Model.*;
-import GUI.*;
+import Model.Rubrica;
 
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JButton;
-import javax.swing.ImageIcon;
-import javax.swing.SwingConstants;
-import javax.swing.JToolBar;
-import javax.swing.ListSelectionModel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SpringLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.sql.SQLException;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
+@SuppressWarnings("serial")
 public class Home extends JFrame {
 
 	private JPanel contentPane;
@@ -48,7 +43,9 @@ public class Home extends JFrame {
 	private JMenuItem mntmContattiDuplicati;
 	private JMenuItem mntmAccountDuplicati;
 	private String passwordCassaforte = "";
+	@SuppressWarnings("unused")
 	private boolean flagCreaCassaforte = false;
+	@SuppressWarnings("unused")
 	private boolean flagModificaCassaforte = false;
 	private boolean isPossibiliModifiche;
     private String frameCheHaModificatoQualcosa;
@@ -57,12 +54,13 @@ public class Home extends JFrame {
 
 
 
+	
 	public Home(Controller controller) {
 		c = controller;
 		frame=this;
 		setTitle("Rubrica");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 650, 400);
+		setBounds(350, 150, 650, 400);
 		
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -112,7 +110,7 @@ public class Home extends JFrame {
 					}
 				}
 				else {
-					JOptionPane.showMessageDialog(null, "La cassaforte è già stata creata", "ERROR", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "La cassaforte ï¿½ giï¿½ stata creata", "ERROR", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -189,7 +187,7 @@ public class Home extends JFrame {
 							String nuovaPassword = JOptionPane.showInputDialog("Inserire la nuova password");
 							if (nuovaPassword != null) {
 								if (nuovaPassword.compareTo(provaPassword) == 0) {
-									JOptionPane.showMessageDialog(null, "La nuova password è uguale alla vecchia", "ERROR", JOptionPane.ERROR_MESSAGE);
+									JOptionPane.showMessageDialog(null, "La nuova password ï¿½ uguale alla vecchia", "ERROR", JOptionPane.ERROR_MESSAGE);
 								}
 								else if (nuovaPassword.compareTo("") == 0) {
 									JOptionPane.showMessageDialog(null, "Nuova password non inserita", "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -245,7 +243,7 @@ public class Home extends JFrame {
 		mntmAccountDuplicati = new JMenuItem("Cerca Account Duplicati");
 		mntmAccountDuplicati.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ArrayList<Contatto>listaRisultati = c.verificaDuplicatiAccount();
+				ArrayList<String>listaRisultati = c.verificaAccountMailDuplicate();
                 JFrame GestioneDuplicatiFrame = new GestioneDuplicatiAccountFrame(c,frame,listaRisultati);
                 frame.setVisible(false);
                 GestioneDuplicatiFrame.setVisible(true);
@@ -402,7 +400,7 @@ public class Home extends JFrame {
 		            }
 		    }
 		});
-		ListSelectionModel listenerContattoSelezionato=RubricaTable.getSelectionModel();
+		
 		RubricaTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		modelloRubrica.addColumn("Id");

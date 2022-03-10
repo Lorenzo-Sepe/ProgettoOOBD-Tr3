@@ -1,30 +1,25 @@
 package GUI;
 
-import Model.*;
-import Controller.Controller;
-
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.util.Arrays;
-import java.util.ArrayList;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.JScrollPane;
-import javax.swing.JButton;
-import javax.swing.SpringLayout;
-import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import Controller.Controller;
+import Model.Contatto;
+
+@SuppressWarnings("serial")
 public class CreaGruppoFrame extends JFrame {
 
 	private JPanel contentPane;
@@ -50,7 +45,7 @@ public class CreaGruppoFrame extends JFrame {
 		listaContattiArrayList = new ArrayList<>(c.getListaContatti());
 		setTitle("Crea Gruppo");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 955, 385);
+		setBounds(200, 100, 955, 385);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -80,10 +75,10 @@ public class CreaGruppoFrame extends JFrame {
 		modelloContatti.addColumn("prefisso");
 		modelloContatti.addColumn("nome"); 
 		modelloContatti.addColumn("cognome"); 
-		
-		if (listaContattiArrayList.isEmpty()) {
-			System.out.println("La lista dei contatti per la crea gruppo è vuota");
-		}
+	
+//		if (listaContattiArrayList.isEmpty()) {
+//			System.out.println("La lista dei contatti per la crea gruppo Ã¨ vuota");
+//		}
 		
 		for (Contatto contatto : listaContattiArrayList) {
 			modelloContatti.addRow(new Object[] {
@@ -186,9 +181,7 @@ public class CreaGruppoFrame extends JFrame {
 					c.checkGruppo(textFieldGruppo.getText(), membriGruppo);
 					c.aggiungiGruppo(textFieldGruppo.getText(), membriGruppo);
 					JOptionPane.showMessageDialog(null, "Gruppo creato con successo");
-					for (Contatto contatto : membriGruppo) {
-						System.out.println("Salvataggio gruppo Contatto: "+contatto.StampaContatto());
-					}
+				
 					frameChiamante.setVisible(true);
 					frame.setVisible(false);
 					frame.dispose();

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--AgileJ Ltd. (http://www.agilej.com)--><ajsv>
+    <diagram creationDate="2022-mar-09 17:15" licenseGrade="single" licenseeName="AgileJ community member" licenseeOrganization="agilej-community" populationMethod="manual" version="1.9.2.v20190518-1152">
+        <filterScript>
+
+// no filter script yet defined for this class diagram
+// use CTRL+SPACE for completion suggestions
+hide method lines
+
+</filterScript>
+        <class className="Model.EnumPrefissoNumero" modelMemberId="Model.EnumPrefissoNumero" project="ProgettoVfinal" xLocation="949" yLocation="1654"/>
+        <class className="Model.Contatto" modelMemberId="Model.Contatto" project="ProgettoVfinal" xLocation="826" yLocation="100"/>
+        <class className="Model.Indirizzi" modelMemberId="Model.Indirizzi" project="ProgettoVfinal" xLocation="1055" yLocation="1119"/>
+        <class className="Model.NumeriTelefonici" modelMemberId="Model.NumeriTelefonici" project="ProgettoVfinal" xLocation="100" yLocation="880"/>
+        <class className="Model.Rubrica" modelMemberId="Model.Rubrica" project="ProgettoVfinal" xLocation="2284" yLocation="465"/>
+        <class className="Model.Account" modelMemberId="Model.Account" project="ProgettoVfinal" xLocation="1885" yLocation="1681"/>
+        <class className="Model.Cassaforte" modelMemberId="Model.Cassaforte" project="ProgettoVfinal" xLocation="1664" yLocation="496"/>
+        <class className="Model.Gruppo" modelMemberId="Model.Gruppo" project="ProgettoVfinal" xLocation="1966" yLocation="950"/>
+        <class className="Model.TipoNumero" modelMemberId="Model.TipoNumero" project="ProgettoVfinal" xLocation="1590" yLocation="1654"/>
+    </diagram>
+</ajsv>

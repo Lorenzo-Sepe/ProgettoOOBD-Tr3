@@ -10,10 +10,10 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
 public class ComboListener extends KeyAdapter{
-	JComboBox comboBoxDelListener;
+	JComboBox<String> comboBoxDelListener;
 	ArrayList<String> arrayList;
 	
-	public ComboListener(JComboBox comboBoxParametro, ArrayList<String> arrayListParametro) {
+	public ComboListener(JComboBox<String> comboBoxParametro, ArrayList<String> arrayListParametro) {
 		comboBoxDelListener=comboBoxParametro;
 		arrayList=arrayListParametro;
 	}
@@ -22,18 +22,18 @@ public class ComboListener extends KeyAdapter{
 	{
 				// TODO Auto-generated method stub
 				String text = ((JTextField)key.getSource()).getText();
-				System.out.println("il testo appena insertito è: "+text);
+				//System.out.println("il testo appena insertito Ã¨: "+text);
 				
-				comboBoxDelListener.setModel(new DefaultComboBoxModel(getFilteredList(text)));
+				comboBoxDelListener.setModel(new DefaultComboBoxModel<String>(getFilteredList(text)));
 				comboBoxDelListener.setSelectedIndex(-1);
 				((JTextField)comboBoxDelListener.getEditor().getEditorComponent()).setText(text);
 				comboBoxDelListener.showPopup();
 	}
 	
 	
-	public Vector getFilteredList(String text)
+	public Vector<String> getFilteredList(String text)
 	{
-		Vector<String> v = new Vector();
+		Vector<String> v = new Vector<String>();
 		for(int a = 0;a<arrayList.size();a++)
 		{
 			if(arrayList.get(a).toString().startsWith(text))

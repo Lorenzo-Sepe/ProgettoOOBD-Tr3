@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 
 
 
+@SuppressWarnings("serial")
 public class VisualizzaDeputatoPanel extends JPanel{
     private JLabel lbTAgNumeroSelezionato;
     private JLabel lbPrefissoNumeroSelezionato;
@@ -37,7 +38,7 @@ public class VisualizzaDeputatoPanel extends JPanel{
         panelNumero.add(lbPrefissoNumeroSelezionato);
         panelNumero.add(lbNumeroSelezionato);
         this.add(panelNumero);
-        this.add(new JLabel("Questo è il numero per il reindirizzamento"));
+        this.add(new JLabel("Questo ï¿½ il numero per il reindirizzamento"));
         panelDeputato.add(lbTAgDeputato);
         panelDeputato.add(lbPrefissoDeputato);
         panelDeputato.add(lbNumeroDeputato);

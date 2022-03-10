@@ -2,7 +2,6 @@ package GUI;
 
 import java.awt.GridLayout;
 import java.util.ArrayList;
-import java.util.Vector;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
@@ -15,7 +14,8 @@ public class SetIndirizzoPrincipale extends JPanel{
 private ArrayList<JRadioButton> arrayListRadioBotton;
 
 private ButtonGroup gruppoBottoniPrincipale;
-    public SetIndirizzoPrincipale (DefaultTableModel modelIndirizzo) throws Exception {
+    @SuppressWarnings("unused")
+	public SetIndirizzoPrincipale (DefaultTableModel modelIndirizzo) throws Exception {
         JPanel pannelBloccoIndirizzo =  new JPanel(new GridLayout(modelIndirizzo.getRowCount(),modelIndirizzo.getColumnCount()+1));
         
          gruppoBottoniPrincipale= new ButtonGroup();
@@ -24,9 +24,9 @@ private ButtonGroup gruppoBottoniPrincipale;
         Object[] array = modelIndirizzo.getDataVector().toArray();
         
         
-    for(int i=0;i<array.length;i++) {
-        System.out.println(array[i].toString());
-    }
+//    for(int i=0;i<array.length;i++) {
+//        System.out.println(array[i].toString());
+//    }
         
         
         for (int row=0;row<modelIndirizzo.getRowCount();row++) {

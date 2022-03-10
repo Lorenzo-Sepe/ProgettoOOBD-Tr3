@@ -110,14 +110,14 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 	}
 	
 	
-	public int addIndirizziDB (int idContatto, String via, String città, String codicePostale, String nazione, String tag, boolean principale ) {
+	public int addIndirizziDB (int idContatto, String via, String citta, String codicePostale, String nazione, String tag, boolean principale ) {
 		PreparedStatement addIndirizziDB;
 		PreparedStatement addAbitaDB;
 		int idIndirizzo = 0;
 		try {
-			addIndirizziDB = connection.prepareStatement("INSERT INTO indirizzi (via,città,codice_postale,nazione) VALUES (?,?,?,?) RETURNING indirizzi_id AS id ;");
+			addIndirizziDB = connection.prepareStatement("INSERT INTO indirizzi (via,cittÃ ,codice_postale,nazione) VALUES (?,?,?,?) RETURNING indirizzi_id AS id ;");
 			addIndirizziDB.setString(1, via);
-			addIndirizziDB.setString(2, città);
+			addIndirizziDB.setString(2, citta);
 			addIndirizziDB.setString(3, codicePostale);
 			addIndirizziDB.setString(4, nazione);
 			ResultSet rs = addIndirizziDB.executeQuery();
@@ -153,7 +153,7 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
 			getListaIndirizziPS.setInt(1, contattoID);
 			ResultSet rs = getListaIndirizziPS.executeQuery();
 			while (rs.next()) {
-				Indirizzi i = new Indirizzi(rs.getInt("indirizzi_id"), rs.getBoolean("abitazione_principale"), rs.getString("via"),rs.getString("città"),rs.getString("codice_postale"),rs.getString("nazione"),rs.getString("identificatore"));
+				Indirizzi i = new Indirizzi(rs.getInt("indirizzi_id"), rs.getBoolean("abitazione_principale"), rs.getString("via"),rs.getString("cittï¿½"),rs.getString("codice_postale"),rs.getString("nazione"),rs.getString("identificatore"));
 			
 				listaIndirizzi.add(i);
 			}
@@ -270,20 +270,10 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
         PreparedStatement getDeputato ;
         try {
             getDeputato=connection.prepareStatement("update Numeri_telefonici_mobili set \"reindirizzamento\" = ? where \"numero_id\" =  ?  ;");
-         //   getDeputato=connection.prepareStatement("CALL "+nomeProcedura+"( ?, ?);");
-            //TODO CANCELLARE DOPO IL DEBUG
-            System.out.print("Sono nella setDEP mobile\nIL mobile è "+mobilePrefisso +" "+mobileNumero );
-            System.out.print(" ID: ");
-            System.out.println(getIDNumeroMobile(mobilePrefisso, mobileNumero,idContatto));
-            getDeputato.setInt(2, getIDNumeroMobile(mobilePrefisso, mobileNumero,idContatto));
-            
-            System.out.print("Il fisso è "+fissoPrefisso +" "+fissoNumero );
-            System.out.print(" ID: ");
-            System.out.println(getIDNumeroFisso(fissoPrefisso, fissoNumero,idContatto));
+        
             
             getDeputato.setInt(1, getIDNumeroFisso(fissoPrefisso, fissoNumero,idContatto));
            
-            System.out.print("Sono nella setDEP mobile su FIsso dopo i set int query:-"+getDeputato.toString());
 
             getDeputato.execute();
             
@@ -298,21 +288,14 @@ public class ImplementazioneContattoDAO implements ContattoDAO {
         try {
             getDeputato=connection.prepareStatement("update Numeri_telefonici_fissi set reindirizzamento = ? where numero_id =  ?  ;");
             
-            //TODO ELIMNIARE DOPO IL DEUBUG
-            System.out.print("Sono nella setDEP FIsso\nIL fisso è "+fissoPrefisso +" "+fissoNumero );
-            System.out.print(" ID:+");
-            System.out.println(getIDNumeroFisso(fissoPrefisso, fissoNumero,idContatto));
+        
             
             getDeputato.setInt(2, getIDNumeroFisso(fissoPrefisso, fissoNumero,idContatto));
             
-            System.out.print("IL mobile è "+mobilePrefisso +" "+mobileNumero );
-            System.out.print(" ID:+");
-            System.out.println(getIDNumeroMobile(mobilePrefisso, mobileNumero,idContatto));
-            
+    
             
             getDeputato.setInt(1, getIDNumeroMobile(mobilePrefisso, mobileNumero,idContatto));
-            System.out.print("Sono nella setDEP FIsso su mobile  dopo i set int query:-"+getDeputato.toString());
-
+         
            getDeputato.execute();
 
         } catch (Exception e) {

@@ -1,50 +1,36 @@
 package GUI;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.EventQueue;
+import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
-import javax.swing.DefaultCellEditor;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
-import javax.swing.JComboBox;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JToolBar;
+import javax.swing.SpringLayout;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableColumn;
 
 import Controller.Controller;
 import Model.Contatto;
 
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.SpringLayout;
-import javax.swing.JLabel;
-import javax.swing.JSplitPane;
-import javax.swing.border.BevelBorder;
-import javax.swing.BoxLayout;
-import java.awt.GridLayout;
-import javax.swing.ListSelectionModel;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.sql.SQLException;
-
-import javax.swing.JToolBar;
-import javax.swing.JButton;
-import javax.swing.ImageIcon;
-
+@SuppressWarnings("serial")
 public class GestioneDuplicatiContattiFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JPanel panelLista;
 	private JTable tableRisultati;
-	private JList listaMail;
+	private JList<String> listaMail;
 	private JLabel lblmail;
 	private JScrollPane scrollPane;
 	private JLabel lblContatti;
@@ -73,7 +59,7 @@ public class GestioneDuplicatiContattiFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public GestioneDuplicatiContattiFrame(Controller c, JFrame frameChiamante, ArrayList mailList) {
+	public GestioneDuplicatiContattiFrame(Controller c, JFrame frameChiamante, ArrayList<String> mailList) {
 		frame = this;
 		localList = mailList;
 		setTitle("Controllo duplicati");
@@ -163,6 +149,8 @@ public class GestioneDuplicatiContattiFrame extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				int id = (int) tableRisultati.getModel().getValueAt(tableRisultati.getSelectedRow(),0);
             	ModificaContattoFrame newFrame = new ModificaContattoFrame(c, frame, id);
+            	newFrame.setVisible(true);
+            	frame.setVisible(false);
             	localList = aggiornaTabella(c, localList);
 			}
 		});
@@ -173,6 +161,7 @@ public class GestioneDuplicatiContattiFrame extends JFrame {
 		btnNewButton_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				c.transactionBegin();
 				int row = tableRisultati.getSelectedRow();
 				if (row>0) {
 					if (JOptionPane.showConfirmDialog(null, "Sicuro di voler cancellare il contatto?", "WARNING", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
@@ -189,15 +178,16 @@ public class GestioneDuplicatiContattiFrame extends JFrame {
 					
 				}
 				localList = aggiornaTabella(c, localList);
+				c.transactionCommit();
 			}
 		});
 		btnNewButton_1.setIcon(new ImageIcon(GestioneDuplicatiContattiFrame.class.getResource("/immagini/elimina.jpg")));
 		toolBar.add(btnNewButton_1);
         
-		DefaultListModel modelloLista = new DefaultListModel();
+		DefaultListModel<String> modelloLista = new DefaultListModel<String>();
 		modelloLista.addAll(mailList);
 		
-		listaMail = new JList(modelloLista);
+		listaMail = new JList<String>(modelloLista);
 		listaMail.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -227,7 +217,7 @@ public class GestioneDuplicatiContattiFrame extends JFrame {
 		panelLista.add(listaMail);
 	}
 
-	protected ArrayList aggiornaTabella(Controller c, ArrayList mailList) {
+	protected ArrayList<String> aggiornaTabella(Controller c, ArrayList<String>  mailList) {
 		ArrayList<String> newListaMail = c.verificaMailDuplicate();
 		if( newListaMail.equals(mailList)==true ) {
 			return mailList;

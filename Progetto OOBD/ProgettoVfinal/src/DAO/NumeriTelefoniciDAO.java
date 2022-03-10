@@ -28,16 +28,12 @@ public interface NumeriTelefoniciDAO {
      * @throws Exception
      */
     public NumeriTelefonici readNumeroDB (int idNumero,String tipo) throws Exception;
-     
-	
-     /**
+    
+    /**
      * esegue una query sulla tabella NumeriTelefonici del database <br> 
      * @param idNumero int che identifica univocamente il numero
      * @param tipo String con valore fisso o mobile
      * @return restituisce il deputato del  {@link Model.NumeriTelefonici} dato dal ResulSet della query 
      */
     public NumeriTelefonici readDeputatoDiNumeroDB(int idNumero, String tipo) ;
-    
-
-
 }

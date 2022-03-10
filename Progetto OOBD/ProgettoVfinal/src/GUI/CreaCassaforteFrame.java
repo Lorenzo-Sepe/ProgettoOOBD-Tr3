@@ -2,34 +2,31 @@ package GUI;
 
 
 
-import Model.*;
-import Controller.Controller;
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.util.Arrays;
-import java.util.ArrayList;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.JScrollPane;
-import javax.swing.JButton;
-import javax.swing.SpringLayout;
-import javax.swing.JTable;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import Controller.Controller;
+import Model.Contatto;
 /**
  * 
  * @author AlessandroTrincone
  *
  */
+@SuppressWarnings("serial")
 public class CreaCassaforteFrame extends JFrame {
 
 	private JPanel contentPane;
@@ -55,7 +52,7 @@ public class CreaCassaforteFrame extends JFrame {
 		setResizable(false);
 		setTitle("Crea Cassaforte");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 950, 375);
+		setBounds(200, 100, 950, 375);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -130,7 +127,7 @@ public class CreaCassaforteFrame extends JFrame {
 				int row;
 				if (!listenerContattoSelezionato.isSelectionEmpty()) {
 					row = ContattiTable.getSelectedRow();
-					System.out.println(modelloContatti.getValueAt(row, 0));
+					//System.out.println(modelloContatti.getValueAt(row, 0));
 					int id = Integer.parseInt(modelloContatti.getValueAt(row, 0).toString());
 					String prefisso = (String) modelloContatti.getValueAt(row, 1);
 					String nome = (String) modelloContatti.getValueAt(row, 2);
@@ -187,12 +184,7 @@ public class CreaCassaforteFrame extends JFrame {
 		btnSalva.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				boolean check;
 				try {
-					for (Contatto contatto : contattiInCassaforte) {
-						check = c.checkContattoInGruppo(contatto.getID());
-						System.out.println("il controllo da esito "+check);
-					}
 					c.creaCassaforte(password);
 					c.aggiungiListaContattiCassaforte(password, contattiInCassaforte);
 					

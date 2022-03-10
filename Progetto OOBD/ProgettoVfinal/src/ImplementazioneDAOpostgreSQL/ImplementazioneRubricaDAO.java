@@ -1,6 +1,9 @@
 package ImplementazioneDAOpostgreSQL;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import DAO.RubricaDAO;
@@ -171,6 +174,7 @@ public class ImplementazioneRubricaDAO implements RubricaDAO {
 	}
 	
 	public ArrayList<String> verificaMailDuplicatiDao() {
+		
 		PreparedStatement verificaDuplicatiContattoDaoPS;
 		ArrayList<String> listaRisultato = new ArrayList<>();
 		try {
@@ -183,6 +187,26 @@ public class ImplementazioneRubricaDAO implements RubricaDAO {
 			e.printStackTrace();
 		}
 		return listaRisultato;
+	}
+	
+	//era arraylist string
+	public ArrayList<String> verificaMailDuplicatiAccountDao(){
+		PreparedStatement verifica;
+		ArrayList<String> risultato = new ArrayList<>();
+		
+		try {
+			verifica = connection.prepareStatement("SELECT mail FROM account GROUP BY mail HAVING COUNT(mail)>1 except SELECT mail FROM account where mail = 'Nessuna Mail';");
+			ResultSet rs = verifica.executeQuery();
+			while (rs.next()) {
+
+				risultato.add(rs.getString("mail"));
+				
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return risultato;
 	}
 	
 	public ArrayList<Integer> verificaDuplicatiContattoDao(String mail) {

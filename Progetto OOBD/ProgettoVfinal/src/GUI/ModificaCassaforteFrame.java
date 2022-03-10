@@ -2,34 +2,31 @@ package GUI;
 
 
 
-import Model.*;
-import Controller.Controller;
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.util.Arrays;
-import java.util.ArrayList;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.JScrollPane;
-import javax.swing.JButton;
-import javax.swing.SpringLayout;
-import javax.swing.JTable;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import Controller.Controller;
+import Model.Contatto;
 /**
  * 
  * @author AlessandroTrincone
  *
  */
+@SuppressWarnings("serial")
 public class ModificaCassaforteFrame extends JFrame {
 
 	private JPanel contentPane;
@@ -44,7 +41,7 @@ public class ModificaCassaforteFrame extends JFrame {
 	private static  JFrame frameChiamante;
 	private static JFrame frame;
 	
-	private ArrayList<Contatto> listaContatti = new ArrayList<>();
+	
 	private ArrayList<Contatto> RAIlistaContatti = new ArrayList<>();
 	private ArrayList<Contatto> RAIlistaContattiCassaforte = new ArrayList<>();
 	
@@ -164,13 +161,13 @@ public class ModificaCassaforteFrame extends JFrame {
 				int row;
 				if (!listenerContattoSelezionato.isSelectionEmpty()) {
 					row = ContattiTable.getSelectedRow();
-					System.out.println(modelloContatti.getValueAt(row, 0));
+					//System.out.println(modelloContatti.getValueAt(row, 0));
 					int id = Integer.parseInt(modelloContatti.getValueAt(row, 0).toString());
 					String prefisso = (String) modelloContatti.getValueAt(row, 1);
 					String nome = (String) modelloContatti.getValueAt(row, 2);
 					String cognome = (String) modelloContatti.getValueAt(row, 3);
 					modelloContatti.removeRow(row);
-					System.out.println("Aggiungi RAIlistaContatti.get(row)+row"+RAIlistaContatti.get(row).StampaContatto()+"-"+row);
+				//	System.out.println("Aggiungi RAIlistaContatti.get(row)+row"+RAIlistaContatti.get(row).StampaContatto()+"-"+row);
 					RAIlistaContattiCassaforte.add(RAIlistaContatti.get(row));
 					RAIlistaContatti.remove(row);
 					modelloCassaforte.addRow(new Object[]{id, prefisso, nome, cognome});
@@ -260,9 +257,9 @@ public class ModificaCassaforteFrame extends JFrame {
 //					listaContattiId.add((int)modelloCassaforte.getValueAt(i, 0));
 //					contattiInCassaforte.add(contatto);
 //				}
-				for (Contatto contatto : RAIlistaContattiCassaforte) {
-					System.out.println("Sono in mod cassadorte frame-"+contatto.StampaContatto());
-				}
+//				for (Contatto contatto : RAIlistaContattiCassaforte) {
+//					System.out.println("Sono in mod cassadorte frame-"+contatto.StampaContatto());
+//				}
 				c.setListaContattiCassaforte(RAIlistaContattiCassaforte);
 				c.transactionCommit();
 				frameChiamante.setVisible(true);

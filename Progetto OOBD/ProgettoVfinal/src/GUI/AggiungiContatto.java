@@ -102,7 +102,7 @@ public class AggiungiContatto extends JFrame {
 		frameChiamante=Chiamante;
 		setTitle("Visualizzazione");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1110, 700);
+		setBounds(200, 30, 1110, 700);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -188,7 +188,7 @@ public class AggiungiContatto extends JFrame {
 	        
 	    modelIndirizzi.addColumn("Tag");
 		modelIndirizzi.addColumn("Via"); 
-		modelIndirizzi.addColumn("Città"); 
+		modelIndirizzi.addColumn("Citta"); 
 		modelIndirizzi.addColumn("Codice Postale");
 		modelIndirizzi.addColumn("Nazione");
 		
@@ -406,7 +406,7 @@ public class AggiungiContatto extends JFrame {
 								modelIndirizzi.addRow(new Object[] {
 										panelAggiungiIndirizzo.getTag(),
 										panelAggiungiIndirizzo.getVia(),
-										panelAggiungiIndirizzo.getCittà(),
+										panelAggiungiIndirizzo.getCitta(),
 										panelAggiungiIndirizzo.getCodicePostale(),
 										panelAggiungiIndirizzo.getNazione(),
 								});
@@ -457,7 +457,7 @@ public class AggiungiContatto extends JFrame {
 								column = 0;
 								 modelIndirizzi.setValueAt(panelModificaIndirizzo.getTag(), row, column++);
 								 modelIndirizzi.setValueAt(panelModificaIndirizzo.getVia(), row, column++);
-								 modelIndirizzi.setValueAt(panelModificaIndirizzo.getCittà(), row, column++);
+								 modelIndirizzi.setValueAt(panelModificaIndirizzo.getCitta(), row, column++);
 								 modelIndirizzi.setValueAt(panelModificaIndirizzo.getCodicePostale(), row, column++);
 								 modelIndirizzi.setValueAt(panelModificaIndirizzo.getNazione(), row, column++);
 							}
@@ -645,17 +645,17 @@ public class AggiungiContatto extends JFrame {
 									String tipoDelDeputato ;
 									
 									for (int i = 0; i < modelloNumeri.getRowCount(); i++) {
-										System.out.println("ceck if  "+modelloNumeri.getValueAt(i , 3).toString().compareToIgnoreCase("Fisso") );
+										//System.out.println("ceck if  "+modelloNumeri.getValueAt(i , 3).toString().compareToIgnoreCase("Fisso") );
 										if (modelloNumeri.getValueAt(i , 3).toString().compareToIgnoreCase("Fisso") == 0)
 											tipoDelDeputato = "Mobile";
 										else tipoDelDeputato = "Fisso";
 										
-										System.out.println("pref 1:-"+modelloNumeri.getValueAt(i, 1).toString()
-												+"\nnum 1:-"+modelloNumeri.getValueAt(i, 2).toString()
-												+"\ntipo 1:-"+modelloNumeri.getValueAt(i, 3).toString()
-												+"\npref 2:-"+pannelSettaDeputati.getPrefissoDeputato(i)
-												+"\nnum 2:-"+pannelSettaDeputati.getNumeroDeputato(i)
-												+"\ntipo2:-"+tipoDelDeputato); 
+//										System.out.println("pref 1:-"+modelloNumeri.getValueAt(i, 1).toString()
+//												+"\nnum 1:-"+modelloNumeri.getValueAt(i, 2).toString()
+//												+"\ntipo 1:-"+modelloNumeri.getValueAt(i, 3).toString()
+//												+"\npref 2:-"+pannelSettaDeputati.getPrefissoDeputato(i)
+//												+"\nnum 2:-"+pannelSettaDeputati.getNumeroDeputato(i)
+//												+"\ntipo2:-"+tipoDelDeputato); 
 										c.setDeputato(idContatto, modelloNumeri.getValueAt(i, 1).toString(),
 												modelloNumeri.getValueAt(i, 2).toString(),
 												modelloNumeri.getValueAt(i, 3).toString(),

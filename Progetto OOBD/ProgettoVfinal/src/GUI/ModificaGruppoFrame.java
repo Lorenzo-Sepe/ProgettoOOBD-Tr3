@@ -1,30 +1,26 @@
 package GUI;
 
-import Model.*;
-import Controller.Controller;
-
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.util.Arrays;
-import java.util.ArrayList;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.JScrollPane;
-import javax.swing.JButton;
-import javax.swing.SpringLayout;
-import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import Controller.Controller;
+import Model.Contatto;
+
+@SuppressWarnings("serial")
 public class ModificaGruppoFrame extends JFrame {
 
 	private JPanel contentPane;
@@ -89,9 +85,9 @@ public class ModificaGruppoFrame extends JFrame {
 		modelloContatti.addColumn("cognome"); 
 		
 		listaContattiArrayList = c.getListaContattiMenoGruppo(nomeGruppo);
-		if (listaContattiArrayList.isEmpty()) {
-			System.out.println("La lista dei contatti per la crea gruppo è vuota");
-		}
+//		if (listaContattiArrayList.isEmpty()) {
+//			System.out.println("La lista dei contatti per la crea gruppo ï¿½ vuota");
+//		}
 		
 		
 		

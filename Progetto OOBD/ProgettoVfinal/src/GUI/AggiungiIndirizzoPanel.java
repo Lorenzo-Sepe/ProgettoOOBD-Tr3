@@ -1,17 +1,16 @@
 package GUI;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-
 import java.awt.GridLayout;
 
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+@SuppressWarnings("serial")
 public class AggiungiIndirizzoPanel extends JPanel {
 
 	private JTextField textFieldVia;
-	private JTextField textFieldCittà;
+	private JTextField textFieldCitta;
 	private JTextField textFieldCodicePostale;
 	private JTextField textFieldNazione;
 	private JTextField textFieldTag;
@@ -26,12 +25,12 @@ public class AggiungiIndirizzoPanel extends JPanel {
 		add(textFieldVia);
 		textFieldVia.setColumns(15);
 		
-		JLabel lbCittà = new JLabel("città");
-		add(lbCittà);
+		JLabel lbCitta = new JLabel("citta");
+		add(lbCitta);
 		
-		textFieldCittà = new JTextField();
-		add(textFieldCittà);
-		textFieldCittà.setColumns(15);
+		textFieldCitta = new JTextField();
+		add(textFieldCitta);
+		textFieldCitta.setColumns(15);
 		
 		JLabel lbCodicePostale = new JLabel("codice postale");
 		add(lbCodicePostale);
@@ -60,8 +59,8 @@ public class AggiungiIndirizzoPanel extends JPanel {
 		return textFieldVia.getText();
 	}
 	
-	public String getCittà ( ) {
-		return textFieldCittà.getText();
+	public String getCitta ( ) {
+		return textFieldCitta.getText();
 	}
 	
 	public String getCodicePostale () {
@@ -76,9 +75,9 @@ public class AggiungiIndirizzoPanel extends JPanel {
 		return textFieldTag.getText();
 	}
 	
-	public void setAll (String tag, String via, String città, String codicePostale, String nazione) {
+	public void setAll (String tag, String via, String citta, String codicePostale, String nazione) {
 		textFieldVia.setText(via);
-		textFieldCittà.setText(città);
+		textFieldCitta.setText(citta);
 		textFieldCodicePostale.setText(codicePostale);
 		textFieldNazione.setText(nazione);
 		textFieldTag.setText(tag);

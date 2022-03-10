@@ -1,44 +1,36 @@
 package GUI;
 
-import java.awt.BorderLayout;
-import java.awt.Dialog.ModalityType;
-import java.awt.EventQueue;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.SpringLayout;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.table.DefaultTableModel;
 
 import Controller.Controller;
-import DAO.RubricaDAO;
 import Model.Contatto;
 import Model.Gruppo;
 import Model.Rubrica;
 
-import javax.swing.JScrollPane;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.SpringLayout;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
+@SuppressWarnings("serial")
 public class VisualizzaGruppiFrame extends JFrame {
 
 	private JPanel contentPane;
-	private JList listGruppi;
+	@SuppressWarnings("unused")
+	private JList<Gruppo> listGruppi;
 	private JScrollPane scrollPaneGruppi;
 	private JButton buttonCreaGruppo;
 	private JTable tableGruppi;
@@ -52,6 +44,7 @@ public class VisualizzaGruppiFrame extends JFrame {
 	static ModificaGruppoFrame modificaGruppoFrame;
 	
 
+	@SuppressWarnings("static-access")
 	public VisualizzaGruppiFrame(Controller controller, JFrame chiamante) {
 		
 		frame = this;
@@ -122,7 +115,7 @@ public class VisualizzaGruppiFrame extends JFrame {
 		// Inserimento nella tabella dei numeri del contatto
 			
 		ArrayList<Gruppo> listaGruppi = c.getListaGruppi();
-		int i = 1;
+	
 		
 		for (Gruppo gruppo : listaGruppi) {
 			modelGruppi.addRow(new Object[] {
@@ -209,6 +202,7 @@ public class VisualizzaGruppiFrame extends JFrame {
 		buttonCreaGruppo.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				@SuppressWarnings("unused")
 				ArrayList<Contatto> listaContattiArrayList = new ArrayList<>();
 				listaContattiArrayList = c.getListaContatti();
 				JFrame creaGruppo = new CreaGruppoFrame(controller, frame);

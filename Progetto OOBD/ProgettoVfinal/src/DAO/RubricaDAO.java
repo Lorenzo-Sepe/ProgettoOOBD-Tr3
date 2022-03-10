@@ -94,6 +94,8 @@ public interface RubricaDAO {
      */
     public ArrayList<String> verificaMailDuplicatiDao() ;
     
+    public ArrayList<String> verificaMailDuplicatiAccountDao();
+    
     /**
      * esegue una query sulla tabella Rubrica del database per estrarre gli id di tutti i contatti che presentano la mail duplicata
      * @param mail Stringa rappresentante la mail duplicata

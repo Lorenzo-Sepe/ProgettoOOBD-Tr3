@@ -22,7 +22,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.JTextPane;
 
 import Controller.Controller;
-import Model.NumeriTelefonici;
+
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -45,11 +45,11 @@ public class ModificaContattoFrame extends JFrame {
 	private JTable tableAccounts;
 	private JTable tableNumeri;
 	/** Il Controller*/
-	 static Controller c;
+	  Controller c;
 	/**L'id del contatto visualizzatp*/
 	/**Il Chiamante	 */
-	 static JFrame frameChiamante;
-	 static JFrame frame;
+	 JFrame frameChiamante;
+	  JFrame frame;
 	private JPanel panelFoto;
 	private JLabel labelFoto;
 	private JScrollPane scrollPaneNumeri;
@@ -101,7 +101,7 @@ public class ModificaContattoFrame extends JFrame {
 c.transactionBegin();
 		setTitle("Modifica");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1110, 700);
+		setBounds(150, 30, 1110, 700);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -295,27 +295,7 @@ c.transactionBegin();
 		};
 		
 		tableNumeri = new JTable(modelloNumeri);
-		tableNumeri.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount()==2) {
-                    int row = tableNumeri.getSelectedRow();
-                    String tag = tableNumeri.getValueAt(row, 0).toString();
-                    String prefN = tableNumeri.getValueAt(row, 1).toString();
-                    String numero = tableNumeri.getValueAt(row, 2).toString();
-                    String tipoNumero= modelloNumeri.getValueAt(row, 3).toString();
-                    NumeriTelefonici deputato = c.getDeputatoDiNumero(contattoID, prefN,numero,tipoNumero);
-                    System.out.println("Test deputato "+deputato);
-                    if(deputato!=null) {
-                        JPanel visualizzaDeputato = new VisualizzaDeputatoPanel(tag, prefN, numero, deputato.getTag(), deputato.getPrefisso(), deputato.getNumero());
-                        JOptionPane.showMessageDialog(null, visualizzaDeputato, "Visualizza deputato",JOptionPane.INFORMATION_MESSAGE);
-                    }else {
-
-                    }
-
-                }
-            }
-        });
+		
 		modelloNumeri.addColumn("tag");
 		modelloNumeri.addColumn("prefisso");
 		modelloNumeri.addColumn("numero");

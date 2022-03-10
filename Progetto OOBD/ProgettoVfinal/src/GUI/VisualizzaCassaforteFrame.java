@@ -1,25 +1,23 @@
 package GUI;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import Controller.Controller;
 import Model.Contatto;
-import Controller.Controller;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.JButton;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.JLabel;
 
+@SuppressWarnings("serial")
 public class VisualizzaCassaforteFrame extends JFrame {
 
 	private JPanel contentPane;
@@ -31,6 +29,7 @@ public class VisualizzaCassaforteFrame extends JFrame {
 	
 	
 	
+	@SuppressWarnings("static-access")
 	public VisualizzaCassaforteFrame(Controller controller, JFrame chiamante) {
 		c = controller;
 		frameChiamante = chiamante;
@@ -63,7 +62,7 @@ public class VisualizzaCassaforteFrame extends JFrame {
 		ArrayList<Contatto> contattiProtetti = c.getContattiCassaforte();
 		
 		for (Contatto contatto : contattiProtetti) {
-			System.out.println("sono dentro la visualizza cassadrote frame, id del contatto e-"+contatto.getID());
+			//System.out.println("sono dentro la visualizza cassadrote frame, id del contatto e-"+contatto.getID());
 			modelCassaforte.addRow(new Object[] {
 					contatto.getID(),
 					contatto.getPrefissoNome(),
@@ -79,7 +78,7 @@ public class VisualizzaCassaforteFrame extends JFrame {
 				if (e.getClickCount()==2) {
 					int row = tableCassaforte.getSelectedRow();
 					int contattoSelezionatoID = (int)modelCassaforte.getValueAt(row, 0);
-					System.out.println("id conta selez:-"+contattoSelezionatoID);
+				//	System.out.println("id conta selez:-"+contattoSelezionatoID);
 					JFrame visualizzaContatto = new VisualizzaContattoCassaforteFrame(controller, frame, contattoSelezionatoID);
 					visualizzaContatto.setVisible(true);
 					frame.setVisible(false);

@@ -15,12 +15,11 @@ import javax.swing.JTextField;
 @SuppressWarnings("serial")
 public class AggiungiAccountPanel extends JPanel {
     private JTextField textFieldNickname;
-    @SuppressWarnings("rawtypes")
-    private JComboBox ComboBoxMail;
+    private JComboBox<String> ComboBoxMail;
     private JTextField textFieldForinitore;
     private JTextArea textAreaFraseDiBenvenuto;
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    
     public AggiungiAccountPanel(ArrayList<String> arrayListEmail) {
         this.setLayout(new GridLayout(3, 1));
 
@@ -37,11 +36,14 @@ public class AggiungiAccountPanel extends JPanel {
 
         JLabel lbMail = new JLabel("Mail");
         tuttoTraneFraseDIbenvenuto.add(lbMail);
-         ComboBoxMail = new JComboBox();
+         ComboBoxMail = new JComboBox<String>();
         ComboBoxMail.addItem("Nessuna Mail");
-    	  for (String string : arrayListEmail) {
-    		  ComboBoxMail.addItem(string);
-        }
+        for (int i = 0; i < arrayListEmail.size(); i++) {
+        	ComboBoxMail.addItem(arrayListEmail.get(i));
+		}
+//    	  for (String string : arrayListEmail) {
+//    		  ComboBoxMail.addItem(string);
+//        }
         tuttoTraneFraseDIbenvenuto.add(ComboBoxMail);
 
 

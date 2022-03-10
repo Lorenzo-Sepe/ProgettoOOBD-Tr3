@@ -1,32 +1,31 @@
 package GUI;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JTabbedPane;
-import javax.swing.SpringLayout;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import Controller.Controller;
-import Model.*;
-import ImplementazioneDAOpostgreSQL.*;
-import javax.swing.JTable;
-import javax.swing.JButton;
-import javax.swing.JRadioButton;
-import javax.swing.ButtonGroup;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.awt.event.ActionEvent;
-import javax.swing.SwingConstants;
-import javax.swing.ImageIcon;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SpringLayout;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import Controller.Controller;
+import Model.Contatto;
+
+@SuppressWarnings("serial")
 public class SearchFrame extends JFrame {
 	
 	private JScrollPane scrollPaneMail;
@@ -266,18 +265,18 @@ public class SearchFrame extends JFrame {
 		
 		//Ricerca per Mail
 		
-		scrollPaneMail = new JScrollPane();
+		
 		
 		panelRicercaMail = new JPanel();
 		tabbedPane.addTab("Ricerca per E-Mail", null, panelRicercaMail, null);
 		SpringLayout sl_panelRicercaMail = new SpringLayout();
 		panelRicercaMail.setLayout(sl_panelRicercaMail);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		sl_panelRicercaMail.putConstraint(SpringLayout.WEST, scrollPane, 0, SpringLayout.WEST, panelRicercaMail);
-		sl_panelRicercaMail.putConstraint(SpringLayout.SOUTH, scrollPane, 333, SpringLayout.NORTH, panelRicercaMail);
-		sl_panelRicercaMail.putConstraint(SpringLayout.EAST, scrollPane, 0, SpringLayout.EAST, panelRicercaMail);
-		panelRicercaMail.add(scrollPane);
+		scrollPaneMail = new JScrollPane();
+		sl_panelRicercaMail.putConstraint(SpringLayout.WEST, scrollPaneMail, 0, SpringLayout.WEST, panelRicercaMail);
+		sl_panelRicercaMail.putConstraint(SpringLayout.SOUTH, scrollPaneMail, 333, SpringLayout.NORTH, panelRicercaMail);
+		sl_panelRicercaMail.putConstraint(SpringLayout.EAST, scrollPaneMail, 0, SpringLayout.EAST, panelRicercaMail);
+		panelRicercaMail.add(scrollPaneMail);
 		
 		tableMail = new JTable(modelContatti2);
 		tableMail.addMouseListener(new MouseAdapter() {
@@ -296,7 +295,7 @@ public class SearchFrame extends JFrame {
 		});
 		
 		tableMail.removeColumn(tableMail.getColumnModel().getColumn(0));
-		scrollPane.setViewportView(tableMail);
+		scrollPaneMail.setViewportView(tableMail);
 		
 		labelMail = new JLabel("Inserire E-Mail");
 		sl_panelRicercaMail.putConstraint(SpringLayout.NORTH, labelMail, 22, SpringLayout.NORTH, panelRicercaMail);
@@ -305,7 +304,7 @@ public class SearchFrame extends JFrame {
 		panelRicercaMail.add(labelMail);
 		
 		textFieldMail = new JTextField();
-		sl_panelRicercaMail.putConstraint(SpringLayout.NORTH, scrollPane, 20, SpringLayout.SOUTH, textFieldMail);
+		sl_panelRicercaMail.putConstraint(SpringLayout.NORTH, scrollPaneMail, 20, SpringLayout.SOUTH, textFieldMail);
 		sl_panelRicercaMail.putConstraint(SpringLayout.NORTH, textFieldMail, 20, SpringLayout.NORTH, panelRicercaMail);
 		sl_panelRicercaMail.putConstraint(SpringLayout.WEST, textFieldMail, 200, SpringLayout.WEST, panelRicercaMail);
 		sl_panelRicercaMail.putConstraint(SpringLayout.EAST, textFieldMail, -250, SpringLayout.EAST, panelRicercaMail);

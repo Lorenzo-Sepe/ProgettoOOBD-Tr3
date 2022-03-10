@@ -1,39 +1,29 @@
 package GUI;
 
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileFilter;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
-import javax.swing.JLabel;
-
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JScrollPane;
 //import net.miginfocom.swing.MigLayout;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.ImageIcon;
-import java.io.File;
-import java.util.ArrayList;
-import javax.swing.SpringLayout;
-import javax.swing.ListSelectionModel;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.SpringLayout;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.table.DefaultTableModel;
 
 import Controller.Controller;
-import Model.Rubrica;
-
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.text.html.HTML.Tag;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.Font;
-import javax.swing.JOptionPane;
-import javax.swing.border.TitledBorder;
 
 
 @SuppressWarnings({  "serial" })
@@ -63,12 +53,6 @@ public class VisualizzaContattoCassaforteFrame extends JFrame {
 	private JTextPane textPanePrefisso;
 	private JButton buttonIndietro;
 	private JPanel panel;
-	private File fileFoto;
-	
-	private ArrayList<String> listaNumeri = new ArrayList<String>();
-	private ArrayList<String> listaMail = new ArrayList<String>();
-	
-	private String pathFoto;
 	private JComboBox<String> comboBoxMail;
 	private int contattoID;
 
@@ -85,7 +69,7 @@ public class VisualizzaContattoCassaforteFrame extends JFrame {
 		c=controller;
 		contattoID = id;
 		frameChiamante=Chiamante;
-		c.dumpContattoCassaforte(id);
+		c.dumpContattoCassaforte(contattoID);
 //		c.transactionBegin();
 		setTitle("Visualizza");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -119,21 +103,21 @@ public class VisualizzaContattoCassaforteFrame extends JFrame {
 		sl_contentPane.putConstraint(SpringLayout.NORTH, textPanePrefisso, 40, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, textPanePrefisso, 380, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, textPanePrefisso, -200, SpringLayout.EAST, contentPane);
-		textPanePrefisso.setText(c.getInfoContattoPrefisso(id));
+		textPanePrefisso.setText(c.getInfoContattoPrefisso(contattoID));
 		contentPane.add(textPanePrefisso);
 		
 		textPaneNome = new JTextPane();
 		sl_contentPane.putConstraint(SpringLayout.NORTH, textPaneNome, 70, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, textPaneNome, 380, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, textPaneNome, 0, SpringLayout.EAST, textPanePrefisso);
-		textPaneNome.setText(c.getInfoContattoNome(id));
+		textPaneNome.setText(c.getInfoContattoNome(contattoID));
 		contentPane.add(textPaneNome);
 		
 		textPaneCognome = new JTextPane();
 		sl_contentPane.putConstraint(SpringLayout.NORTH, textPaneCognome, 100, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, textPaneCognome, 380, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, textPaneCognome, 0, SpringLayout.EAST, textPanePrefisso);
-		textPaneCognome.setText(c.getInfoContattoNome(id));
+		textPaneCognome.setText(c.getInfoContattoNome(contattoID));
 		contentPane.add(textPaneCognome);
 		contentPane.add(panelFoto);
 	
@@ -141,7 +125,7 @@ public class VisualizzaContattoCassaforteFrame extends JFrame {
 		
 		//TODO modifica dimensioni della foto
 		labelFoto = new JLabel("");
-		labelFoto.setIcon(new ImageIcon(c.getImageModificata(150, 150, new File (c.getPathContatto(id)))));
+		labelFoto.setIcon(new ImageIcon(c.getImageModificata(150, 150, new File (c.getPathContatto(contattoID)))));
 		labelFoto.setBounds(0, 0, 150, 150);
 		panelFoto.add(labelFoto);
 		
@@ -164,18 +148,17 @@ public class VisualizzaContattoCassaforteFrame extends JFrame {
 		modelIndirizzi.addColumn("Codice Postale");
 		modelIndirizzi.addColumn("Nazione");
 		
-		for(int i=0;i<c.getInfoContattoIndirizzoQuantita(id);i++) {
+		for(int i=0;i<c.getInfoContattoIndirizzoQuantita(contattoID);i++) {
 			modelIndirizzi.addRow(new Object[]{
-					c.getInfoContattoIndirizzoId(i,id),
-					c.getInfoContattoIndirizzoVia(i,id),
-					c.getInfoContattoIndirizzoCitta(i, id),
-					c.getInfoContattoIndirizzoCodicePostale(i, id),
-					c.getInfoContattoIndirizzoNazione(i, id)
+					c.getInfoContattoIndirizzoId(i,contattoID),
+					c.getInfoContattoIndirizzoVia(i,contattoID),
+					c.getInfoContattoIndirizzoCitta(i, contattoID),
+					c.getInfoContattoIndirizzoCodicePostale(i, contattoID),
+					c.getInfoContattoIndirizzoNazione(i, contattoID)
 			});	
 		}
 		
 		tableIndirizzi = new JTable(modelIndirizzi);
-		final ListSelectionModel listenerIndirizzi=tableIndirizzi.getSelectionModel();
 		tableIndirizzi.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		tableIndirizzi.removeColumn(tableIndirizzi.getColumnModel().getColumn(0));
@@ -198,12 +181,12 @@ public class VisualizzaContattoCassaforteFrame extends JFrame {
 		
 		// Inserimento account del contatto
 		
-		for(int i=0;i<c.getInfoContattoAccountQuantita(id);i++) {
+		for(int i=0;i<c.getInfoContattoAccountQuantita(contattoID);i++) {
 			modelAccounts.addRow(new Object[]{
-				c.getInfoContattoAccountFornitore(i, id),
-				c.getInfoContattoAccountNickname(i, id),
-				c.getInfoContattoAccountMail(i, id),
-				c.getInfoContattoAccountBenvenuto(i, id)
+				c.getInfoContattoAccountFornitore(i, contattoID),
+				c.getInfoContattoAccountNickname(i, contattoID),
+				c.getInfoContattoAccountMail(i, contattoID),
+				c.getInfoContattoAccountBenvenuto(i, contattoID)
 		});	
 	}
 		
@@ -225,8 +208,8 @@ public class VisualizzaContattoCassaforteFrame extends JFrame {
 		sl_contentPane.putConstraint(SpringLayout.WEST, comboBoxMail, 380, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, comboBoxMail, 0, SpringLayout.EAST, textPanePrefisso);
 	
-		for (int i = 0; i < c.getInfoContattoMailList(id).size(); i++) {
-			comboBoxMail.addItem((String) c.getInfoContattoMailList(id).get(i));
+		for (int i = 0; i < c.getInfoContattoMailList(contattoID).size(); i++) {
+			comboBoxMail.addItem((String) c.getInfoContattoMailList(contattoID).get(i));
 		}
 		contentPane.add(comboBoxMail);
 				
@@ -265,15 +248,14 @@ public class VisualizzaContattoCassaforteFrame extends JFrame {
 		modelloNumeri.addColumn("tipo");
 		
 		
-		final ListSelectionModel listenerNumeri=tableNumeri.getSelectionModel();
 		tableNumeri.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		for(int i=0;i<c.getNumeroQuantita(id);i++) {
+		for(int i=0;i<c.getNumeroQuantita(contattoID);i++) {
 			modelloNumeri.addRow(new Object[]{
-					c.getInfoContattoTagNumero(i,id),
-					c.getInfoContattoPrefissoNumero(i,id),
-					c.getInfoContattoNumeroNumero(i,id),
-					c.getInfoContattoNumeroTipo(i,id)
+					c.getInfoContattoTagNumero(i,contattoID),
+					c.getInfoContattoPrefissoNumero(i,contattoID),
+					c.getInfoContattoNumeroNumero(i,contattoID),
+					c.getInfoContattoNumeroTipo(i,contattoID)
 			});	
 		}
 		scrollPaneNumeri.setViewportView(tableNumeri);
@@ -332,7 +314,6 @@ public class VisualizzaContattoCassaforteFrame extends JFrame {
 				panelAccount.add(scrollPaneAccounts);
 				
 				tableAccounts = new JTable(modelAccounts);
-				final ListSelectionModel listenerAccount = tableAccounts.getSelectionModel();
 				tableAccounts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				
 						scrollPaneAccounts.setViewportView(tableAccounts);

@@ -2,31 +2,30 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import Controller.Controller;
-import Model.Account;
-import Model.EnumPrefissoNumero;
-import Model.Indirizzi;
-import Model.NumeriTelefonici;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
+import Controller.Controller;
+import Model.EnumPrefissoNumero;
+import Model.NumeriTelefonici;
 
 
 
 
 
+@SuppressWarnings("serial")
 public class AggiungiNumeroFrame extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
@@ -36,7 +35,10 @@ public class AggiungiNumeroFrame extends JDialog {
 	static private JFrame frameChiamante;
 	static private JDialog frame;
 	private final ButtonGroup tipoNumero = new ButtonGroup();
+	@SuppressWarnings("unused")
+	private NumeriTelefonici numero;
 
+	
 	/**
 	 * Launch the application.
 	 */
@@ -101,7 +103,7 @@ public class AggiungiNumeroFrame extends JDialog {
 		lblNewLabel_1.setBounds(43, 151, 145, 14);
 		contentPanel.add(lblNewLabel_1);
 		
-		JComboBox comboBoxPrefisso = new JComboBox();
+		JComboBox<String> comboBoxPrefisso = new JComboBox<String>();
 		comboBoxPrefisso.setBounds(198, 89, 56, 20);
 		EnumPrefissoNumero[] arrayEnumPrefissi = EnumPrefissoNumero.class.getEnumConstants();
 	       for (EnumPrefissoNumero enumPrefissoNumero : arrayEnumPrefissi) {
@@ -116,6 +118,7 @@ public class AggiungiNumeroFrame extends JDialog {
 			{
 				JButton okButton = new JButton("Conferma");
 				okButton.addMouseListener(new MouseAdapter() {
+					
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						String tipo = new String();
@@ -125,7 +128,7 @@ public class AggiungiNumeroFrame extends JDialog {
 						else if (rdbtnMobile.isSelected()) {
 							tipo = "Mobile";
 						}
-						NumeriTelefonici numero = new NumeriTelefonici(comboBoxPrefisso.getActionCommand(), textNumero.getText() , textTag.getText(),tipo );
+						numero = new NumeriTelefonici(comboBoxPrefisso.getActionCommand(), textNumero.getText() , textTag.getText(),tipo );
 						frame.setVisible(false);
 					}
 				});

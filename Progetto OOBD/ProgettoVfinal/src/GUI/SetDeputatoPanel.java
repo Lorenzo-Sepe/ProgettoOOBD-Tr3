@@ -86,9 +86,9 @@ public SetDeputatoPanel(DefaultTableModel modelloNumeriDiTelefono,String tagNume
 			
 			}
 
-			for (String dep : arrayListnumeroDeputato) {
-				System.out.println("numeria arraylisy setdeputato :  "+dep);
-			}
+//			for (String dep : arrayListnumeroDeputato) {
+//				System.out.println("numeria arraylisy setdeputato :  "+dep);
+//			}
 //			panel.add(new JLabel(tagNumeroInserito+" "));
 //			panel.add(new JLabel(prefissoNumeroInserito));
 //			panel.add(new JLabel(numeroInserito+" "));
@@ -97,7 +97,7 @@ public SetDeputatoPanel(DefaultTableModel modelloNumeriDiTelefono,String tagNume
 			panel.add(new JLabel(tagNumeroInserito+" "+prefissoNumeroInserito+numeroInserito+" "+tipoNumeroInserito));
 		
 				comboBOxSingolaIstanza =new JComboBox<Object>(arrayListnumeroDeputato.toArray());
-				System.out.println("primo elemento");
+				//System.out.println("primo elemento");
 				arrayListnComboBox.add(comboBOxSingolaIstanza);
 				panel.add(comboBOxSingolaIstanza);
 				

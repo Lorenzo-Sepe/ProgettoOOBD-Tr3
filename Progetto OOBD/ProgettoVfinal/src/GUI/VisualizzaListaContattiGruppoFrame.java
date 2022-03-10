@@ -1,30 +1,27 @@
 package GUI;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import Controller.Controller;
 import Model.Contatto;
 
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.SwingConstants;
-
+@SuppressWarnings("serial")
 public class VisualizzaListaContattiGruppoFrame extends JDialog {
 
 	private JPanel contentPane;
@@ -38,6 +35,7 @@ public class VisualizzaListaContattiGruppoFrame extends JDialog {
 	
 	
 	
+	@SuppressWarnings("static-access")
 	public VisualizzaListaContattiGruppoFrame(Controller controller, JFrame chiamante, String nGruppo) {
 		c = controller;
 		frameChiamante = chiamante;

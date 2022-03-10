@@ -52,6 +52,10 @@ public class Gruppo {
     	
     }
     
+    /**
+     * imposta la lista dei contatti del gruppo
+     * @param membriGruppo ArrayList di Contatto che rappresenta la lista di contatti da impostare
+     */
     public void setMembriGruppo (ArrayList<Contatto> membriGruppo) {
     	this.membriGruppo = membriGruppo;
     }

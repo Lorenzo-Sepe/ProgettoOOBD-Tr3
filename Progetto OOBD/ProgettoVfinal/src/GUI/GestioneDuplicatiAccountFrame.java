@@ -1,20 +1,15 @@
 package GUI;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 
-import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -26,13 +21,15 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import Controller.Controller;
-import Model.Contatto;
+import Model.Account;
 
+
+@SuppressWarnings("serial")
 public class GestioneDuplicatiAccountFrame extends JFrame {
 
 	private JPanel contentPane;
 	private GestioneDuplicatiAccountFrame frame;
-	private Object localList;
+	private ArrayList<String> localList=new ArrayList<>();
 	private JPanel panelLista;
 	private JLabel lblmail;
 	private JScrollPane scrollPane;
@@ -42,9 +39,7 @@ public class GestioneDuplicatiAccountFrame extends JFrame {
 	private JButton btnBack;
 	private JButton btnModifica;
 	private JButton btnElimina;
-	private ArrayList <Contatto> contattilList;
-	private JScrollPane scrollPaneContatti;
-	private JTable tableRisultati;
+	private JTable table;
 	
 
 	/**
@@ -66,7 +61,7 @@ public class GestioneDuplicatiAccountFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public GestioneDuplicatiAccountFrame(Controller c, JFrame frameChiamante, ArrayList<Contatto> listaRisultati) {
+	public GestioneDuplicatiAccountFrame(Controller c, JFrame frameChiamante, ArrayList<String> listaRisultati) {
 		frame = this;
 		localList = listaRisultati;
 				
@@ -85,20 +80,76 @@ public class GestioneDuplicatiAccountFrame extends JFrame {
 		
 		
 		
-		lblmail = new JLabel("Contatti con duplicati");
+		lblmail = new JLabel("Mail duplicate");
 		sl_panelLista.putConstraint(SpringLayout.NORTH, lblmail, 0, SpringLayout.NORTH, panelLista);
 		sl_panelLista.putConstraint(SpringLayout.WEST, lblmail, 100, SpringLayout.WEST, panelLista);
 		sl_panelLista.putConstraint(SpringLayout.SOUTH, lblmail, 25, SpringLayout.NORTH, panelLista);
 		sl_panelLista.putConstraint(SpringLayout.EAST, lblmail, -10, SpringLayout.EAST, panelLista);
 		panelLista.add(lblmail);
 		
-		scrollPaneContatti = new JScrollPane();
+		JScrollPane scrollPane_1 = new JScrollPane();
+		sl_panelLista.putConstraint(SpringLayout.NORTH, scrollPane_1, 30, SpringLayout.NORTH, panelLista);
+		sl_panelLista.putConstraint(SpringLayout.WEST, scrollPane_1, 5, SpringLayout.WEST, panelLista);
+		sl_panelLista.putConstraint(SpringLayout.SOUTH, scrollPane_1, -40, SpringLayout.SOUTH, panelLista);
+		sl_panelLista.putConstraint(SpringLayout.EAST, scrollPane_1, -5, SpringLayout.EAST, panelLista);
+		panelLista.add(scrollPane_1);
 		
-		sl_panelLista.putConstraint(SpringLayout.NORTH, scrollPaneContatti, 5, SpringLayout.SOUTH, lblmail);
-		sl_panelLista.putConstraint(SpringLayout.WEST, scrollPaneContatti, 5, SpringLayout.WEST, panelLista);
-		sl_panelLista.putConstraint(SpringLayout.SOUTH, scrollPaneContatti, -40, SpringLayout.SOUTH, panelLista);
-		sl_panelLista.putConstraint(SpringLayout.EAST, scrollPaneContatti, -5, SpringLayout.EAST, panelLista);
-		panelLista.add(scrollPaneContatti);
+DefaultTableModel modelloAccount = new DefaultTableModel () {
+			
+	        public boolean isCellEditable(int row, int column) {
+	           return false;
+	        }
+
+		};		
+		
+DefaultTableModel modelloRisultati = new DefaultTableModel () {
+			
+	        public boolean isCellEditable(int row, int column) {
+	           return false;
+	        }     
+	        
+		};
+
+		modelloRisultati.addColumn("E-Mail");
+		for (int i = 0; i < listaRisultati.size(); i++) {
+			modelloRisultati.addRow(new Object[]{
+
+			listaRisultati.get(i)
+			});
+		}
+		
+		
+		
+		table = new JTable(modelloRisultati);
+
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int row = table.getSelectedRow();
+				int column = table.getSelectedColumn();
+				String mailSelezionata = (String) table.getValueAt(row, column);
+				int cont = modelloAccount.getRowCount();
+				while (cont>0) {
+					int i=0;
+					modelloAccount.removeRow(i);
+					cont--;
+				}
+								
+				ArrayList <Account> listaRisultati = c.verificaDuplicatiAccount(mailSelezionata);
+				for (int i = 0; i < listaRisultati.size(); i++) {
+					modelloAccount.addRow(new Object[]{
+							
+							listaRisultati.get(i).getID(),
+							listaRisultati.get(i).getAssociato(),
+							listaRisultati.get(i).getFornitore(),
+							listaRisultati.get(i).getNickname(),
+							listaRisultati.get(i).getMail(),
+							listaRisultati.get(i).getBenvenuto()
+					});
+				}
+			}
+		});
+		scrollPane_1.setViewportView(table);
 		
 		
 		
@@ -114,70 +165,9 @@ public class GestioneDuplicatiAccountFrame extends JFrame {
 		sl_panelTabella.putConstraint(SpringLayout.EAST, scrollPane, -5, SpringLayout.EAST, panelTabella);
 		panelTabella.add(scrollPane);
 		
-		DefaultTableModel modelloAccount = new DefaultTableModel () {
-			
-	        public boolean isCellEditable(int row, int column) {
-	           return false;
-	        }
-
-		};
-
 		
-		DefaultTableModel modelloContatto = new DefaultTableModel () {
-			
-	        public boolean isCellEditable(int row, int column) {
-	           return false;
-	        }     
-	        
-		};
-
-		modelloContatto.addColumn("Id");
-		modelloContatto.addColumn("prefisso");
-		modelloContatto.addColumn("nome"); 
-		modelloContatto.addColumn("cognome"); 
-		
-		tableRisultati = new JTable(modelloContatto);
-		tableRisultati.removeColumn(tableRisultati.getColumnModel().getColumn(0));
-		tableRisultati.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				System.out.println("Sono in listner");
-				int cont = modelloAccount.getRowCount();
-				while (cont>0) {
-					int i=0;
-					modelloAccount.removeRow(i);
-					cont--;
-				}
-					
-				
-				int id = (int) tableRisultati.getModel().getValueAt(tableRisultati.getSelectedRow(),0);
-				c.dumpContatto(id);
-
-				for (int i = 0; i < c.getInfoContattoAccountQuantità(id); i++) {
-					System.out.println("Sono in for");
-					modelloAccount.addRow(new Object[] {
-						c.getInfoContattoAccountFornitore(i, id)	,
-						c.getInfoContattoAccountNickname(i, id),
-						c.getInfoContattoAccountMail(i, id)	,
-						c.getInfoContattoAccountBenvenuto(i, id)	
-					});
-				}
-			}
-		});
-		final ListSelectionModel listenerContatto = tableRisultati.getSelectionModel();
-		tableRisultati.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		scrollPaneContatti.setViewportView(tableRisultati);
-		
-		for (int i = 0; i < listaRisultati.size(); i++) {
-			modelloContatto.addRow(new Object[]{
-					listaRisultati.get(i).getID(),
-					listaRisultati.get(i).getPrefissoNome(),
-					listaRisultati.get(i).getNome(),
-					listaRisultati.get(i).getCognome()
-			});
-		}
-		
-		
+		modelloAccount.addColumn("IDaccount");
+		modelloAccount.addColumn("ID Contatto Associato");
 		modelloAccount.addColumn("Fornitore");
 		modelloAccount.addColumn("Nickname"); 
 		modelloAccount.addColumn("Indirizzo e-mail");
@@ -185,11 +175,13 @@ public class GestioneDuplicatiAccountFrame extends JFrame {
 		
 		
 		tableAccount = new JTable(modelloAccount);
+		tableAccount.removeColumn(tableAccount.getColumnModel().getColumn(1));
+		tableAccount.removeColumn(tableAccount.getColumnModel().getColumn(0));
 		final ListSelectionModel listenerAccount = tableAccount.getSelectionModel();
 		tableAccount.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(tableAccount);
 		
-		lblContatti = new JLabel("Account del contatto");
+		lblContatti = new JLabel("Account della mail");
 		sl_panelTabella.putConstraint(SpringLayout.NORTH, lblContatti, 0, SpringLayout.NORTH, panelTabella);
 		sl_panelTabella.putConstraint(SpringLayout.WEST, lblContatti, 100, SpringLayout.WEST, scrollPane);
 		sl_panelTabella.putConstraint(SpringLayout.SOUTH, lblContatti, 25, SpringLayout.NORTH, panelTabella);
@@ -218,21 +210,37 @@ public class GestioneDuplicatiAccountFrame extends JFrame {
 		btnModifica.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-//				if (!listenerAccount.isSelectionEmpty()) {
-//					int row = tableAccount.getSelectedRow();
-//					int column = 0;
-//					AggiungiAccountPanel panelModificaAccount = new AggiungiAccountPanel(listaMail);
-//					panelModificaAccount.setAll(modelloAccount.getValueAt(row, column++).toString(), modelloAccount.getValueAt(row, column++).toString(),modelloAccount.getValueAt(row, column++).toString(), modelloAccount.getValueAt(row, column++).toString());
-//					int results = JOptionPane.showConfirmDialog(null, panelModificaAccount,"Modifica Account",JOptionPane.OK_CANCEL_OPTION);
-//					
-//					if (results == JOptionPane.OK_OPTION) {
-//						column = 0;
-//						modelloAccount.setValueAt(panelModificaAccount.getFornitore(), row, column++);
-//						modelloAccount.setValueAt(panelModificaAccount.getNickname(), row, column++);
-//						modelloAccount.setValueAt(panelModificaAccount.getMail(), row, column++);
-//						modelloAccount.setValueAt(panelModificaAccount.getFraseDiBenvenuto(), row, column++);
-//					}
-//				}
+				if (!listenerAccount.isSelectionEmpty()) {
+					c.transactionBegin();
+					int row = tableAccount.getSelectedRow();
+					int column = 0;
+					int columnID =(int) modelloAccount.getValueAt(row, 1) ;
+					c.dumpContatto(columnID);
+					ArrayList<String> listaMail=c.getInfoContattoMailList((int) modelloAccount.getValueAt(row, 1) );
+					AggiungiAccountPanel panelModificaAccount = new AggiungiAccountPanel(listaMail);
+					panelModificaAccount.setAll(modelloAccount.getValueAt(row, 3).toString(), modelloAccount.getValueAt(row, 4).toString(),modelloAccount.getValueAt(row, 2).toString(), modelloAccount.getValueAt(row, 5).toString());
+					int results = JOptionPane.showConfirmDialog(null, panelModificaAccount,"Modifica Account",JOptionPane.OK_CANCEL_OPTION);
+					
+					if (results == JOptionPane.OK_OPTION) {
+						column = 2;
+						modelloAccount.setValueAt(panelModificaAccount.getFornitore(), row, column++);
+						modelloAccount.setValueAt(panelModificaAccount.getNickname(), row, column++);
+						modelloAccount.setValueAt(panelModificaAccount.getMail(), row, column++);
+						modelloAccount.setValueAt(panelModificaAccount.getFraseDiBenvenuto(), row, column++);
+					}
+					try {
+						Integer oldID = (int) modelloAccount.getValueAt(row, 0);
+						String	fornitore=modelloAccount.getValueAt(row, 2).toString();
+						String nickname=  modelloAccount.getValueAt(row, 3).toString();
+						String mail=modelloAccount.getValueAt(row, 4).toString();//vero
+						String benvenuto = modelloAccount.getValueAt(row, 5).toString();
+						c.modificaAccount(columnID, oldID, fornitore, nickname,mail,benvenuto);
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+					localList=aggiornaTabella(c, localList);
+					c.transactionCommit();
+				}
 			}
 		});
 		btnModifica.setIcon(new ImageIcon(GestioneDuplicatiContattiFrame.class.getResource("/immagini/edit.png")));
@@ -240,25 +248,39 @@ public class GestioneDuplicatiAccountFrame extends JFrame {
 		
 		btnElimina = new JButton("Elimina Account");
 		btnElimina.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				//TODO
-			}
-		});
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int idOld = (int) tableAccount.getModel().getValueAt(tableAccount.getSelectedRow(),0);
+                try {
+                	c.transactionBegin();
+                    c.eliminaAccount(idOld);
+                    int row;
+                    if (!listenerAccount.isSelectionEmpty()) {
+                        row = tableAccount.getSelectedRow();
+                        modelloAccount.removeRow(row);
+                    }
+                } catch (SQLException e1) {
+
+                    e1.printStackTrace();
+                }
+                c.transactionCommit();
+            }
+        });
 		btnElimina.setIcon(new ImageIcon(GestioneDuplicatiContattiFrame.class.getResource("/immagini/elimina.jpg")));
 		toolBar.add(btnElimina);
         
 		
 	}
 
-	protected ArrayList aggiornaTabella(Controller c, ArrayList mailList) {
+	
+	
+	protected ArrayList<String> aggiornaTabella(Controller c, ArrayList<String> mailList) {
 		ArrayList<String> newListaMail = c.verificaMailDuplicate();
 		if( newListaMail.equals(mailList)==true ) {
 			return mailList;
 		}else {
 				return newListaMail;
+				
 			}
 	}
-	
-
 }

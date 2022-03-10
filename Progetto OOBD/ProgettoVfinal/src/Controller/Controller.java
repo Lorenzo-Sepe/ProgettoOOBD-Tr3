@@ -108,9 +108,7 @@ public class Controller{
 
         contatto.setAccount(contattoDao.getListaAccount(contattoID));
         contatto.setIndirizzo(contattoDao.getListaIndirizzi(contattoID));
-        for(Indirizzi indirizzo : contatto.getListaIndirizzi()) {
-            System.out.println("Stampa Indirizzo DEl contatto:-"+indirizzo.stampaIndirizzo());
-        }
+     
         contatto.setEmail(contattoDao.getListaEmail(contattoID));
 
 
@@ -130,7 +128,7 @@ public class Controller{
 		RubricaDAO rubricaDao = new ImplementazioneRubricaDAO();
 		ArrayList<Gruppo> listaGruppi = rubricaDao.selectListaGruppiDB();
 		for (Gruppo gruppo : listaGruppi) {
-			System.out.println("prova ripeti for "+gruppo.getNomeGruppo());
+		//	System.out.println("prova ripeti for "+gruppo.getNomeGruppo());
 			rubrica.creaGruppo(gruppo.getNomeGruppo());
 		}
 	}
@@ -297,13 +295,13 @@ public class Controller{
 		boolean existTipoMobile = false;
 
 		for (String tipo : arraylisyTipi) {
-			System.out.println("arrayTipi : "+tipo);
+	//	System.out.println("arrayTipi : "+tipo);
 			if (tipo.compareToIgnoreCase("fisso") ==0)
 				existTipoFisso = true;
 			else if (tipo.compareToIgnoreCase("mobile") ==0)
 				existTipoMobile = true;
 		}
-		System.out.println("existTipoFisso : "+existTipoFisso +"\nexistTipoMobile: "+existTipoMobile);
+		//System.out.println("existTipoFisso : "+existTipoFisso +"\nexistTipoMobile: "+existTipoMobile);
 
 		if (existTipoFisso == false || existTipoMobile == false)
 			throw new Exception("Non ci sono almeno due numeri con tip diverso ");
@@ -595,7 +593,7 @@ public class Controller{
 			eliminato = false;
 			for (int i2=0; !eliminato && i2<membriGruppo.size(); i2++) {
 				if (listaContattiMenoGruppo.get(i1).getID()==membriGruppo.get(i2).getID()) {
-					System.out.println("ListaContattiMenoGruppo "+listaContattiMenoGruppo.get(i1).StampaContatto());
+				//	System.out.println("ListaContattiMenoGruppo "+listaContattiMenoGruppo.get(i1).StampaContatto());
 					listaContattiMenoGruppo.remove(i1);
 					membriGruppo.remove(i2);
 					eliminato = true;
@@ -812,8 +810,8 @@ public class Controller{
 		String estenzione = name.substring(name.lastIndexOf(".") + 1);
 		pathDestinazione = GetRelativePath() + "User" + id + "." + estenzione; // concatenazione directory di
 																				// salvataggio più l' ID del contatto
-		System.out.println("pathSorgente: " + pathSorgente + "\n estensione: " + estenzione);
-		System.out.println("pathDestinazione: " + pathDestinazione + "\n estensione: " + estenzione);
+	//	System.out.println("pathSorgente: " + pathSorgente + "\n estensione: " + estenzione);
+		//System.out.println("pathDestinazione: " + pathDestinazione + "\n estensione: " + estenzione);
 		ImageIO.write(img, estenzione, new File(pathDestinazione));
 		// Modifico il Path Destinazione mettendo estenzione
 
@@ -842,12 +840,11 @@ public class Controller{
                  copiaFoto(pathSorgente, pathDestiCompleto);
         }else return "";
 
-        System.out.println("Sono COntroller.setFotoContatto: Stringa con pathSorgente : \n" + pathSorgente);
+//        System.out.println("Sono COntroller.setFotoContatto: Stringa con pathSorgente : \n" + pathSorgente);
 
 
 
-        System.out.println(
-                "Sono COntroller.setFotoContatto:  Stringa con pathCompleto che viene restituito dal metodo CaricaESettaFoto: \n" + pathDestiCompleto);
+//        System.out.println( "Sono COntroller.setFotoContatto:  Stringa con pathCompleto che viene restituito dal metodo CaricaESettaFoto: \n" + pathDestiCompleto);
 //        try {
 //            rubrica.getContatto(id).aggiungiFoto("User" + id + "." + estenzione);
 //        } catch (Exception e) {
@@ -855,8 +852,7 @@ public class Controller{
 //            System.out.println("Errore hai provato a settare una foto a un contatto non esistente");
 //
 ////        }
-//        System.out.println("contatto " + id + " " + rubrica.getContatto(id).getNome() + " path: "
-//                + rubrica.getContatto(id).getPathFoto());
+//        System.out.println("contatto " + id + " " + rubrica.getContatto(id).getNome() + " path: "  + rubrica.getContatto(id).getPathFoto());
 
         return "User" + id + "." + estenzione;
     }
@@ -929,17 +925,15 @@ public class Controller{
 			e.printStackTrace();
 		}
 
-		System.out.println(
-				"Stringa con pathCompleto che viene restituito dal metodo CaricaESettaFoto: \n" + pathDestiCompleto);
+		//System.out.println( "Stringa con pathCompleto che viene restituito dal metodo CaricaESettaFoto: \n" + pathDestiCompleto);
 		try {
 			rubrica.getContatto(id).setPathFoto(pathDestiCompleto);
 		} catch (Exception e) {
 			e.getStackTrace();
-			System.out.println("Errore hai provato a settare una foto a un contatto non esistente");
+			//System.out.println("Errore hai provato a settare una foto a un contatto non esistente");
 
 		}
-		System.out.println("contatto " + id + " " + rubrica.getContatto(id).getNome() + " path "
-				+ rubrica.getContatto(id).getPathFoto());
+		//System.out.println("contatto " + id + " " + rubrica.getContatto(id).getNome() + " path " + rubrica.getContatto(id).getPathFoto());
 
 	}
 
@@ -956,14 +950,14 @@ public class Controller{
         } catch (Exception e) {
             path = "NoImage.jpg";
         }
-        System.out.println("sono in controller.GetPAthContatto poco prima degli if:-"+ path);
+       // System.out.println("sono in controller.GetPAthContatto poco prima degli if:-"+ path);
         if (path == "") {
             return GetRelativePath() + "NoImage.jpg";
         } else {
             if (!new File(GetRelativePath() + path).exists()) {
                 return GetRelativePath() + "NoImageFound.png";
             } else {
-                System.out.println("sono in controller.GetPAthContatto:-"+GetRelativePath() + path);
+                //System.out.println("sono in controller.GetPAthContatto:-"+GetRelativePath() + path);
                 return GetRelativePath() + path;
 
             }
@@ -1162,21 +1156,26 @@ public class Controller{
 	    listaMail = rubricaDao.verificaMailDuplicatiDao();
 	    return listaMail;
 	}
+	
+	public ArrayList<String> verificaAccountMailDuplicate() {
+	    ArrayList<String> listaMail = new ArrayList<String>();
+	    RubricaDAO rubricaDao = new ImplementazioneRubricaDAO();
+	    listaMail = rubricaDao.verificaMailDuplicatiAccountDao();
+	    return listaMail;
+	}
 
 /**
  * 
  * @return ArrayList {@literal<Contatto>} con tutti i contatit che hanno email uguali fra i loro possibili {@link Model.Account}
  */
-	public ArrayList<Contatto> verificaDuplicatiAccount() {
-	    ArrayList<Contatto> listaRisultato = new ArrayList<Contatto>();
-	    ArrayList<Integer> listaID = new ArrayList<Integer>();
+	public ArrayList<Account> verificaDuplicatiAccount(String mail) {
+	    ArrayList<Account> listaRisultato = new ArrayList<Account>();
 	    AccountDAO accountDao = new ImplementazioneAccountDAO();
-	    listaID=accountDao.verificaDuplicatiAccountDao();
-	        for (int j = 0; j < listaID.size(); j++) {
-	            listaRisultato.add(rubrica.getContatto(listaID.get(j) ) );
-	    }
+	    listaRisultato=accountDao.verificaDuplicatiAccountDao(mail);
 	    return listaRisultato;
 	}
+	
+	
 
 	/**
 	 *Getter del prefisso del contatto associato al parametro dato 
@@ -1463,7 +1462,7 @@ public void eliminaAccount(int contattoId,int idOld,int index) {
 
 
 /**
- * 
+ * metodo per modificare un contatto nel frame ModificaContatti
  * @param idContatto int codice che identifica univocamente il contatto
  * @param index usato per modficare  Account dalla Arraylist{@literal<Account>} del contatto
  * @param idMod int codice che identifica univocamente account
@@ -1483,6 +1482,24 @@ public void modificaAccount(int idContatto,int index,int idMod, String fornitore
 }
 
 /**
+ * metodo per modificare un contatto nel frame ModificaContatti
+ * @param idContatto int codice che identifica univocamente il contatto
+ * @param idMod int codice che identifica univocamente account
+ * @param fornitore String
+ * @param nickname String
+ * @param mail String
+ * @param fraseDiBenvenuto String
+ * @throws SQLException
+ */
+public void modificaAccount(int idContatto,int idMod, String fornitore, String nickname, String mail, String fraseDiBenvenuto) throws SQLException {
+    AccountDAO accountDao = new ImplementazioneAccountDAO();
+
+    accountDao.updateAccountDB(idMod,fornitore,nickname,mail,fraseDiBenvenuto);
+    
+
+}
+
+/**
  * Modifica le anagrafie del contatto 
  * @param contattoID int codice che identifica univocamente il contatto
  * @param contattoPrefisso String
@@ -1495,7 +1512,7 @@ public void modificaContattoAnagrafiche(int contattoID, String contattoPrefisso,
     ContattoDAO contattoDao = new ImplementazioneContattoDAO();
 
         contattoPath= setFotoContatto(new File (contattoPath), contattoID);
-        System.out.println("SOno controller.modifcaContattoAnagrafiche:- contattoPath:-"+contattoPath);
+       // System.out.println("SOno controller.modifcaContattoAnagrafiche:- contattoPath:-"+contattoPath);
     contattoDao.updateContattoDB(contattoID, contattoPrefisso, contattoNome, contattoCognome, contattoPath);
     contatto.setPathFoto(contattoPath);
     contatto.setPrefissoNome(contattoPrefisso);
@@ -1652,14 +1669,56 @@ public NumeriTelefonici getDeputatoDiNumero (int contattoID, String prefN, Strin
         return null;
     }
     }
-	
-	/**
+
+public void dumpContattoCassaforte(int contattoID) {
+
+        ContattoDAO contattoDao = new ImplementazioneContattoDAO();
+//        Contatto contatto = new Contatto(contattoID, rubrica.getContatto(contattoID).getPrefissoNome(),
+//                rubrica.getContatto(contattoID).getNome(), rubrica.getContatto(contattoID).getCognome(),
+//                rubrica.getContatto(contattoID).getPathFoto());
+//
+
+        Contatto contatto = rubrica.getCassaforte().getContatto(contattoID);
+        if( contatto.getPathFoto()!=null&&contatto.getPathFoto().compareTo("")!=0) {
+            contatto.setPathFoto("User"+contattoID+"."+getEstenzioneImmagine(contatto.getPathFoto()));
+        }else {
+            contatto.setPathFoto("");
+        }
+        contatto.setNumero(contattoDao.getListaNumeri(contattoID));
+
+        contatto.setAccount(contattoDao.getListaAccount(contattoID));
+        contatto.setIndirizzo(contattoDao.getListaIndirizzi(contattoID));
+     
+        contatto.setEmail(contattoDao.getListaEmail(contattoID));
+        rubrica.aggiungiContatto(contatto);
+    }
+
+/**
  * elimina il contatto
  * @param id int id del contatto da eliminare
  */
 public void eliminaContatto(int id) {
 	rubrica.eliminaContatto(rubrica.getContatto(id));
 }
+
+/**
+ * restituisce la lista di email asssociata al contatto 
+ * @param idContatto int codice che identifica univocamente il contatto
+ * @return arrayList{@literal<String >}
+ */
+public ArrayList<String> getDumpMailContatto(int idContatto) {
+	ContattoDAO contattoDao = new ImplementazioneContattoDAO();
+	return contattoDao.getListaEmail(idContatto);	
+}
+/**
+ * metodo che cancella dal'database un account
+ * @param idOld identificatore del Account da cancellare
+ * @throws SQLException
+ */
+public void eliminaAccount(int idOld) throws SQLException {
+    ContattoDAO contattoDao = new ImplementazioneContattoDAO();
+    contattoDao.deleteAccountDB(idOld);
+
 }
 
 }

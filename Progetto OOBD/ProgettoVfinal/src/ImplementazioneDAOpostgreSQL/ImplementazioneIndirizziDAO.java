@@ -46,14 +46,14 @@ public class ImplementazioneIndirizziDAO implements IndirizziDAO {
         
         try {
             addIndirizziDB = connection.prepareStatement("UPDATE public.indirizzi\r\n"
-                    + "    SET  via=? ,  \"città\" =? , codice_postale = ? , nazione = ? \r\n"
+                    + "    SET  via=? ,  \"cittï¿½\" =? , codice_postale = ? , nazione = ? \r\n"
                     + "    WHERE indirizzi_id = ? ;   ");
             addIndirizziDB.setString(1, via);
             addIndirizziDB.setString(2, citta);
             addIndirizziDB.setString(3, codicePostale);
             addIndirizziDB.setString(4, nazione);
             addIndirizziDB.setInt(5, idIndirizzo);
-            System.out.println("query Update:-"+addIndirizziDB.toString());
+          //  System.out.println("query Update:-"+addIndirizziDB.toString());
             addIndirizziDB.execute();
 
             
@@ -73,7 +73,7 @@ public class ImplementazioneIndirizziDAO implements IndirizziDAO {
             addAbitaDB.setBoolean(1, principale);
             addAbitaDB.setString(2, tag);
             
-            System.out.println("Sono nel ImplementazioneIdirizzo update indirizzo con idIdndi:-"+idIndirizzo+" contatto ID:-"+idContatto+"\nquery:-"+addAbitaDB.toString());
+           // System.out.println("Sono nel ImplementazioneIdirizzo update indirizzo con idIdndi:-"+idIndirizzo+" contatto ID:-"+idContatto+"\nquery:-"+addAbitaDB.toString());
             addAbitaDB.execute();
         }
         catch (SQLException e) {

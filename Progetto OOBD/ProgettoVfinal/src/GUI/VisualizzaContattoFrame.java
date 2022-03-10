@@ -1,40 +1,33 @@
 package GUI;
 
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileFilter;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
 
-import javax.swing.JLabel;
-
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JScrollPane;
 //import net.miginfocom.swing.MigLayout;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.ImageIcon;
-import java.io.File;
-import java.util.ArrayList;
-import javax.swing.SpringLayout;
-import javax.swing.ListSelectionModel;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.SpringLayout;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.table.DefaultTableModel;
 
 import Controller.Controller;
 import Model.NumeriTelefonici;
-import Model.Rubrica;
-
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.text.html.HTML.Tag;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.Font;
-import javax.swing.JOptionPane;
-import javax.swing.border.TitledBorder;
 
 
 @SuppressWarnings({  "serial" })
@@ -64,12 +57,11 @@ public class VisualizzaContattoFrame extends JFrame {
 	private JTextPane textPanePrefisso;
 	private JButton buttonIndietro;
 	private JPanel panel;
-	private File fileFoto;
 	
-	private ArrayList<String> listaNumeri = new ArrayList<String>();
-	private ArrayList<String> listaMail = new ArrayList<String>();
 	
-	private String pathFoto;
+	
+	
+
 	private JComboBox<String> comboBoxMail;
 	private int contattoID;
 
@@ -161,22 +153,22 @@ public class VisualizzaContattoFrame extends JFrame {
 		modelIndirizzi.addColumn("Id");
 	    modelIndirizzi.addColumn("Tag");
 		modelIndirizzi.addColumn("Via"); 
-		modelIndirizzi.addColumn("Città"); 
+		modelIndirizzi.addColumn("Cittï¿½"); 
 		modelIndirizzi.addColumn("Codice Postale");
 		modelIndirizzi.addColumn("Nazione");
 		
-		for(int i=0;i<c.getInfoContattoIndirizzoQuantità(id);i++) {
+		for(int i=0;i<c.getInfoContattoIndirizzoQuantita(id);i++) {
 			modelIndirizzi.addRow(new Object[]{
 					c.getInfoContattoIndirizzoId(i,id),
 					c.getInfoContattoIndirizzoVia(i,id),
-					c.getInfoContattoIndirizzoCittà(i, id),
+					c.getInfoContattoIndirizzoCitta(i, id),
 					c.getInfoContattoIndirizzoCodicePostale(i, id),
 					c.getInfoContattoIndirizzoNazione(i, id)
 			});	
 		}
 		
 		tableIndirizzi = new JTable(modelIndirizzi);
-		final ListSelectionModel listenerIndirizzi=tableIndirizzi.getSelectionModel();
+		
 		tableIndirizzi.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		tableIndirizzi.removeColumn(tableIndirizzi.getColumnModel().getColumn(0));
@@ -199,7 +191,7 @@ public class VisualizzaContattoFrame extends JFrame {
 		
 		// Inserimento account del contatto
 		
-		for(int i=0;i<c.getInfoContattoAccountQuantità(id);i++) {
+		for(int i=0;i<c.getInfoContattoAccountQuantita(id);i++) {
 			modelAccounts.addRow(new Object[]{
 				c.getInfoContattoAccountFornitore(i, id),
 				c.getInfoContattoAccountNickname(i, id),
@@ -260,21 +252,27 @@ public class VisualizzaContattoFrame extends JFrame {
 		
 		tableNumeri = new JTable(modelloNumeri);
 		tableNumeri.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount()==2) {
-					int row = tableNumeri.getSelectedRow();
-					String tag = tableNumeri.getValueAt(row, 1).toString();
-					String prefN = tableNumeri.getValueAt(row, 2).toString();
-					String numero = tableNumeri.getValueAt(row, 3).toString();
-					NumeriTelefonici deputato = c.getDeputatoDiNumero(contattoID, prefN,numero);
-					System.out.println("Test deputato "+deputato);
-//					JPanel visualizzaDeputato = new VisualizzaDeputatoPanel(tag, prefN, numero, deputato.getTag(), deputato.getPrefisso(), deputato.getNumero());
-//					JOptionPane.showMessageDialog(null, visualizzaDeputato, "Visualizza deputato",JOptionPane.INFORMATION_MESSAGE);
-					//TODO implementate il visualizzaDeputato
-				}
-			}
-		});
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount()==2) {
+                    int row = tableNumeri.getSelectedRow();
+                    String tag = tableNumeri.getValueAt(row, 0).toString();
+                    String prefN = tableNumeri.getValueAt(row, 1).toString();
+                    String numero = tableNumeri.getValueAt(row, 2).toString();
+                    String tipoNumero= modelloNumeri.getValueAt(row, 3).toString();
+
+                    NumeriTelefonici deputato = c.getDeputatoDiNumero(contattoID, prefN,numero,tipoNumero);
+                   // System.out.println("Test deputato "+deputato);
+                    if(deputato!=null) {
+                        JPanel visualizzaDeputato = new VisualizzaDeputatoPanel(tag, prefN, numero, deputato.getTag(), deputato.getPrefisso(), deputato.getNumero());
+                        JOptionPane.showMessageDialog(null, visualizzaDeputato, "Visualizza deputato",JOptionPane.INFORMATION_MESSAGE);
+                    }else {
+
+                    }
+
+                }
+            }
+        });
 		
 		modelloNumeri.addColumn("tag");
 		modelloNumeri.addColumn("prefisso");
@@ -282,7 +280,7 @@ public class VisualizzaContattoFrame extends JFrame {
 		modelloNumeri.addColumn("tipo");
 		
 		
-		final ListSelectionModel listenerNumeri=tableNumeri.getSelectionModel();
+		
 		tableNumeri.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		for(int i=0;i<c.getNumeroQuantita(id);i++) {
@@ -349,7 +347,7 @@ public class VisualizzaContattoFrame extends JFrame {
 				panelAccount.add(scrollPaneAccounts);
 				
 				tableAccounts = new JTable(modelAccounts);
-				final ListSelectionModel listenerAccount = tableAccounts.getSelectionModel();
+				
 				tableAccounts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				
 						scrollPaneAccounts.setViewportView(tableAccounts);

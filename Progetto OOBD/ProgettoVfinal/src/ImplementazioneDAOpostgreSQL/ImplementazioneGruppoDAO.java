@@ -53,7 +53,7 @@ private Connection connection;
 			return rs.next();
 		}
 		catch (SQLException e) {
-			System.out.println("Siamo nel catch "+checkContattoInGruppoPS.toString());
+			//System.out.println("Siamo nel catch "+checkContattoInGruppoPS.toString());
 			e.printStackTrace();
 			return false;
 		}
